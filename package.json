@@ -1,0 +1,22 @@
+{
+  "name": "valknut-discord-bot-template",
+  "version": "1.0.0",
+  "description": "Modulaire Discord.js bot template met volledige event en command handling",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "deploy": "node src/deploy-commands.js"
+  },
+  "keywords": ["discord", "bot", "discord.js", "modular"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
