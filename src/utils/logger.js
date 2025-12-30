@@ -1,7 +1,8 @@
 import { config } from '../config/config.js';
-import { appendFileSync, mkdirSync, existsSync, writeFileSync } from 'fs';
+import { appendFileSync, mkdirSync, existsSync, writeFileSync, readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { EmbedBuilder } from 'discord.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -27,6 +28,8 @@ class Logger {
         };
         this.currentLevel = this.levels[config.logLevel] || this.levels.info;
         this.logFile = join(__dirname, '../../logs/bot.log');
+        this.logChannelConfigPath = join(__dirname, '../config/logChannel.json');
+        this.client = null;
 
         // Create logs directory if it doesn't exist
         try {
@@ -45,6 +48,65 @@ class Logger {
         }
     }
 
+    setClient(client) {
+        this.client = client;
+    }
+
+    getLogChannels() {
+        try {
+            if (!existsSync(this.logChannelConfigPath)) {
+                return {};
+            }
+            const data = JSON.parse(readFileSync(this.logChannelConfigPath, 'utf8'));
+            return data.channels || {};
+        } catch (error) {
+            return {};
+        }
+    }
+
+    async sendToDiscord(level, message, guildId = null) {
+        if (!this.client) return;
+
+        const logChannels = this.getLogChannels();
+        const colorMap = {
+            error: 0xFF0000,    // Red
+            warn: 0xFFA500,     // Orange
+            info: 0x5865F2,     // Blue
+            debug: 0x00FFFF,    // Cyan
+            success: 0x00FF00   // Green
+        };
+
+        const embed = new EmbedBuilder()
+            .setColor(colorMap[level] || 0x5865F2)
+            .setDescription(`\`\`\`${message}\`\`\``)
+            .setTimestamp()
+            .setFooter({ text: level.toUpperCase() });
+
+        // If guildId is provided, only send to that guild's log channel
+        if (guildId && logChannels[guildId]) {
+            try {
+                const channel = await this.client.channels.fetch(logChannels[guildId]);
+                if (channel) {
+                    await channel.send({ embeds: [embed] });
+                }
+            } catch (error) {
+                // Silently fail if channel not found or no permission
+            }
+        } else {
+            // Send to all configured log channels
+            for (const [guild, channelId] of Object.entries(logChannels)) {
+                try {
+                    const channel = await this.client.channels.fetch(channelId);
+                    if (channel) {
+                        await channel.send({ embeds: [embed] });
+                    }
+                } catch (error) {
+                    // Silently fail if channel not found or no permission
+                }
+            }
+        }
+    }
+
     formatMessage(level, message) {
         const timestamp = new Date().toISOString();
         return `[${timestamp}] [${level.toUpperCase()}] ${message}`;
@@ -58,42 +120,47 @@ class Logger {
         }
     }
 
-    error(message) {
+    error(message, guildId = null) {
         if (this.currentLevel >= this.levels.error) {
             const formatted = this.formatMessage('error', message);
             console.error(`${colors.red}${formatted}${colors.reset}`);
             this.writeToFile(formatted);
+            this.sendToDiscord('error', message, guildId);
         }
     }
 
-    warn(message) {
+    warn(message, guildId = null) {
         if (this.currentLevel >= this.levels.warn) {
             const formatted = this.formatMessage('warn', message);
             console.warn(`${colors.yellow}${formatted}${colors.reset}`);
             this.writeToFile(formatted);
+            this.sendToDiscord('warn', message, guildId);
         }
     }
 
-    info(message) {
+    info(message, guildId = null) {
         if (this.currentLevel >= this.levels.info) {
             const formatted = this.formatMessage('info', message);
             console.log(`${colors.blue}${formatted}${colors.reset}`);
             this.writeToFile(formatted);
+            this.sendToDiscord('info', message, guildId);
         }
     }
 
-    debug(message) {
+    debug(message, guildId = null) {
         if (this.currentLevel >= this.levels.debug) {
             const formatted = this.formatMessage('debug', message);
             console.log(`${colors.cyan}${formatted}${colors.reset}`);
             this.writeToFile(formatted);
+            this.sendToDiscord('debug', message, guildId);
         }
     }
 
-    success(message) {
+    success(message, guildId = null) {
         const formatted = this.formatMessage('success', message);
         console.log(`${colors.green}${formatted}${colors.reset}`);
         this.writeToFile(formatted);
+        this.sendToDiscord('success', message, guildId);
     }
 }
 

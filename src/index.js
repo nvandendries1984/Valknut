@@ -32,6 +32,9 @@ const client = new Client({
 await loadCommands(client);
 await loadEvents(client);
 
+// Set client in logger for Discord logging
+logger.setClient(client);
+
 // Error handling
 process.on('unhandledRejection', error => {
     logger.error(`Unhandled promise rejection: ${error.message}`);
