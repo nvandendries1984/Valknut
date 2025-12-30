@@ -4,7 +4,7 @@ import { logger } from './utils/logger.js';
 import { loadCommands } from './handlers/commandHandler.js';
 import { loadEvents } from './handlers/eventHandler.js';
 
-// Valideer configuratie
+// Validate configuration
 try {
     validateConfig();
 } catch (error) {
@@ -12,7 +12,7 @@ try {
     process.exit(1);
 }
 
-// Maak Discord client
+// Create Discord client
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -28,7 +28,7 @@ const client = new Client({
     ]
 });
 
-// Laad commands en events
+// Load commands and events
 await loadCommands(client);
 await loadEvents(client);
 

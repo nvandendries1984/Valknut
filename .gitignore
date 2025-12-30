@@ -27,3 +27,4 @@ build/
 *.tmp
 .cache/
 package-lock.json
+src/assets/images/valknut.png

@@ -4,7 +4,7 @@ import { createEmbed } from '../../utils/embedBuilder.js';
 export default {
     data: new SlashCommandBuilder()
         .setName('ping')
-        .setDescription('Check de latency van de bot'),
+        .setDescription('Check the bot latency'),
 
     async execute(interaction) {
         const sent = await interaction.reply({

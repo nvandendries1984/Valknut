@@ -21,47 +21,52 @@ export default {
         const target = interaction.options.getMember('target');
         const reason = interaction.options.getString('reason') || 'No reason provided';
 
-        // Validatie checks
+        // Validation checks
         if (!target) {
             return interaction.reply({
-                embeds: [createErrorEmbed('Member niet gevonden!')],
+                embeds: [createErrorEmbed('Member not found!')],
                 ephemeral: true
             });
         }
 
         if (target.id === interaction.user.id) {
             return interaction.reply({
-                embeds: [createErrorEmbed('Je kunt jezelf niet kicken!')],
+                embeds: [createErrorEmbed('You cannot kick yourself!')],
                 ephemeral: true
             });
         }
 
         if (target.roles.highest.position >= interaction.member.roles.highest.position) {
             return interaction.reply({
-                embeds: [createErrorEmbed('Je kunt deze member niet kicken vanwege role hierarchy!')],
+                embeds: [createErrorEmbed('You cannot kick this member due to role hierarchy!')],
                 ephemeral: true
             });
         }
 
         if (!target.kickable) {
             return interaction.reply({
-                embeds: [createErrorEmbed('Ik kan deze member niet kicken!')],
+                embeds: [createErrorEmbed('I cannot kick this member!')],
                 ephemeral: true
             });
         }
 
-        // Kick de member
+        // Kick the member
         try {
             await target.kick(reason);
 
             const embed = createSuccessEmbed(
-                `**${target.user.tag}** is gekicked door **${interaction.user.tag}**\n**Reden:** ${reason}`
+                `**${target.user.tag}** has been kicked by **${interaction.user.tag}**\n**Reason:** ${reason}`
             );
 
             await interaction.reply({ embeds: [embed] });
         } catch (error) {
             await interaction.reply({
-                embeds: [createErrorEmbed(`Fout bij kicken: ${error.message}`)],
+                embeds: [createErrorEmbed(`Error while kicking: ${error.message}`)],
+                ephemeral: true
+            });
+        }
+    }
+};
                 ephemeral: true
             });
         }

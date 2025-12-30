@@ -34,13 +34,13 @@ export default {
         // Handle button interactions
         if (interaction.isButton()) {
             logger.debug(`Button interaction: ${interaction.customId}`);
-            // Voeg hier button handling logic toe
+            // Add button handling logic here
         }
 
         // Handle select menu interactions
         if (interaction.isStringSelectMenu()) {
             logger.debug(`Select menu interaction: ${interaction.customId}`);
-            // Voeg hier select menu handling logic toe
+            // Add select menu handling logic here
         }
     }
 };
