@@ -7,10 +7,11 @@ export default {
         .setDescription('Check the bot latency'),
 
     async execute(interaction) {
-        const sent = await interaction.reply({
-            content: 'Pinging...',
-            fetchReply: true
+        await interaction.reply({
+            content: 'Pinging...'
         });
+
+        const sent = await interaction.fetchReply();
 
         const latency = sent.createdTimestamp - interaction.createdTimestamp;
         const apiLatency = Math.round(interaction.client.ws.ping);

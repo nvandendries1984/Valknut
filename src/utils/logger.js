@@ -2,7 +2,6 @@ import { config } from '../config/config.js';
 import { appendFileSync, mkdirSync, existsSync, writeFileSync, readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { EmbedBuilder } from 'discord.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -68,26 +67,33 @@ class Logger {
         if (!this.client) return;
 
         const logChannels = this.getLogChannels();
+
+        // ANSI color codes for Discord code blocks
         const colorMap = {
-            error: 0xFF0000,    // Red
-            warn: 0xFFA500,     // Orange
-            info: 0x5865F2,     // Blue
-            debug: 0x00FFFF,    // Cyan
-            success: 0x00FF00   // Green
+            error: '```ansi\n\u001b[0;31m',      // Red
+            warn: '```ansi\n\u001b[0;33m',       // Yellow
+            info: '```ansi\n\u001b[0;34m',       // Blue
+            debug: '```ansi\n\u001b[0;36m',      // Cyan
+            success: '```ansi\n\u001b[0;32m'     // Green
         };
 
-        const embed = new EmbedBuilder()
-            .setColor(colorMap[level] || 0x5865F2)
-            .setDescription(`\`\`\`${message}\`\`\``)
-            .setTimestamp()
-            .setFooter({ text: level.toUpperCase() });
+        const timestamp = new Date().toLocaleString('nl-NL', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+
+        const formattedMessage = `${colorMap[level] || '```'}[${timestamp}] [${level.toUpperCase()}] ${message}\u001b[0m\n\`\`\``;
 
         // If guildId is provided, only send to that guild's log channel
         if (guildId && logChannels[guildId]) {
             try {
                 const channel = await this.client.channels.fetch(logChannels[guildId]);
                 if (channel) {
-                    await channel.send({ embeds: [embed] });
+                    await channel.send(formattedMessage);
                 }
             } catch (error) {
                 // Silently fail if channel not found or no permission
@@ -98,7 +104,7 @@ class Logger {
                 try {
                     const channel = await this.client.channels.fetch(channelId);
                     if (channel) {
-                        await channel.send({ embeds: [embed] });
+                        await channel.send(formattedMessage);
                     }
                 } catch (error) {
                     // Silently fail if channel not found or no permission
