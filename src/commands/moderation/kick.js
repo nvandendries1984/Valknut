@@ -67,8 +67,3 @@ export default {
         }
     }
 };
-                ephemeral: true
-            });
-        }
-    }
-};
