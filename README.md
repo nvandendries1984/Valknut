@@ -110,7 +110,7 @@ import { logger } from '../utils/logger.js';
 
 export default {
     name: 'eventName', // Discord.js event name
-    once: false, // true for one-time events like 'ready'
+    once: false, // true for one-time events like 'clientReady'
     async execute(...args) {
         // Event logic here
     }

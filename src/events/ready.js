@@ -3,7 +3,7 @@ import { logger } from '../utils/logger.js';
 import { config } from '../config/config.js';
 
 export default {
-    name: 'ready',
+    name: 'clientReady',
     once: true,
     execute(client) {
         logger.success(`${config.botName} is online!`);

@@ -32,7 +32,7 @@ Event files export a default object with `name`, `once`, and `execute`:
 ```javascript
 export default {
     name: 'eventName',
-    once: false, // true for ready event
+    once: false, // true for clientReady event
     async execute(...args) { /* logic */ }
 };
 ```
