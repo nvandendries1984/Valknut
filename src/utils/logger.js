@@ -1,4 +1,10 @@
 import { config } from '../config/config.js';
+import { appendFileSync, mkdirSync, existsSync, writeFileSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const colors = {
     reset: '\x1b[0m',
@@ -20,6 +26,23 @@ class Logger {
             debug: 3
         };
         this.currentLevel = this.levels[config.logLevel] || this.levels.info;
+        this.logFile = join(__dirname, '../../logs/bot.log');
+
+        // Create logs directory if it doesn't exist
+        try {
+            mkdirSync(dirname(this.logFile), { recursive: true });
+        } catch (error) {
+            // Directory already exists
+        }
+
+        // Create log file if it doesn't exist with proper permissions
+        if (!existsSync(this.logFile)) {
+            try {
+                writeFileSync(this.logFile, '', { mode: 0o666 });
+            } catch (error) {
+                console.error(`Failed to create log file: ${error.message}`);
+            }
+        }
     }
 
     formatMessage(level, message) {
@@ -27,32 +50,50 @@ class Logger {
         return `[${timestamp}] [${level.toUpperCase()}] ${message}`;
     }
 
+    writeToFile(formattedMessage) {
+        try {
+            appendFileSync(this.logFile, formattedMessage + '\n');
+        } catch (error) {
+            console.error(`Failed to write to log file: ${error.message}`);
+        }
+    }
+
     error(message) {
         if (this.currentLevel >= this.levels.error) {
-            console.error(`${colors.red}${this.formatMessage('error', message)}${colors.reset}`);
+            const formatted = this.formatMessage('error', message);
+            console.error(`${colors.red}${formatted}${colors.reset}`);
+            this.writeToFile(formatted);
         }
     }
 
     warn(message) {
         if (this.currentLevel >= this.levels.warn) {
-            console.warn(`${colors.yellow}${this.formatMessage('warn', message)}${colors.reset}`);
+            const formatted = this.formatMessage('warn', message);
+            console.warn(`${colors.yellow}${formatted}${colors.reset}`);
+            this.writeToFile(formatted);
         }
     }
 
     info(message) {
         if (this.currentLevel >= this.levels.info) {
-            console.log(`${colors.blue}${this.formatMessage('info', message)}${colors.reset}`);
+            const formatted = this.formatMessage('info', message);
+            console.log(`${colors.blue}${formatted}${colors.reset}`);
+            this.writeToFile(formatted);
         }
     }
 
     debug(message) {
         if (this.currentLevel >= this.levels.debug) {
-            console.log(`${colors.cyan}${this.formatMessage('debug', message)}${colors.reset}`);
+            const formatted = this.formatMessage('debug', message);
+            console.log(`${colors.cyan}${formatted}${colors.reset}`);
+            this.writeToFile(formatted);
         }
     }
 
     success(message) {
-        console.log(`${colors.green}${this.formatMessage('success', message)}${colors.reset}`);
+        const formatted = this.formatMessage('success', message);
+        console.log(`${colors.green}${formatted}${colors.reset}`);
+        this.writeToFile(formatted);
     }
 }
 
