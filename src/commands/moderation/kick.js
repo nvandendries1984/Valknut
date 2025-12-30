@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
+import { SlashCommandBuilder, PermissionFlagsBits, MessageFlags } from 'discord.js';
 import { createSuccessEmbed, createErrorEmbed } from '../../utils/embedBuilder.js';
 
 export default {
@@ -25,28 +25,28 @@ export default {
         if (!target) {
             return interaction.reply({
                 embeds: [createErrorEmbed('Member not found!')],
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
         }
 
         if (target.id === interaction.user.id) {
             return interaction.reply({
                 embeds: [createErrorEmbed('You cannot kick yourself!')],
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
         }
 
         if (target.roles.highest.position >= interaction.member.roles.highest.position) {
             return interaction.reply({
                 embeds: [createErrorEmbed('You cannot kick this member due to role hierarchy!')],
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
         }
 
         if (!target.kickable) {
             return interaction.reply({
                 embeds: [createErrorEmbed('I cannot kick this member!')],
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
         }
 
@@ -62,7 +62,7 @@ export default {
         } catch (error) {
             await interaction.reply({
                 embeds: [createErrorEmbed(`Error while kicking: ${error.message}`)],
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
         }
     }

@@ -1,3 +1,4 @@
+import { MessageFlags } from 'discord.js';
 import { logger } from '../utils/logger.js';
 import { createErrorEmbed } from '../utils/embedBuilder.js';
 
@@ -24,9 +25,9 @@ export default {
                 );
 
                 if (interaction.replied || interaction.deferred) {
-                    await interaction.followUp({ embeds: [errorEmbed], ephemeral: true });
+                    await interaction.followUp({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
                 } else {
-                    await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
+                    await interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
                 }
             }
         }
