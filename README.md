@@ -5,7 +5,8 @@ A fully modular Discord.js v14 bot template with command handling, event handlin
 ## Features
 
 - ✅ **Fully modular** - Commands and events in separate files
-- 🔐 **Secure configuration** - All sensitive data in .env
+- � **Docker ready** - Easy deployment with Docker and Docker Compose
+- �🔐 **Secure configuration** - All sensitive data in .env
 - 📝 **Slash commands** - Modern Discord slash command support
 - 🎨 **Embed utilities** - Easy-to-use embed creation
 - 📊 **Logging system** - Colored console logging with levels
@@ -13,6 +14,42 @@ A fully modular Discord.js v14 bot template with command handling, event handlin
 - 🏗️ **Scalable** - Easily extensible with new commands and events
 
 ## Installation
+
+### Option 1: Docker (Recommended)
+
+1. Clone this repository
+```bash
+git clone <repository-url>
+cd Valknut
+```
+
+2. Configure your bot
+```bash
+cp .env.example .env
+```
+
+3. Fill in your `.env` file with your Discord bot credentials
+   - Go to https://discord.com/developers/applications
+   - Create a new application or select an existing one
+   - Copy the Bot Token and Client ID
+   - Fill these into your `.env` file
+
+4. Deploy slash commands (one-time setup)
+```bash
+docker-compose run --rm valknut-bot node src/deploy-commands.js
+```
+
+5. Start the bot
+```bash
+docker-compose up -d
+```
+
+6. View logs
+```bash
+docker-compose logs -f
+```
+
+### Option 2: Manual Installation
 
 1. Clone this repository
 ```bash
@@ -44,6 +81,38 @@ npm run deploy
 6. Start the bot
 ```bash
 npm start
+```
+
+## Docker Commands
+
+### Start the bot
+```bash
+docker-compose up -d
+```
+
+### Stop the bot
+```bash
+docker-compose down
+```
+
+### Restart the bot
+```bash
+docker-compose restart
+```
+
+### View logs
+```bash
+docker-compose logs -f
+```
+
+### Rebuild container (after code changes)
+```bash
+docker-compose up -d --build
+```
+
+### Deploy commands in Docker
+```bash
+docker-compose run --rm valknut-bot node src/deploy-commands.js
 ```
 
 ## Development

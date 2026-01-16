@@ -1,0 +1,20 @@
+services:
+  valknut-bot:
+    build: .
+    container_name: valknut-discord-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    volumes:
+      # Persist logs
+      - ./logs:/app/logs
+      # Persist log channel config
+      - ./src/config/logChannel.json:/app/src/config/logChannel.json
+    networks:
+      - bot-network
+
+networks:
+  bot-network:
+    driver: bridge
