@@ -3,6 +3,7 @@ import { isAllowedUser, hasGuildAccess } from '../middleware/auth.js';
 import { Guild } from '../../src/models/Guild.js';
 import { User } from '../../src/models/User.js';
 import { Role } from '../../src/models/Role.js';
+import { AllowedUser } from '../../src/models/AllowedUser.js';
 
 const router = express.Router();
 
@@ -16,28 +17,55 @@ router.get('/', isAllowedUser, async (req, res) => {
         const botGuilds = await Guild.find({ active: true });
         const botGuildIds = new Set(botGuilds.map(g => g.guildId));
 
-        // Find mutual guilds where user has admin permissions or DEV role
+        // Owner sees all guilds
+        const isOwner = req.user.id === process.env.OWNER_ID;
+
+        // Check if user is a moderator (AllowedUser)
+        const isModerator = await AllowedUser.isAllowed(req.user.id);
+
+        // Find mutual guilds with appropriate access
         const botClient = req.app.get('client');
         const mutualGuildsPromises = userGuilds
             .filter(guild => botGuildIds.has(guild.id))
             .map(async (guild) => {
-                const hasAdmin = (guild.permissions & 0x8) === 0x8;
+                // Owner has access to all guilds
+                if (isOwner) {
+                    return guild;
+                }
 
-                // Check for DEV role if not admin
-                let hasDevRole = false;
-                if (!hasAdmin && botClient) {
+                // Check admin permissions
+                const hasAdmin = (guild.permissions & 0x8) === 0x8;
+                if (hasAdmin) {
+                    return guild;
+                }
+
+                // Check Discord roles
+                if (botClient) {
                     try {
                         const discordGuild = botClient.guilds.cache.get(guild.id);
                         if (discordGuild) {
                             const member = await discordGuild.members.fetch(req.user.id);
-                            hasDevRole = member.roles.cache.some(role => role.name === 'DEV');
+
+                            // Check DEV role
+                            const hasDevRole = member.roles.cache.some(role => role.name === 'DEV');
+                            if (hasDevRole) {
+                                return guild;
+                            }
+
+                            // Moderators need Mod role in the guild
+                            if (isModerator) {
+                                const hasModRole = member.roles.cache.some(role => role.name === 'Mod');
+                                if (hasModRole) {
+                                    return guild;
+                                }
+                            }
                         }
                     } catch (error) {
-                        console.error(`Error checking DEV role for guild ${guild.id}:`, error);
+                        console.error(`Error checking roles for guild ${guild.id}:`, error);
                     }
                 }
 
-                return (hasAdmin || hasDevRole) ? guild : null;
+                return null;
             });
 
         const mutualGuildsResults = await Promise.all(mutualGuildsPromises);

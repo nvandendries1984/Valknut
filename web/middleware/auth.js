@@ -42,6 +42,11 @@ export function isOwner(req, res, next) {
 export async function hasGuildAccess(req, res, next) {
     const guildId = req.params.guildId;
 
+    // Owner always has access to all guilds
+    if (req.user.id === process.env.OWNER_ID) {
+        return next();
+    }
+
     // Get user's guilds
     const userGuild = req.user.guilds?.find(g => g.id === guildId);
     if (!userGuild) {
@@ -53,22 +58,33 @@ export async function hasGuildAccess(req, res, next) {
         return next();
     }
 
-    // Check if user has DEV role in the Discord server
+    // Check Discord roles (DEV or Mod)
     try {
         const botClient = req.app.get('client');
         if (botClient) {
             const guild = botClient.guilds.cache.get(guildId);
             if (guild) {
                 const member = await guild.members.fetch(req.user.id);
+
+                // Check for DEV role (development/testing)
                 const hasDevRole = member.roles.cache.some(role => role.name === 'DEV');
                 if (hasDevRole) {
                     return next();
                 }
+
+                // Check for Mod role (for AllowedUser moderators)
+                const isAllowedModerator = await AllowedUser.isAllowed(req.user.id);
+                if (isAllowedModerator) {
+                    const hasModRole = member.roles.cache.some(role => role.name === 'Mod');
+                    if (hasModRole) {
+                        return next();
+                    }
+                }
             }
         }
     } catch (error) {
-        console.error('Error checking DEV role:', error);
+        console.error('Error checking Discord roles:', error);
     }
 
-    res.status(403).json({ error: 'You need Administrator permissions or DEV role to access this guild' });
+    res.status(403).json({ error: 'You need Administrator permissions, DEV role, or Mod role to access this guild' });
 }

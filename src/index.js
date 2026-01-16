@@ -1,9 +1,11 @@
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
+import cron from 'node-cron';
 import { config, validateConfig } from './config/config.js';
 import { logger } from './utils/logger.js';
 import { connectDatabase, disconnectDatabase } from './utils/database.js';
 import { loadCommands } from './handlers/commandHandler.js';
 import { loadEvents } from './handlers/eventHandler.js';
+import { createDatabaseBackup } from './utils/backup.js';
 
 // Validate configuration
 try {
@@ -35,6 +37,20 @@ logger.setClient(client);
 // Load commands and events
 await loadCommands(client);
 await loadEvents(client);
+
+// Schedule daily database backup at 00:00
+cron.schedule('0 0 * * *', async () => {
+    logger.info('Running scheduled database backup...');
+    try {
+        await createDatabaseBackup();
+    } catch (error) {
+        logger.error('Scheduled backup failed:', error.message);
+    }
+}, {
+    timezone: "Europe/Amsterdam"
+});
+
+logger.info('Database backup scheduled: Daily at 00:00 (Europe/Amsterdam)');
 
 // Error handling
 process.on('unhandledRejection', error => {

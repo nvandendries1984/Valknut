@@ -12,6 +12,8 @@ services:
       - ./logs:/app/logs
       # Persist log channel config
       - ./src/config/logChannel.json:/app/src/config/logChannel.json
+      # Database backups
+      - ./db-backups:/app/db-backups
     networks:
       - nginx-proxy-manager_default
 
