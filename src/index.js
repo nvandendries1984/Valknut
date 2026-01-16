@@ -29,20 +29,12 @@ const client = new Client({
     ]
 });
 
+// Set client in logger for Discord logging
+logger.setClient(client);
+
 // Load commands and events
 await loadCommands(client);
 await loadEvents(client);
-
-// Connect to MongoDB
-try {
-    await connectDatabase();
-} catch (error) {
-    logger.error('Failed to connect to database, exiting...');
-    process.exit(1);
-}
-
-// Set client in logger for Discord logging
-logger.setClient(client);
 
 // Error handling
 process.on('unhandledRejection', error => {
