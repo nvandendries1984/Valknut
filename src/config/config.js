@@ -10,6 +10,7 @@ export const config = {
     // Bot settings
     botName: process.env.BOT_NAME || 'Discord Bot',
     prefix: process.env.BOT_PREFIX || '!',
+    ownerId: process.env.OWNER_ID,
 
     // Logging
     logLevel: process.env.LOG_LEVEL || 'info',
