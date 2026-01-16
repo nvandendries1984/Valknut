@@ -14,6 +14,9 @@ export const config = {
     // Logging
     logLevel: process.env.LOG_LEVEL || 'info',
 
+    // MongoDB
+    mongodbUri: process.env.MONGODB_URI,
+
     // Bot intents and configuration
     intents: [
         'Guilds',
@@ -33,7 +36,7 @@ export const config = {
 
 // Validate required config
 export function validateConfig() {
-    const required = ['token', 'clientId'];
+    const required = ['token', 'clientId', 'mongodbUri'];
     const missing = required.filter(key => !config[key]);
 
     if (missing.length > 0) {

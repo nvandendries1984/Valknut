@@ -13,8 +13,8 @@ services:
       # Persist log channel config
       - ./src/config/logChannel.json:/app/src/config/logChannel.json
     networks:
-      - bot-network
+      - nginx-proxy-manager_default
 
 networks:
-  bot-network:
-    driver: bridge
+  nginx-proxy-manager_default:
+    external: true
