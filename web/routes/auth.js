@@ -16,9 +16,9 @@ router.get('/callback',
         logger.info('Callback received from Discord');
         next();
     },
-    passport.authenticate('discord', { 
+    passport.authenticate('discord', {
         failureRedirect: '/',
-        failureMessage: true 
+        failureMessage: true
     }),
     (req, res) => {
         logger.info(`User logged in successfully: ${req.user.username}`);
