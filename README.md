@@ -1,17 +1,20 @@
 # Valknut - Discord Bot Template
 
-A fully modular Discord.js v14 bot template with command handling, event handling, and complete .env configuration.
+A fully modular Discord.js v14 bot template with command handling, event handling, MongoDB integration, and complete .env configuration. **Now with Multi-Guild Support!**
 
 ## Features
 
 - ✅ **Fully modular** - Commands and events in separate files
-- � **Docker ready** - Easy deployment with Docker and Docker Compose
-- �🔐 **Secure configuration** - All sensitive data in .env
+- 🐳 **Docker ready** - Easy deployment with Docker and Docker Compose
+- 🔐 **Secure configuration** - All sensitive data in .env
 - 📝 **Slash commands** - Modern Discord slash command support
 - 🎨 **Embed utilities** - Easy-to-use embed creation
 - 📊 **Logging system** - Colored console logging with levels
 - ⚡ **Hot reload** - Development mode with auto-restart
 - 🏗️ **Scalable** - Easily extensible with new commands and events
+- 🌐 **Multi-Guild Support** - Works seamlessly across multiple Discord servers
+- 💾 **MongoDB Integration** - Persistent data storage with Mongoose
+- 🔧 **Guild-Specific Settings** - Per-server configuration (log channels, prefixes, etc.)
 
 ## Installation
 
@@ -32,6 +35,8 @@ cp .env.example .env
    - Go to https://discord.com/developers/applications
    - Create a new application or select an existing one
    - Copy the Bot Token and Client ID
+   - Add your MongoDB connection string (MONGODB_URI)
+   - Add your Discord User ID as OWNER_ID
    - Fill these into your `.env` file
 
 4. Deploy slash commands (one-time setup)
@@ -71,6 +76,8 @@ cp .env.example .env
    - Go to https://discord.com/developers/applications
    - Create a new application or select an existing one
    - Copy the Bot Token and Client ID
+   - Add your MongoDB connection string (MONGODB_URI)
+   - Add your Discord User ID as OWNER_ID
    - Fill these into your `.env` file
 
 5. Deploy slash commands
@@ -125,35 +132,82 @@ npm run dev
 ## Project Structure
 
 ```
-src/
-├── commands/           # All bot commands
-│   ├── utility/       # Utility commands (ping, help)
+src/, register, guildinfo, listguilds)
 │   └── moderation/    # Moderation commands (kick, ban, etc)
 ├── events/            # Discord event handlers
-│   ├── ready.js
+│   ├── ready.js       # Bot startup and guild registration
+│   ├── guildCreate.js # New guild join handler
+│   ├── guildDelete.js # Guild leave handler
 │   ├── interactionCreate.js
 │   └── messageCreate.js
 ├── handlers/          # Command and event loaders
 │   ├── commandHandler.js
 │   └── eventHandler.js
+├── models/            # MongoDB/Mongoose models
+│   ├── Guild.js       # Guild data and settings
+│   └── User.js        # User registration (per-guild)
 ├── utils/             # Utility functions
 │   ├── logger.js
-│   └── embedBuilder.js
+│   ├── embedBuilder.js
+│   └── database.js    # MongoDB connection
 ├── config/            # Configuration files
 │   └── config.js
 ├── index.js           # Main bot entry point
 └── deploy-commands.js # Slash command deployer
 ```
 
+## Multi-Guild Features
+
+The bot now supports multiple Discord servers with guild-specific settings:
+
+### Automatic Guild Registration
+- New guilds are automatically registered when the bot joins
+- Existing guilds are registered on bot startup
+- Guild data includes name, member count, owner, and settings
+
+### Guild-Specific Settings
+Each guild can have its own:
+- **Log Channel** - Set with `/setlogchannel`
+- **Custom Prefix** - Per-guild prefix configuration
+- **Language Settings** - Multi-language support ready
+
+### Guild Management Commands
+- `/guildinfo` - Display detailed information about the current server (Admin only)
+- `/listguilds` - List all guilds the bot is in (Owner only)
+- `/setlogchannel` - Configure the log channel for this server (Admin only)
+
+### User Registration
+- Users are registered per-guild (same user can be registered in multiple servers)
+- Track which guilds a user is registered in
+- `/register` command now supports multi-guild registration
+
+## Migration from Single-Guild
+
+If you're upgrading from an older version:
+
+1. Run the migration script to transfer log channel data:
+```bash
+npm run migrate
+```
+
+2. After successful migration, you can safely delete `src/config/logChannel.json─ index.js           # Main bot entry point
+└── deploy-commands.js # Slash command deployer
+```
+
 ## Adding a New Command
 
 1. Create a new file in `src/commands/<category>/`
-2. Use this template:
+### Required
+- `DISCORD_TOKEN` - Your bot token from Discord Developer Portal
+- `CLIENT_ID` - Your application ID
+- `MONGODB_URI` - MongoDB connection string (e.g., `mongodb://localhost:27017/valknut`)
+- `OWNER_ID` - Your Discord user ID (for owner-only commands)
 
-```javascript
-import { SlashCommandBuilder } from 'discord.js';
-import { createEmbed } from '../../utils/embedBuilder.js';
-
+### Optional
+- `GUILD_ID` - Test server ID (for faster command deployment during development)
+- `BOT_NAME` - The name of your bot (default: "Discord Bot")
+- `BOT_PREFIX` - Prefix for legacy text commands (default: "!")
+- `LOG_LEVEL` - Logging level: error/warn/info/debug (default: "info"
 export default {
     category: 'utility', // Optional, for help command
     data: new SlashCommandBuilder()

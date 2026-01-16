@@ -15,7 +15,7 @@ export default {
                 .setDescription('The user to register')
                 .setRequired(true)
         ),
-    
+
     async execute(interaction) {
         // Owner check
         if (interaction.user.id !== config.ownerId) {
@@ -26,17 +26,25 @@ export default {
         }
 
         const targetUser = interaction.options.getUser('user');
-        
+        const guildId = interaction.guild?.id;
+
+        if (!guildId) {
+            return interaction.reply({
+                embeds: [createErrorEmbed('This command can only be used in a server!')],
+                ephemeral: true
+            });
+        }
+
         await interaction.deferReply();
 
         try {
-            // Check if user is already registered
-            const existingUser = await User.findByUserId(targetUser.id);
-            
+            // Check if user is already registered in this guild
+            const existingUser = await User.findByUserId(targetUser.id, guildId);
+
             if (existingUser) {
                 return interaction.editReply({
                     embeds: [createErrorEmbed(
-                        `**${targetUser.tag}** is already registered in the database.\n\n` +
+                        `**${targetUser.tag}** is already registered in this server.\n\n` +
                         `**Registered at:** ${existingUser.registeredAt.toLocaleString('nl-NL')}\n` +
                         `**Registered by:** <@${existingUser.registeredBy}>`
                     )]
@@ -49,6 +57,7 @@ export default {
             // Create new user document
             const newUser = new User({
                 userId: fullUser.id,
+                guildId: guildId,
                 username: fullUser.username,
                 globalName: fullUser.globalName,
                 discriminator: fullUser.discriminator,
@@ -61,15 +70,18 @@ export default {
                 banner: fullUser.banner,
                 accentColor: fullUser.accentColor,
                 registeredBy: interaction.user.id,
-                guildId: interaction.guild?.id || null,
                 guildName: interaction.guild?.name || null
             });
 
             await newUser.save();
 
+            // Check if user is registered in other guilds
+            const otherRegistrations = await User.findAllByUserId(fullUser.id);
+            const registrationCount = otherRegistrations.length;
+
             // Success embed with all user details
             const embed = createSuccessEmbed(
-                `✅ Successfully registered **${fullUser.tag}**`
+                `✅ Successfully registered **${fullUser.tag}** in this server`
             )
                 .addFields(
                     { name: '👤 Display Name', value: newUser.getDisplayName(), inline: true },
@@ -77,7 +89,8 @@ export default {
                     { name: '🤖 Bot Account', value: fullUser.bot ? 'Yes' : 'No', inline: true },
                     { name: '📅 Account Created', value: `<t:${Math.floor(fullUser.createdTimestamp / 1000)}:F>`, inline: false },
                     { name: '📝 Registered By', value: `<@${interaction.user.id}>`, inline: true },
-                    { name: '🏠 Guild', value: interaction.guild?.name || 'DM', inline: true }
+                    { name: '🏠 Guild', value: interaction.guild?.name || 'Unknown', inline: true },
+                    { name: '🌐 Total Registrations', value: `${registrationCount} server(s)`, inline: true }
                 )
                 .setThumbnail(fullUser.displayAvatarURL({ size: 256 }));
 
@@ -86,7 +99,7 @@ export default {
             }
 
             logger.info(
-                `User ${fullUser.tag} (${fullUser.id}) registered by ${interaction.user.tag}`,
+                `User ${fullUser.tag} (${fullUser.id}) registered in ${interaction.guild.name} by ${interaction.user.tag}`,
                 interaction.guild?.id
             );
 
@@ -94,7 +107,7 @@ export default {
 
         } catch (error) {
             logger.error(`Error registering user: ${error.message}`, interaction.guild?.id);
-            
+
             return interaction.editReply({
                 embeds: [createErrorEmbed(
                     '❌ An error occurred while registering the user.\n' +

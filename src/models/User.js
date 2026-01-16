@@ -5,94 +5,95 @@ const userSchema = new mongoose.Schema({
     userId: {
         type: String,
         required: true,
-        unique: true,
         index: true
     },
-    
+
+    // Guild ID (for multi-guild support)
+    guildId: {
+        type: String,
+        required: true,
+        index: true
+    },
+
     // Username
     username: {
         type: String,
         required: true
     },
-    
+
     // Global display name
     globalName: {
         type: String,
         default: null
     },
-    
+
     // Discriminator (legacy)
     discriminator: {
         type: String,
         default: null
     },
-    
+
     // Avatar hash
     avatar: {
         type: String,
         default: null
     },
-    
+
     // Avatar URL (full URL)
     avatarURL: {
         type: String,
         default: null
     },
-    
+
     // Bot account
     bot: {
         type: Boolean,
         default: false
     },
-    
+
     // Account creation date from Discord
     createdAt: {
         type: Date,
         required: true
     },
-    
+
     // User flags (badges, etc.)
     flags: {
         type: Number,
         default: 0
     },
-    
+
     // Premium type (Nitro)
     premiumType: {
         type: Number,
         default: 0
     },
-    
+
     // Banner hash
     banner: {
         type: String,
         default: null
     },
-    
+
     // Banner color
     accentColor: {
         type: Number,
         default: null
     },
-    
+
     // Registered by (owner user ID)
     registeredBy: {
         type: String,
         required: true
     },
-    
+
     // Registration timestamp
     registeredAt: {
         type: Date,
         default: Date.now
     },
-    
+
     // Guild context (where they were registered)
-    guildId: {
-        type: String,
-        default: null
-    },
-    
     guildName: {
         type: String,
         default: null
@@ -101,6 +102,9 @@ const userSchema = new mongoose.Schema({
     timestamps: true,
     collection: 'users'
 });
+
+// Compound unique index for userId + guildId
+userSchema.index({ userId: 1, guildId: 1 }, { unique: true });
 
 // Instance methods
 userSchema.methods.getDisplayName = function() {
@@ -114,13 +118,17 @@ userSchema.methods.getTag = function() {
 };
 
 // Static methods
-userSchema.statics.findByUserId = function(userId) {
-    return this.findOne({ userId });
+userSchema.statics.findByUserId = function(userId, guildId) {
+    return this.findOne({ userId, guildId });
 };
 
-userSchema.statics.isRegistered = async function(userId) {
-    const user = await this.findByUserId(userId);
+userSchema.statics.isRegistered = async function(userId, guildId) {
+    const user = await this.findByUserId(userId, guildId);
     return !!user;
+};
+
+userSchema.statics.findAllByUserId = function(userId) {
+    return this.find({ userId });
 };
 
 export const User = mongoose.model('User', userSchema);
