@@ -10,6 +10,7 @@ import { logger } from '../src/utils/logger.js';
 import authRoutes from './routes/auth.js';
 import dashboardRoutes from './routes/dashboard.js';
 import apiRoutes from './routes/api.js';
+import adminRoutes from './routes/admin.js';
 import { Client, GatewayIntentBits } from 'discord.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -25,10 +26,10 @@ await connectDatabase();
 let discordClient = null;
 try {
     discordClient = new Client({
-        intents: [GatewayIntentBits.Guilds]
+        intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers]
     });
     await discordClient.login(process.env.DISCORD_TOKEN);
-    app.set('discordClient', discordClient);
+    app.set('client', discordClient); // Store as 'client' for admin routes
     logger.info('Discord client connected for web dashboard');
 } catch (error) {
     logger.warn('Could not connect Discord client for web dashboard');
@@ -91,6 +92,7 @@ app.use((req, res, next) => {
 app.use('/auth', authRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/api', apiRoutes);
+app.use('/admin', adminRoutes);
 
 // Home page
 app.get('/', (req, res) => {

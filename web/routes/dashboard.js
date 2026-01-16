@@ -1,5 +1,5 @@
 import express from 'express';
-import { isAuthenticated } from '../middleware/auth.js';
+import { isAllowedUser, hasGuildAccess } from '../middleware/auth.js';
 import { Guild } from '../../src/models/Guild.js';
 import { User } from '../../src/models/User.js';
 import { Role } from '../../src/models/Role.js';
@@ -7,7 +7,7 @@ import { Role } from '../../src/models/Role.js';
 const router = express.Router();
 
 // Dashboard home
-router.get('/', isAuthenticated, async (req, res) => {
+router.get('/', isAllowedUser, async (req, res) => {
     try {
         // Get user's guilds from Discord
         const userGuilds = req.user.guilds || [];
@@ -53,7 +53,7 @@ router.get('/', isAuthenticated, async (req, res) => {
 });
 
 // Guild management page
-router.get('/guild/:guildId', isAuthenticated, async (req, res) => {
+router.get('/guild/:guildId', isAllowedUser, async (req, res) => {
     try {
         const guildId = req.params.guildId;
 
