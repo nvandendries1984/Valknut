@@ -46,7 +46,7 @@ export async function createDatabaseBackup() {
     } catch (error) {
         const errorMessage = `Database backup failed: ${error.message}`;
         logger.error(errorMessage);
-        
+
         throw error;
     }
 }
