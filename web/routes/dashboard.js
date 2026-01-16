@@ -2,6 +2,7 @@ import express from 'express';
 import { isAuthenticated } from '../middleware/auth.js';
 import { Guild } from '../../src/models/Guild.js';
 import { User } from '../../src/models/User.js';
+import { Role } from '../../src/models/Role.js';
 
 const router = express.Router();
 
@@ -74,15 +75,22 @@ router.get('/guild/:guildId', isAuthenticated, async (req, res) => {
             });
         }
 
-        // Get registered users
-        const users = await User.find({ guildId }).sort({ registeredAt: -1 }).limit(50);
+        // Get registered users with roles
+        const users = await User.find({ guildId })
+            .populate('roles')
+            .sort({ registeredAt: -1 })
+            .limit(50);
+
+        // Get all roles for this guild
+        const roles = await Role.findByGuildId(guildId);
 
         res.render('guild', {
             title: `Manage ${userGuild.name}`,
             guild: {
                 ...userGuild,
                 dbInfo: guild,
-                users
+                users,
+                roles
             }
         });
     } catch (error) {

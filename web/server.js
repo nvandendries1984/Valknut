@@ -10,6 +10,7 @@ import { logger } from '../src/utils/logger.js';
 import authRoutes from './routes/auth.js';
 import dashboardRoutes from './routes/dashboard.js';
 import apiRoutes from './routes/api.js';
+import { Client, GatewayIntentBits } from 'discord.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,6 +20,19 @@ const PORT = process.env.WEB_PORT || 16016;
 
 // Connect to database
 await connectDatabase();
+
+// Connect Discord client (read-only for fetching guild data)
+let discordClient = null;
+try {
+    discordClient = new Client({
+        intents: [GatewayIntentBits.Guilds]
+    });
+    await discordClient.login(process.env.DISCORD_TOKEN);
+    app.set('discordClient', discordClient);
+    logger.info('Discord client connected for web dashboard');
+} catch (error) {
+    logger.warn('Could not connect Discord client for web dashboard');
+}
 
 // Passport Discord Strategy
 passport.use(new DiscordStrategy({

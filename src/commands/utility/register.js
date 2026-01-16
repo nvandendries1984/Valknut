@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { User } from '../../models/User.js';
+import { Role } from '../../models/Role.js';
 import { createEmbed, createSuccessEmbed, createErrorEmbed } from '../../utils/embedBuilder.js';
 import { config } from '../../config/config.js';
 import { logger } from '../../utils/logger.js';
@@ -54,6 +55,19 @@ export default {
             // Fetch full user data
             const fullUser = await interaction.client.users.fetch(targetUser.id, { force: true });
 
+            // Get member to fetch roles
+            const member = await interaction.guild.members.fetch(targetUser.id);
+
+            // Get member's Discord role IDs (excluding @everyone)
+            const memberDiscordRoleIds = Array.from(member.roles.cache.keys())
+                .filter(roleId => roleId !== guildId);
+
+            // Find corresponding roles in database
+            const dbRoles = await Role.find({
+                guildId,
+                discordRoleId: { $in: memberDiscordRoleIds }
+            });
+
             // Create new user document
             const newUser = new User({
                 userId: fullUser.id,
@@ -70,7 +84,8 @@ export default {
                 banner: fullUser.banner,
                 accentColor: fullUser.accentColor,
                 registeredBy: interaction.user.id,
-                guildName: interaction.guild?.name || null
+                guildName: interaction.guild?.name || null,
+                roles: dbRoles.map(role => role._id) // Add Discord roles
             });
 
             await newUser.save();

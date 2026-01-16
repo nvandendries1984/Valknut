@@ -119,6 +119,46 @@
                 </div>
             </div>
 
+            <!-- Roles Section -->
+            <div class="card bg-dark text-white border-secondary mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Server Rollen</h5>
+                    <button class="btn btn-sm btn-secondary" onclick="syncDiscordRoles()" id="syncRolesBtn">
+                        <i class="fab fa-discord me-1"></i>
+                        Sync Discord Rollen
+                    </button>
+                </div>
+                <div class="card-body">
+                    <% if (guild.roles && guild.roles.length > 0) { %>
+                        <div class="row g-3">
+                            <% guild.roles.forEach(role => { %>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="card bg-secondary border-0 h-100" data-role-id="<%= role._id %>">
+                                        <div class="card-body">
+                                            <span class="badge" style="background: <%= role.color %>; font-size: 0.9rem;">
+                                                <%= role.name %>
+                                            </span>
+                                            <% if (role.description) { %>
+                                                <p class="small mt-2 mb-2"><%= role.description %></p>
+                                            <% } %>
+                                            <small class="text-muted d-block mt-2">
+                                                <i class="fab fa-discord me-1"></i>Discord Rol
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+                    <% } else { %>
+                        <div class="text-center py-4">
+                            <i class="fas fa-shield-alt fa-3x text-muted mb-3"></i>
+                            <p class="text-muted mb-3">Nog geen rollen gevonden</p>
+                            <p class="text-muted small">Klik op 'Sync Discord Rollen' om de rollen van de Discord server te importeren</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
             <!-- Users Section -->
             <% if (guild.users.length > 0) { %>
                 <div class="card bg-dark text-white border-secondary">
@@ -141,7 +181,7 @@
                                     <% guild.users.forEach(user => { %>
                                         <tr>
                                             <td>
-                                                <img src="<%= user.avatarURL %>" alt="<%= user.username %>"
+                                                <img src="<%= user.avatarURL %>" alt="<%= user.username %>" 
                                                      class="rounded-circle" width="32" height="32">
                                             </td>
                                             <td>
@@ -174,10 +214,72 @@
         </div>
 
         <!-- Create/Edit Role Modal -->
-        <!-- Removed: Roles are managed in Discord only -->
+        <div class="modal fade" id="roleModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content bg-dark text-white">
+                    <div class="modal-header border-secondary">
+                        <h5 class="modal-title" id="roleModalTitle">Nieuwe Rol</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form id="roleForm">
+                        <div class="modal-body">
+                            <input type="hidden" id="roleId" name="roleId">
+                            
+                            <div class="mb-3">
+                                <label for="roleName" class="form-label">
+                                    <i class="fas fa-tag me-1"></i>
+                                    Rol Naam
+                                </label>
+                                <input type="text" class="form-control" id="roleName" name="name" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="roleColor" class="form-label">
+                                    <i class="fas fa-palette me-1"></i>
+                                    Kleur
+                                </label>
+                                <input type="color" class="form-control form-control-color w-100" 
+                                       id="roleColor" name="color" value="#6B7280">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="roleDescription" class="form-label">
+                                    <i class="fas fa-align-left me-1"></i>
+                                    Beschrijving
+                                </label>
+                                <textarea class="form-control" id="roleDescription" name="description" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-secondary">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>
+                                Opslaan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <!-- Manage User Roles Modal -->
-        <!-- Removed: Roles are managed in Discord only -->
+        <div class="modal fade" id="userRolesModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content bg-dark text-white">
+                    <div class="modal-header border-secondary">
+                        <h5 class="modal-title" id="userRolesModalTitle">Rollen Beheren</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body" id="userRolesContent">
+                        <div class="text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Laden...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <%- include('partials/footer') %>
@@ -185,6 +287,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
 const guildId = '<%= guild.id %>';
+const allRoles = <%- JSON.stringify(guild.roles || []) %>;
+let currentUser = null;
+let roleModal, userRolesModal;
+
+document.addEventListener('DOMContentLoaded', () => {
+    roleModal = new bootstrap.Modal(document.getElementById('roleModal'));
+    userRolesModal = new bootstrap.Modal(document.getElementById('userRolesModal'));
+});
 
 // Sync Discord roles
 async function syncDiscordRoles() {
@@ -245,6 +355,148 @@ document.getElementById('settingsForm').addEventListener('submit', async (e) => 
         messageEl.style.display = 'block';
     }
 });
+
+function showCreateRoleModal() {
+    document.getElementById('roleModalTitle').textContent = 'Nieuwe Rol';
+    document.getElementById('roleForm').reset();
+    document.getElementById('roleId').value = '';
+    roleModal.show();
+}
+
+// Create/Edit role
+document.getElementById('roleForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData);
+    const roleId = data.roleId;
+    delete data.roleId;
+
+    try {
+        const url = roleId
+            ? `/api/guild/${guildId}/roles/${roleId}`
+            : `/api/guild/${guildId}/roles`;
+        const method = roleId ? 'PUT' : 'POST';
+
+        const response = await fetch(url, {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            location.reload();
+        } else {
+            const error = await response.json();
+            alert('Fout: ' + (error.error || 'Kon rol niet opslaan'));
+        }
+    } catch (error) {
+        alert('Fout bij opslaan van rol');
+    }
+});
+
+async function editRole(roleId) {
+    const role = allRoles.find(r => r._id === roleId);
+    if (!role) return;
+
+    document.getElementById('roleModalTitle').textContent = 'Rol Bewerken';
+    document.getElementById('roleId').value = role._id;
+    document.getElementById('roleName').value = role.name;
+    document.getElementById('roleColor').value = role.color;
+    document.getElementById('roleDescription').value = role.description || '';
+    roleModal.show();
+}
+
+async function deleteRole(roleId) {
+    if (!confirm('Weet je zeker dat je deze rol wilt verwijderen? Dit verwijdert de rol van alle users.')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/guild/${guildId}/roles/${roleId}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            location.reload();
+        } else {
+            alert('Fout bij verwijderen van rol');
+        }
+    } catch (error) {
+        alert('Fout bij verwijderen van rol');
+    }
+}
+
+async function manageUserRoles(userId, username) {
+    currentUser = userId;
+    document.getElementById('userRolesModalTitle').textContent = `Rollen voor ${username}`;
+    userRolesModal.show();
+
+    try {
+        const response = await fetch(`/api/guild/${guildId}/users/${userId}`);
+        const data = await response.json();
+        const user = data.user;
+
+        let html = '<div class="d-grid gap-2">';
+
+        allRoles.forEach(role => {
+            const hasRole = user.roles.some(r => r._id === role._id);
+            html += `
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="${role._id}" id="role-${role._id}"
+                           ${hasRole ? 'checked' : ''}
+                           onchange="toggleUserRole('${userId}', '${role._id}', this.checked)">
+                    <label class="form-check-label d-flex align-items-center" for="role-${role._id}">
+                        <span class="badge me-2" style="background: ${role.color};">
+                            ${role.name}
+                        </span>
+                    </label>
+                </div>
+            `;
+        });
+
+        html += '</div>';
+
+        if (allRoles.length === 0) {
+            html = '<p class="text-muted">Geen rollen beschikbaar. Maak eerst rollen aan.</p>';
+        }
+
+        document.getElementById('userRolesContent').innerHTML = html;
+    } catch (error) {
+        document.getElementById('userRolesContent').innerHTML = '<p class="text-danger">Fout bij laden van rollen</p>';
+    }
+}
+
+async function toggleUserRole(userId, roleId, add) {
+    try {
+        if (add) {
+            const response = await fetch(`/api/guild/${guildId}/users/${userId}/roles`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ roleId })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to add role');
+            }
+        } else {
+            const response = await fetch(`/api/guild/${guildId}/users/${userId}/roles/${roleId}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to remove role');
+            }
+        }
+
+        // Reload page to update table
+        setTimeout(() => location.reload(), 500);
+    } catch (error) {
+        alert('Fout bij updaten van rol');
+        // Revert checkbox
+        event.target.checked = !add;
+    }
+}
     </script>
 </body>
 </html>

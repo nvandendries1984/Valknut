@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <%- include('partials/navbar') %>
+
+    <main>
+<div class="container guild-page">
+    <div class="page-header">
+        <div class="guild-title">
+            <% if (guild.icon) { %>
+                <img src="https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.icon %>.png"
+                     alt="<%= guild.name %>" class="guild-icon-large">
+            <% } else { %>
+                <div class="guild-icon-placeholder large">
+                    <%= guild.name.charAt(0) %>
+                </div>
+            <% } %>
+            <div>
+                <h1><%= guild.name %></h1>
+                <p class="text-muted">Server ID: <%= guild.id %></p>
+            </div>
+        </div>
+        <a href="/dashboard" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i>
+            Terug naar Dashboard
+        </a>
+    </div>
+
+    <div class="settings-section">
+        <h2><i class="fas fa-cog"></i> Server Instellingen</h2>
+
+        <form id="settingsForm" class="settings-form">
+            <div class="form-group">
+                <label for="logChannelId">
+                    <i class="fas fa-hashtag"></i>
+                    Log Kanaal ID
+                </label>
+                <input type="text"
+                       id="logChannelId"
+                       name="logChannelId"
+                       class="form-control"
+                       value="<%= guild.dbInfo.logChannelId || '' %>"
+                       placeholder="Bijv. 123456789012345678">
+                <small class="form-text">Kanaal waar bot logs naartoe worden gestuurd</small>
+            </div>
+
+            <div class="form-group">
+                <label for="prefix">
+                    <i class="fas fa-terminal"></i>
+                    Custom Prefix
+                </label>
+                <input type="text"
+                       id="prefix"
+                       name="prefix"
+                       class="form-control"
+                       value="<%= guild.dbInfo.settings?.prefix || '' %>"
+                       placeholder="! (standaard)">
+                <small class="form-text">Laat leeg voor standaard prefix</small>
+            </div>
+
+            <div class="form-group">
+                <label for="language">
+                    <i class="fas fa-language"></i>
+                    Taal
+                </label>
+                <select id="language" name="language" class="form-control">
+                    <option value="en" <%= guild.dbInfo.settings?.language === 'en' ? 'selected' : '' %>>English</option>
+                    <option value="nl" <%= guild.dbInfo.settings?.language === 'nl' ? 'selected' : '' %>>Nederlands</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i>
+                Opslaan
+            </button>
+        </form>
+
+        <div id="saveMessage" class="alert" style="display: none;"></div>
+    </div>
+
+    <div class="stats-section">
+        <h2><i class="fas fa-chart-bar"></i> Statistieken</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <h3><%= guild.dbInfo.memberCount %></h3>
+                <p>Totaal Leden</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-user-check"></i>
+                <h3><%= guild.users.length %></h3>
+                <p>Geregistreerde Users</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-calendar"></i>
+                <h3><%= new Date(guild.dbInfo.joinedAt).toLocaleDateString('nl-NL') %></h3>
+                <p>Bot Toegevoegd</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="roles-section">
+        <div class="section-header">
+            <h2><i class="fas fa-shield-alt"></i> Rollen Beheer</h2>
+            <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-secondary" onclick="syncDiscordRoles()" id="syncRolesBtn">
+                    <i class="fab fa-discord"></i>
+                    Sync Discord Rollen
+                </button>
+                <button class="btn btn-primary" onclick="showCreateRoleModal()">
+                    <i class="fas fa-plus"></i>
+                    Nieuwe Rol
+                </button>
+            </div>
+        </div>
+
+        <% if (guild.roles && guild.roles.length > 0) { %>
+            <div class="roles-grid">
+                <% guild.roles.forEach(role => { %>
+                    <div class="role-card" data-role-id="<%= role._id %>">
+                        <div class="role-header">
+                            <div class="role-badge" style="background: <%= role.color %>;">
+                                <%= role.name %>
+                            </div>
+                            <div class="role-actions">
+                                <button class="btn-icon" onclick="editRole('<%= role._id %>')" title="Bewerken">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon btn-danger" onclick="deleteRole('<%= role._id %>')" title="Verwijderen">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <% if (role.description) { %>
+                            <p class="role-description"><%= role.description %></p>
+                        <% } %>
+                        <div class="role-meta">
+                            <small class="text-muted">
+                                <% if (role.discordRoleId) { %>
+                                    <i class="fab fa-discord"></i> Gekoppeld aan Discord
+                                <% } else { %>
+                                    <i class="fas fa-database"></i> Bot rol
+                                <% } %>
+                            </small>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div class="empty-state">
+                <i class="fas fa-shield-alt"></i>
+                <p>Nog geen rollen aangemaakt</p>
+                <button class="btn btn-primary" onclick="showCreateRoleModal()">
+                    <i class="fas fa-plus"></i>
+                    Eerste rol aanmaken
+                </button>
+            </div>
+        <% } %>
+    </div>
+
+    <% if (guild.users.length > 0) { %>
+        <div class="users-section">
+            <h2><i class="fas fa-users"></i> Geregistreerde Users (Laatste 50)</h2>
+            <div class="users-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Avatar</th>
+                            <th>Username</th>
+                            <th>Rollen</th>
+                            <th>User ID</th>
+                            <th>Geregistreerd op</th>
+                            <th>Acties</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% guild.users.forEach(user => { %>
+                            <tr>
+                                <td>
+                                    <img src="<%= user.avatarURL %>" alt="<%= user.username %>" class="user-avatar">
+                                </td>
+                                <td>
+                                    <strong><%= user.globalName || user.username %></strong>
+                                    <% if (user.bot) { %>
+                                        <span class="badge badge-bot">BOT</span>
+                                    <% } %>
+                                </td>
+                                <td>
+                                    <div class="user-roles">
+                                        <% if (user.roles && user.roles.length > 0) { %>
+                                            <% user.roles.forEach(role => { %>
+                                                <span class="role-badge-small" style="background: <%= role.color %>;">
+                                                    <%= role.name %>
+                                                </span>
+                                            <% }); %>
+                                        <% } else { %>
+                                            <span class="text-muted">Geen rollen</span>
+                                        <% } %>
+                                    </div>
+                                </td>
+                                <td><code><%= user.userId %></code></td>
+                                <td><%= new Date(user.registeredAt).toLocaleString('nl-NL') %></td>
+                                <td>
+                                    <button class="btn-small btn-primary" onclick="manageUserRoles('<%= user.userId %>', '<%= user.globalName || user.username %>')">
+                                        <i class="fas fa-user-shield"></i>
+                                        Beheer Rollen
+                                    </button>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <% } %>
+</div>
+
+<!-- Create/Edit Role Modal -->
+<div id="roleModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="roleModalTitle">Nieuwe Rol</h3>
+            <button class="modal-close" onclick="closeModal('roleModal')">&times;</button>
+        </div>
+        <form id="roleForm">
+            <input type="hidden" id="roleId" name="roleId">
+            <div class="form-group">
+                <label for="roleName">
+                    <i class="fas fa-tag"></i>
+                    Rol Naam
+                </label>
+                <input type="text" id="roleName" name="name" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="roleColor">
+                    <i class="fas fa-palette"></i>
+                    Kleur
+                </label>
+                <input type="color" id="roleColor" name="color" class="form-control color-input" value="#6B7280">
+            </div>
+
+            <div class="form-group">
+                <label for="roleDescription">
+                    <i class="fas fa-align-left"></i>
+                    Beschrijving
+                </label>
+                <textarea id="roleDescription" name="description" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('roleModal')">Annuleren</button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i>
+                    Opslaan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Manage User Roles Modal -->
+<div id="userRolesModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="userRolesModalTitle">Rollen Beheren</h3>
+            <button class="modal-close" onclick="closeModal('userRolesModal')">&times;</button>
+        </div>
+        <div id="userRolesContent">
+            <div class="loading">Laden...</div>
+        </div>
+    </div>
+</div>
+
+<script>
+const guildId = '<%= guild.id %>';
+const allRoles = <%- JSON.stringify(guild.roles || []) %>;
+let currentUser = null;
+
+// Sync Discord roles
+async function syncDiscordRoles() {
+    const btn = document.getElementById('syncRolesBtn');
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Synchroniseren...';
+
+    try {
+        const response = await fetch(`/api/guild/${guildId}/roles/sync`, {
+            method: 'POST'
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert(`✓ Rollen gesynchroniseerd!\n\nGeïmporteerd: ${data.imported}\nBijgewerkt: ${data.updated}\nTotaal: ${data.total}`);
+            location.reload();
+        } else {
+            throw new Error(data.error || 'Sync failed');
+        }
+    } catch (error) {
+        alert('✗ Fout bij synchroniseren van rollen: ' + error.message);
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    }
+}
+
+// Settings form submission
+document.getElementById('settingsForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData);
+
+    const messageEl = document.getElementById('saveMessage');
+
+    try {
+        const response = await fetch('/api/guild/<%= guild.id %>/settings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            messageEl.className = 'alert alert-success';
+            messageEl.textContent = '✓ Instellingen opgeslagen!';
+            messageEl.style.display = 'block';
+
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 3000);
+        } else {
+            throw new Error('Failed to save');
+        }
+    } catch (error) {
+        messageEl.className = 'alert alert-error';
+        messageEl.textContent = '✗ Fout bij opslaan van instellingen';
+        messageEl.style.display = 'block';
+    }
+});
+
+// Modal functions
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+function showCreateRoleModal() {
+    document.getElementById('roleModalTitle').textContent = 'Nieuwe Rol';
+    document.getElementById('roleForm').reset();
+    document.getElementById('roleId').value = '';
+    document.getElementById('roleModal').style.display = 'flex';
+}
+
+// Create/Edit role
+document.getElementById('roleForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData);
+    const roleId = data.roleId;
+    delete data.roleId;
+
+    try {
+        const url = roleId
+            ? `/api/guild/${guildId}/roles/${roleId}`
+            : `/api/guild/${guildId}/roles`;
+        const method = roleId ? 'PUT' : 'POST';
+
+        const response = await fetch(url, {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            location.reload();
+        } else {
+            const error = await response.json();
+            alert('Fout: ' + (error.error || 'Kon rol niet opslaan'));
+        }
+    } catch (error) {
+        alert('Fout bij opslaan van rol');
+    }
+});
+
+async function editRole(roleId) {
+    const role = allRoles.find(r => r._id === roleId);
+    if (!role) return;
+
+    document.getElementById('roleModalTitle').textContent = 'Rol Bewerken';
+    document.getElementById('roleId').value = role._id;
+    document.getElementById('roleName').value = role.name;
+    document.getElementById('roleColor').value = role.color;
+    document.getElementById('roleDescription').value = role.description || '';
+    document.getElementById('roleModal').style.display = 'flex';
+}
+
+async function deleteRole(roleId) {
+    if (!confirm('Weet je zeker dat je deze rol wilt verwijderen? Dit verwijdert de rol van alle users.')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/guild/${guildId}/roles/${roleId}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            location.reload();
+        } else {
+            alert('Fout bij verwijderen van rol');
+        }
+    } catch (error) {
+        alert('Fout bij verwijderen van rol');
+    }
+}
+
+async function manageUserRoles(userId, username) {
+    currentUser = userId;
+    document.getElementById('userRolesModalTitle').textContent = `Rollen voor ${username}`;
+    document.getElementById('userRolesModal').style.display = 'flex';
+
+    try {
+        const response = await fetch(`/api/guild/${guildId}/users/${userId}`);
+        const data = await response.json();
+        const user = data.user;
+
+        let html = '<div class="roles-checkboxes">';
+
+        allRoles.forEach(role => {
+            const hasRole = user.roles.some(r => r._id === role._id);
+            html += `
+                <label class="role-checkbox">
+                    <input type="checkbox"
+                           value="${role._id}"
+                           ${hasRole ? 'checked' : ''}
+                           onchange="toggleUserRole('${userId}', '${role._id}', this.checked)">
+                    <span class="role-badge-small" style="background: ${role.color};">
+                        ${role.name}
+                    </span>
+                </label>
+            `;
+        });
+
+        html += '</div>';
+
+        if (allRoles.length === 0) {
+            html = '<p class="text-muted">Geen rollen beschikbaar. Maak eerst rollen aan.</p>';
+        }
+
+        document.getElementById('userRolesContent').innerHTML = html;
+    } catch (error) {
+        document.getElementById('userRolesContent').innerHTML = '<p class="text-danger">Fout bij laden van rollen</p>';
+    }
+}
+
+async function toggleUserRole(userId, roleId, add) {
+    try {
+        if (add) {
+            const response = await fetch(`/api/guild/${guildId}/users/${userId}/roles`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ roleId })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to add role');
+            }
+        } else {
+            const response = await fetch(`/api/guild/${guildId}/users/${userId}/roles/${roleId}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to remove role');
+            }
+        }
+
+        // Reload page to update table
+        setTimeout(() => location.reload(), 500);
+    } catch (error) {
+        alert('Fout bij updaten van rol');
+        // Revert checkbox
+        event.target.checked = !add;
+    }
+}
+
+// Close modals when clicking outside
+window.onclick = function(event) {
+    if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+    }
+}
+</script>
+    </main>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

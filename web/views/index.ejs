@@ -4,77 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <%- include('partials/navbar') %>
 
     <main>
-        <div class="hero">
-    <div class="container">
-        <h1>
-            <i class="fas fa-shield-alt"></i>
-            Welkom bij Valknut
-        </h1>
-        <p class="subtitle">Een krachtige Discord bot voor jouw server</p>
+        <!-- Hero Section -->
+        <div class="bg-dark text-white py-5">
+            <div class="container text-center py-5">
+                <h1 class="display-3 fw-bold mb-3">
+                    <i class="fas fa-shield-alt me-3"></i>
+                    Welkom bij Valknut
+                </h1>
+                <p class="lead mb-4">Een krachtige Discord bot voor jouw server</p>
 
-        <% if (!user) { %>
-            <a href="/auth/login" class="btn btn-large btn-primary">
-                <i class="fab fa-discord"></i>
-                Login met Discord
-            </a>
-        <% } else { %>
-            <a href="/dashboard" class="btn btn-large btn-primary">
-                <i class="fas fa-tachometer-alt"></i>
-                Ga naar Dashboard
-            </a>
-        <% } %>
-    </div>
-</div>
-
-<div class="container">
-    <section class="features">
-        <div class="feature-card">
-            <i class="fas fa-cogs"></i>
-            <h3>Volledig Configureerbaar</h3>
-            <p>Pas de bot aan naar jouw wensen met per-server instellingen</p>
+                <% if (!user) { %>
+                    <a href="/auth/login" class="btn btn-primary btn-lg">
+                        <i class="fab fa-discord me-2"></i>
+                        Login met Discord
+                    </a>
+                <% } else { %>
+                    <a href="/dashboard" class="btn btn-primary btn-lg">
+                        <i class="fas fa-tachometer-alt me-2"></i>
+                        Ga naar Dashboard
+                    </a>
+                <% } %>
+            </div>
         </div>
 
-        <div class="feature-card">
-            <i class="fas fa-users"></i>
-            <h3>Multi-Guild Support</h3>
-            <p>Beheer meerdere servers vanuit één dashboard</p>
-        </div>
+        <!-- Features Section -->
+        <div class="container my-5">
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="card h-100 bg-dark text-white border-secondary">
+                        <div class="card-body text-center">
+                            <i class="fas fa-cogs fa-3x mb-3 text-primary"></i>
+                            <h5 class="card-title">Volledig Configureerbaar</h5>
+                            <p class="card-text">Pas de bot aan naar jouw wensen met per-server instellingen</p>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="feature-card">
-            <i class="fas fa-chart-line"></i>
-            <h3>Statistieken & Logs</h3>
-            <p>Krijg inzicht in gebruik en activiteit</p>
-        </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card h-100 bg-dark text-white border-secondary">
+                        <div class="card-body text-center">
+                            <i class="fas fa-users fa-3x mb-3 text-primary"></i>
+                            <h5 class="card-title">Multi-Guild Support</h5>
+                            <p class="card-text">Beheer meerdere servers vanuit één dashboard</p>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="feature-card">
-            <i class="fas fa-shield-alt"></i>
-            <h3>Moderatie Tools</h3>
-            <p>Krachtige moderatie commando's voor veilige servers</p>
-        </div>
-    </section>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card h-100 bg-dark text-white border-secondary">
+                        <div class="card-body text-center">
+                            <i class="fas fa-chart-line fa-3x mb-3 text-primary"></i>
+                            <h5 class="card-title">Statistieken & Logs</h5>
+                            <p class="card-text">Krijg inzicht in gebruik en activiteit</p>
+                        </div>
+                    </div>
+                </div>
 
-    <% if (!user) { %>
-        <section class="cta">
-            <h2>Klaar om te beginnen?</h2>
-            <p>Login met je Discord account om de bot te beheren</p>
-            <a href="/auth/login" class="btn btn-large btn-primary">
-                <i class="fab fa-discord"></i>
-                Login met Discord
-            </a>
-        </section>
-    <% } %>
-</div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card h-100 bg-dark text-white border-secondary">
+                        <div class="card-body text-center">
+                            <i class="fas fa-shield-alt fa-3x mb-3 text-primary"></i>
+                            <h5 class="card-title">Moderatie Tools</h5>
+                            <p class="card-text">Krachtige moderatie commando's voor veilige servers</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <% if (!user) { %>
+                <div class="text-center my-5 py-5">
+                    <h2 class="mb-3">Klaar om te beginnen?</h2>
+                    <p class="lead text-muted mb-4">Login met je Discord account om de bot te beheren</p>
+                    <a href="/auth/login" class="btn btn-primary btn-lg">
+                        <i class="fab fa-discord me-2"></i>
+                        Login met Discord
+                    </a>
+                </div>
+            <% } %>
+        </div>
     </main>
 
     <%- include('partials/footer') %>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/main.js"></script>
 </body>
 </html>

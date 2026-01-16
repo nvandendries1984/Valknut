@@ -97,7 +97,13 @@ const userSchema = new mongoose.Schema({
     guildName: {
         type: String,
         default: null
-    }
+    },
+
+    // User roles (references to Role IDs)
+    roles: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Role'
+    }]
 }, {
     timestamps: true,
     collection: 'users'
@@ -129,6 +135,24 @@ userSchema.statics.isRegistered = async function(userId, guildId) {
 
 userSchema.statics.findAllByUserId = function(userId) {
     return this.find({ userId });
+};
+
+userSchema.methods.addRole = async function(roleId) {
+    if (!this.roles.includes(roleId)) {
+        this.roles.push(roleId);
+        await this.save();
+    }
+    return this;
+};
+
+userSchema.methods.removeRole = async function(roleId) {
+    this.roles = this.roles.filter(id => !id.equals(roleId));
+    await this.save();
+    return this;
+};
+
+userSchema.methods.hasRole = function(roleId) {
+    return this.roles.some(id => id.equals(roleId));
 };
 
 export const User = mongoose.model('User', userSchema);
