@@ -15,6 +15,26 @@ services:
     networks:
       - nginx-proxy-manager_default
 
+  valknut-web:
+    build: .
+    container_name: valknut-web-dashboard
+    restart: unless-stopped
+    command: node web/server.js
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - WEB_PORT=16016
+    ports:
+      - "16016:16016"
+    volumes:
+      - ./web:/app/web
+      - ./src:/app/src
+    depends_on:
+      - valknut-bot
+    networks:
+      - nginx-proxy-manager_default
+
 networks:
   nginx-proxy-manager_default:
     external: true

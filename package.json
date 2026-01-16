@@ -8,15 +8,27 @@
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
     "deploy": "node src/deploy-commands.js",
-    "migrate": "node migrate-logchannels.js"
+    "migrate": "node migrate-logchannels.js",
+    "web": "node web/server.js",
+    "web:dev": "node --watch web/server.js"
   },
-  "keywords": ["discord", "bot", "discord.js", "modular"],
+  "keywords": [
+    "discord",
+    "bot",
+    "discord.js",
+    "modular"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "discord.js": "^14.14.1",
     "dotenv": "^16.3.1",
-    "mongoose": "^8.0.3"
+    "ejs": "^3.1.10",
+    "express": "^4.22.1",
+    "express-session": "^1.18.2",
+    "mongoose": "^8.0.3",
+    "passport": "^0.7.0",
+    "passport-discord": "^0.1.4"
   },
   "engines": {
     "node": ">=18.0.0"

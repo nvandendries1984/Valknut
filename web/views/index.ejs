@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <%- include('partials/navbar') %>
+
+    <main>
+        <div class="hero">
+    <div class="container">
+        <h1>
+            <i class="fas fa-shield-alt"></i>
+            Welkom bij Valknut
+        </h1>
+        <p class="subtitle">Een krachtige Discord bot voor jouw server</p>
+
+        <% if (!user) { %>
+            <a href="/auth/login" class="btn btn-large btn-primary">
+                <i class="fab fa-discord"></i>
+                Login met Discord
+            </a>
+        <% } else { %>
+            <a href="/dashboard" class="btn btn-large btn-primary">
+                <i class="fas fa-tachometer-alt"></i>
+                Ga naar Dashboard
+            </a>
+        <% } %>
+    </div>
+</div>
+
+<div class="container">
+    <section class="features">
+        <div class="feature-card">
+            <i class="fas fa-cogs"></i>
+            <h3>Volledig Configureerbaar</h3>
+            <p>Pas de bot aan naar jouw wensen met per-server instellingen</p>
+        </div>
+
+        <div class="feature-card">
+            <i class="fas fa-users"></i>
+            <h3>Multi-Guild Support</h3>
+            <p>Beheer meerdere servers vanuit één dashboard</p>
+        </div>
+
+        <div class="feature-card">
+            <i class="fas fa-chart-line"></i>
+            <h3>Statistieken & Logs</h3>
+            <p>Krijg inzicht in gebruik en activiteit</p>
+        </div>
+
+        <div class="feature-card">
+            <i class="fas fa-shield-alt"></i>
+            <h3>Moderatie Tools</h3>
+            <p>Krachtige moderatie commando's voor veilige servers</p>
+        </div>
+    </section>
+
+    <% if (!user) { %>
+        <section class="cta">
+            <h2>Klaar om te beginnen?</h2>
+            <p>Login met je Discord account om de bot te beheren</p>
+            <a href="/auth/login" class="btn btn-large btn-primary">
+                <i class="fab fa-discord"></i>
+                Login met Discord
+            </a>
+        </section>
+    <% } %>
+</div>
+    </main>
+
+    <%- include('partials/footer') %>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>
