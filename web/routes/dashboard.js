@@ -16,11 +16,32 @@ router.get('/', isAllowedUser, async (req, res) => {
         const botGuilds = await Guild.find({ active: true });
         const botGuildIds = new Set(botGuilds.map(g => g.guildId));
 
-        // Find mutual guilds where user has admin permissions
-        const mutualGuilds = userGuilds.filter(guild => {
-            const hasAdmin = (guild.permissions & 0x8) === 0x8; // Administrator permission
-            return botGuildIds.has(guild.id) && hasAdmin;
-        });
+        // Find mutual guilds where user has admin permissions or DEV role
+        const botClient = req.app.get('client');
+        const mutualGuildsPromises = userGuilds
+            .filter(guild => botGuildIds.has(guild.id))
+            .map(async (guild) => {
+                const hasAdmin = (guild.permissions & 0x8) === 0x8;
+
+                // Check for DEV role if not admin
+                let hasDevRole = false;
+                if (!hasAdmin && botClient) {
+                    try {
+                        const discordGuild = botClient.guilds.cache.get(guild.id);
+                        if (discordGuild) {
+                            const member = await discordGuild.members.fetch(req.user.id);
+                            hasDevRole = member.roles.cache.some(role => role.name === 'DEV');
+                        }
+                    } catch (error) {
+                        console.error(`Error checking DEV role for guild ${guild.id}:`, error);
+                    }
+                }
+
+                return (hasAdmin || hasDevRole) ? guild : null;
+            });
+
+        const mutualGuildsResults = await Promise.all(mutualGuildsPromises);
+        const mutualGuilds = mutualGuildsResults.filter(g => g !== null);
 
         // Get detailed info for mutual guilds
         const guildsWithInfo = await Promise.all(
@@ -53,16 +74,16 @@ router.get('/', isAllowedUser, async (req, res) => {
 });
 
 // Guild management page
-router.get('/guild/:guildId', isAllowedUser, async (req, res) => {
+router.get('/guild/:guildId', isAllowedUser, hasGuildAccess, async (req, res) => {
     try {
         const guildId = req.params.guildId;
 
-        // Check if user has access to this guild
+        // Get user's guild info from Discord
         const userGuild = req.user.guilds?.find(g => g.id === guildId);
-        if (!userGuild || (userGuild.permissions & 0x8) !== 0x8) {
+        if (!userGuild) {
             return res.status(403).render('error', {
                 title: 'Access Denied',
-                error: { message: 'You do not have permission to manage this guild' }
+                error: { message: 'You are not a member of this guild' }
             });
         }
 

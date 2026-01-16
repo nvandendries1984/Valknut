@@ -1,5 +1,6 @@
 import express from 'express';
 import session from 'express-session';
+import MongoStore from 'connect-mongo';
 import passport from 'passport';
 import { Strategy as DiscordStrategy } from 'passport-discord';
 import path from 'path';
@@ -66,6 +67,10 @@ app.use(session({
     secret: process.env.SESSION_SECRET || 'valknut-secret-key-change-this',
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGODB_URI || 'mongodb://admin:Pasja@2025@mongo:27017/valknut?authSource=admin',
+        touchAfter: 24 * 3600 // Lazy session update (seconds)
+    }),
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
         secure: false, // Set to false for HTTP
