@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="<%= currentLang %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,7 +17,7 @@
         <div class="container mt-4">
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 <i class="fas fa-exclamation-triangle me-2"></i>
-                <strong>Cookie toestemming vereist!</strong> Je moet cookies accepteren om in te kunnen loggen.
+                <strong><%= __('home.cookieConsentRequired') %></strong> <%= __('home.cookieConsentRequiredDesc') %>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         </div>
@@ -27,7 +27,7 @@
         <div class="container mt-4">
             <div class="alert alert-info alert-dismissible fade show" role="alert">
                 <i class="fas fa-info-circle me-2"></i>
-                <strong>Uitgelogd.</strong> Je cookie toestemming is verlopen of ingetrokken.
+                <strong><%= __('home.consentRevoked') %></strong> <%= __('home.consentRevokedDesc') %>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         </div>
@@ -38,19 +38,19 @@
             <div class="container text-center py-5">
                 <h1 class="display-3 fw-bold mb-3">
                     <i class="fas fa-shield-alt me-3"></i>
-                    Welkom bij Valknut
+                    <%= __('home.title') %>
                 </h1>
-                <p class="lead mb-4">Een krachtige Discord bot voor jouw server</p>
+                <p class="lead mb-4"><%= __('home.subtitle') %></p>
 
                 <% if (!user) { %>
                     <a href="/auth/login" class="btn btn-primary btn-lg">
                         <i class="fab fa-discord me-2"></i>
-                        Login met Discord
+                        <%= __('home.loginButton') %>
                     </a>
                 <% } else { %>
                     <a href="/dashboard" class="btn btn-primary btn-lg">
                         <i class="fas fa-tachometer-alt me-2"></i>
-                        Ga naar Dashboard
+                        <%= __('home.goToDashboard') %>
                     </a>
                 <% } %>
             </div>
@@ -102,11 +102,11 @@
 
             <% if (!user) { %>
                 <div class="text-center my-5 py-5">
-                    <h2 class="mb-3">Klaar om te beginnen?</h2>
-                    <p class="lead text-muted mb-4">Login met je Discord account om de bot te beheren</p>
+                    <h2 class="mb-3"><%= __('home.getStarted') %></h2>
+                    <p class="lead text-muted mb-4"><%= __('home.getStartedDesc') %></p>
                     <a href="/auth/login" class="btn btn-primary btn-lg">
                         <i class="fab fa-discord me-2"></i>
-                        Login met Discord
+                        <%= __('home.loginButton') %>
                     </a>
                 </div>
             <% } %>

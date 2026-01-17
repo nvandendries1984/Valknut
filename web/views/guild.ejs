@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="<%= currentLang %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,14 +33,14 @@
                 </div>
                 <a href="/dashboard" class="btn btn-secondary">
                     <i class="fas fa-arrow-left me-2"></i>
-                    Terug
+                    <%= __('guild.backToDashboard') %>
                 </a>
             </div>
 
             <!-- Settings Section -->
             <div class="card bg-dark text-white border-secondary mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-cog me-2"></i>Server Instellingen</h5>
+                    <h5 class="mb-0"><i class="fas fa-cog me-2"></i><%= __('guild.settings') %></h5>
                 </div>
                 <div class="card-body">
                     <form id="settingsForm">
@@ -81,7 +81,7 @@
 
                         <button type="submit" class="btn btn-primary mt-3">
                             <i class="fas fa-save me-2"></i>
-                            Opslaan
+                            <%= __('common.save') %>
                         </button>
                     </form>
 

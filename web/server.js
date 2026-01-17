@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import { Strategy as DiscordStrategy } from 'passport-discord';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import i18n from 'i18n';
 import { config } from '../src/config/config.js';
 import { connectDatabase } from '../src/utils/database.js';
 import { logger } from '../src/utils/logger.js';
@@ -67,6 +68,20 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// i18n configuration
+i18n.configure({
+    locales: ['nl', 'en'],
+    defaultLocale: 'nl',
+    directory: path.join(__dirname, 'locales'),
+    cookie: 'language',
+    queryParameter: 'lang',
+    updateFiles: false,
+    syncFiles: false,
+    objectNotation: true
+});
+
+app.use(i18n.init);
+
 // Session configuration
 app.use(session({
     secret: process.env.SESSION_SECRET || 'valknut-secret-key-change-this',
@@ -97,6 +112,8 @@ app.use((req, res, next) => {
     res.locals.user = req.user;
     res.locals.botUser = discordClient?.user || null;
     res.locals.botName = config.botName;
+    res.locals.__ = res.__;
+    res.locals.currentLang = req.getLocale();
     next();
 });
 
@@ -124,6 +141,17 @@ app.use('/auth/2fa', twofaRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/api', apiRoutes);
 app.use('/admin', adminRoutes);
+
+// Language switcher
+app.get('/language/:lang', (req, res) => {
+    const { lang } = req.params;
+    if (['nl', 'en'].includes(lang)) {
+        res.cookie('language', lang, { maxAge: 365 * 24 * 60 * 60 * 1000 }); // 1 year
+        req.setLocale(lang);
+    }
+    const referer = req.get('Referer') || '/';
+    res.redirect(referer);
+});
 
 // Home page
 app.get('/', (req, res) => {

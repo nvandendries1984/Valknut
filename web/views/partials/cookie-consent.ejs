@@ -4,31 +4,31 @@
         <div class="modal-content bg-dark text-white border-secondary">
             <div class="modal-header border-secondary" style="background: linear-gradient(135deg, #8B1E1E 0%, #6B1515 100%);">
                 <h5 class="modal-title" id="cookieConsentLabel">
-                    <i class="fas fa-cookie-bite me-2"></i>Cookie & Privacy Melding
+                    <i class="fas fa-cookie-bite me-2"></i>Cookie & Privacy Notice
                 </h5>
             </div>
             <div class="modal-body">
                 <div class="alert border-0 text-white" style="background-color: rgba(74, 111, 165, 0.3);">
                     <i class="fas fa-info-circle me-2"></i>
-                    Wij gebruiken cookies en vergelijkbare technologieën om jouw ervaring te verbeteren en onze diensten te leveren.
-                    Door onze website te gebruiken, ga je akkoord met het gebruik van cookies en het opslaan van persoonlijke gegevens
-                    zoals beschreven in ons <a href="/privacy" class="text-warning text-decoration-underline fw-bold" target="_blank">privacybeleid</a>
-                    en onze <a href="/terms" class="text-warning text-decoration-underline fw-bold" target="_blank">gebruiksvoorwaarden</a>.
+                    We use cookies and similar technologies to enhance your experience and provide our services.
+                    By using our website, you agree to the use of cookies and the storage of personal data
+                    as described in our <a href="/privacy" class="text-warning text-decoration-underline fw-bold" target="_blank">privacy policy</a>
+                    and our <a href="/terms" class="text-warning text-decoration-underline fw-bold" target="_blank">terms of service</a>.
                 </div>
 
                 <div class="card bg-dark border-secondary mb-3">
                     <div class="card-header border-secondary" style="background-color: rgba(198, 167, 94, 0.1);">
                         <h6 class="mb-0" style="color: #C6A75E;">
-                            <i class="fas fa-database me-2"></i>Welke gegevens verzamelen we?
+                            <i class="fas fa-database me-2"></i>What data do we collect?
                         </h6>
                     </div>
                     <div class="card-body text-white">
                         <ul class="mb-0">
-                            <li class="mb-2">Discord gebruikersinformatie (ID, gebruikersnaam, avatar)</li>
-                            <li class="mb-2">Server configuratie-instellingen</li>
-                            <li class="mb-2">Authenticatie cookies voor inloggen</li>
-                            <li class="mb-2">Sessie gegevens en voorkeuren</li>
-                            <li class="mb-2">Two-Factor Authentication (2FA) instellingen</li>
+                            <li class="mb-2">Discord user information (ID, username, avatar)</li>
+                            <li class="mb-2">Server configuration settings</li>
+                            <li class="mb-2">Authentication cookies for login</li>
+                            <li class="mb-2">Session data and preferences</li>
+                            <li class="mb-2">Two-Factor Authentication (2FA) settings</li>
                         </ul>
                     </div>
                 </div>
@@ -36,34 +36,34 @@
                 <div class="card bg-dark border-secondary mb-3">
                     <div class="card-header border-secondary" style="background-color: rgba(198, 167, 94, 0.1);">
                         <h6 class="mb-0" style="color: #C6A75E;">
-                            <i class="fas fa-cookie me-2"></i>Type cookies
+                            <i class="fas fa-cookie me-2"></i>Cookie types
                         </h6>
                     </div>
                     <div class="card-body text-white">
                         <ul class="mb-0">
-                            <li class="mb-2"><strong class="text-warning">Noodzakelijk:</strong> Voor authenticatie en beveiliging (verplicht)</li>
-                            <li class="mb-2"><strong class="text-warning">Functioneel:</strong> Voor het onthouden van voorkeuren</li>
-                            <li class="mb-2"><strong class="text-warning">Sessie:</strong> Voor het beheren van jouw inlog sessie</li>
+                            <li class="mb-2"><strong class="text-warning">Essential:</strong> For authentication and security (required)</li>
+                            <li class="mb-2"><strong class="text-warning">Functional:</strong> For remembering your preferences</li>
+                            <li class="mb-2"><strong class="text-warning">Session:</strong> For managing your login session</li>
                         </ul>
                     </div>
                 </div>
 
                 <p class="small text-white-50 mb-0">
                     <i class="fas fa-shield-alt me-1"></i>
-                    Door op "Accepteren" te klikken, ga je akkoord met het gebruik van alle cookies en het verwerken
-                    van jouw persoonlijke gegevens zoals beschreven. Je kunt je toestemming op elk moment intrekken
-                    door contact met ons op te nemen.
+                    By clicking "Accept", you agree to the use of all cookies and the processing
+                    of your personal data as described. You can withdraw your consent at any time
+                    by contacting us.
                 </p>
             </div>
             <div class="modal-footer border-secondary">
                 <a href="/privacy" class="btn btn-outline-light me-auto" target="_blank">
-                    <i class="fas fa-info-circle me-1"></i>Meer informatie
+                    <i class="fas fa-info-circle me-1"></i>More information
                 </a>
                 <button type="button" class="btn btn-secondary" id="cookieDecline">
-                    <i class="fas fa-times me-1"></i>Weigeren
+                    <i class="fas fa-times me-1"></i>Decline
                 </button>
                 <button type="button" class="btn btn-primary" id="cookieAccept">
-                    <i class="fas fa-check me-1"></i>Accepteren & Doorgaan
+                    <i class="fas fa-check me-1"></i>Accept & Continue
                 </button>
             </div>
         </div>
@@ -115,7 +115,7 @@
             const alertHtml = `
                 <div class="alert alert-warning alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" role="alert" style="z-index: 9999; max-width: 500px;">
                     <i class="fas fa-exclamation-triangle me-2"></i>
-                    <strong>Let op:</strong> Je hebt cookies geweigerd. Je kunt niet inloggen zonder cookies te accepteren.
+                    <strong>Notice:</strong> You have declined cookies. You cannot log in without accepting cookies.
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             `;
@@ -157,16 +157,16 @@
                                         <div class="modal-header border-warning bg-warning bg-opacity-10">
                                             <h5 class="modal-title">
                                                 <i class="fas fa-exclamation-triangle text-warning me-2"></i>
-                                                Cookies Vereist
+                                                Cookies Required
                                             </h5>
                                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <p>Om in te loggen moet je cookies accepteren. Wil je de cookie-instellingen bekijken?</p>
+                                            <p>To log in, you must accept cookies. Would you like to review the cookie settings?</p>
                                         </div>
                                         <div class="modal-footer border-warning">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
-                                            <button type="button" class="btn btn-primary" id="reopenConsent">Cookie Instellingen</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn btn-primary" id="reopenConsent">Cookie Settings</button>
                                         </div>
                                     </div>
                                 </div>

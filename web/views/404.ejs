@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="<%= currentLang %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,11 +15,11 @@
     <div class="error-content">
         <i class="fas fa-exclamation-triangle"></i>
         <h1>404</h1>
-        <h2>Pagina niet gevonden</h2>
-        <p>De pagina die je zoekt bestaat niet.</p>
+        <h2><%= __('errors.404') %></h2>
+        <p><%= __('errors.404Desc') %></p>
         <a href="/" class="btn btn-primary">
             <i class="fas fa-home"></i>
-            Terug naar home
+            <%= __('errors.goHome') %>
         </a>
     </div>
 </div>

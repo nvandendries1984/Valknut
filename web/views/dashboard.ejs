@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="<%= currentLang %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,9 +17,9 @@
             <div class="mb-4">
                 <h1 class="display-5 fw-bold">
                     <i class="fas fa-tachometer-alt me-2"></i>
-                    Dashboard
+                    <%= __('dashboard.title') %>
                 </h1>
-                <p class="lead">Welkom terug, <strong><%= user.username %></strong>!</p>
+                <p class="lead"><%= __('dashboard.welcomeBack') %>, <strong><%= user.username %></strong>!</p>
             </div>
 
             <div class="row g-4 mb-4">
@@ -29,7 +29,7 @@
                             <i class="fas fa-server fa-3x me-3 text-primary"></i>
                             <div>
                                 <h3 class="mb-0"><%= allGuilds %></h3>
-                                <p class="mb-0 text-muted">Jouw Servers</p>
+                                <p class="mb-0 text-muted"><%= __('dashboard.yourServers') %></p>
                             </div>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                             <i class="fas fa-robot fa-3x me-3 text-primary"></i>
                             <div>
                                 <h3 class="mb-0"><%= mutualGuilds %></h3>
-                                <p class="mb-0 text-muted">Met Bot</p>
+                                <p class="mb-0 text-muted"><%= __('dashboard.withBot') %></p>
                             </div>
                         </div>
                     </div>
@@ -52,12 +52,12 @@
                 <div class="card bg-dark text-white border-secondary text-center py-5">
                     <div class="card-body">
                         <i class="fas fa-inbox fa-5x mb-4 text-muted"></i>
-                        <h2>Geen servers gevonden</h2>
-                        <p class="text-muted mb-4">De bot is nog niet in een van jouw servers, of je hebt geen admin rechten.</p>
+                        <h2><%= __('dashboard.noServersFound') %></h2>
+                        <p class="text-muted mb-4"><%= __('dashboard.noServersFoundDesc') %></p>
                         <a href="https://discord.com/api/oauth2/authorize?client_id=<%= process.env.CLIENT_ID %>&permissions=8&scope=bot%20applications.commands"
                            class="btn btn-primary btn-lg" target="_blank">
                             <i class="fas fa-plus me-2"></i>
-                            Bot toevoegen aan server
+                            <%= __('dashboard.addBotToServer') %>
                         </a>
                     </div>
                 </div>
@@ -83,21 +83,21 @@
                                     <div class="mb-3">
                                         <div class="d-flex align-items-center mb-2">
                                             <i class="fas fa-users me-2 text-primary"></i>
-                                            <span><%= guild.memberCount %> leden</span>
+                                            <span><%= guild.memberCount %> <%= __('dashboard.members') %></span>
                                         </div>
                                         <div class="d-flex align-items-center mb-2">
                                             <i class="fas fa-user-check me-2 text-primary"></i>
-                                            <span><%= guild.registeredUsers %> geregistreerd</span>
+                                            <span><%= guild.registeredUsers %> <%= __('dashboard.registered') %></span>
                                         </div>
                                         <div class="d-flex align-items-center">
                                             <i class="<%= guild.logChannelId ? 'fas fa-check-circle text-success' : 'fas fa-exclamation-triangle text-warning' %> me-2"></i>
-                                            <span><%= guild.logChannelId ? 'Log kanaal actief' : 'Geen log kanaal' %></span>
+                                            <span><%= guild.logChannelId ? __('dashboard.logChannelActive') : __('dashboard.noLogChannel') %></span>
                                         </div>
                                     </div>
 
                                     <a href="/dashboard/guild/<%= guild.id %>" class="btn btn-primary w-100">
                                         <i class="fas fa-cog me-2"></i>
-                                        Beheren
+                                        <%= __('dashboard.manage') %>
                                     </a>
                                 </div>
                             </div>
