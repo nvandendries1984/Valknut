@@ -174,7 +174,7 @@ router.get('/guild/:guildId/onboarding', isAllowedUser, hasGuildAccess, async (r
         }
 
         // Get users with onboarding data
-        const users = await User.find({ 
+        const users = await User.find({
             guildId,
             'onboarding.name': { $ne: null }
         }).sort({ 'onboarding.dateRegistered': -1 });
