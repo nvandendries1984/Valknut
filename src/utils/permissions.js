@@ -23,7 +23,7 @@ export async function canExecuteCommand(interaction) {
     // Get guild from database to check mod role
     try {
         const guild = await Guild.findByGuildId(interaction.guild.id);
-        
+
         if (!guild || !guild.settings.modRoleId) {
             return {
                 allowed: false,
@@ -33,7 +33,7 @@ export async function canExecuteCommand(interaction) {
 
         // Check if user has the mod role
         const hasModRole = interaction.member.roles.cache.has(guild.settings.modRoleId);
-        
+
         if (!hasModRole) {
             return {
                 allowed: false,
