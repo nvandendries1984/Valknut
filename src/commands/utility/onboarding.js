@@ -1,8 +1,9 @@
-import { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, PermissionFlagsBits, StringSelectMenuBuilder } from 'discord.js';
+import { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, StringSelectMenuBuilder } from 'discord.js';
 import { User } from '../../models/User.js';
 import { Guild } from '../../models/Guild.js';
 import { createSuccessEmbed, createErrorEmbed, createEmbed } from '../../utils/embedBuilder.js';
 import { logger } from '../../utils/logger.js';
+import { canExecuteCommand } from '../../utils/permissions.js';
 
 export default {
     category: 'utility',
@@ -18,27 +19,11 @@ export default {
         .setDMPermission(false),
 
     async execute(interaction) {
-        // Check if command is used in a guild
-        if (!interaction.guild) {
+        // Check permissions
+        const permissionCheck = await canExecuteCommand(interaction);
+        if (!permissionCheck.allowed) {
             return interaction.reply({
-                embeds: [createErrorEmbed('This command can only be used in a server!')],
-                ephemeral: true
-            });
-        }
-
-        // Check if user has the moderator role
-        const guild = await Guild.findByGuildId(interaction.guild.id);
-
-        if (!guild || !guild.settings.modRoleId) {
-            return interaction.reply({
-                embeds: [createErrorEmbed('No moderator role has been set! An administrator must use `/setmod` first.')],
-                ephemeral: true
-            });
-        }
-
-        if (!interaction.member.roles.cache.has(guild.settings.modRoleId)) {
-            return interaction.reply({
-                embeds: [createErrorEmbed('You need the moderator role to use this command!')],
+                embeds: [createErrorEmbed(permissionCheck.reason)],
                 ephemeral: true
             });
         }

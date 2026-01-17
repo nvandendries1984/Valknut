@@ -1,12 +1,23 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { createEmbed } from '../../utils/embedBuilder.js';
+import { createEmbed, createErrorEmbed } from '../../utils/embedBuilder.js';
+import { canExecuteCommand } from '../../utils/permissions.js';
 
 export default {
+    category: 'utility',
     data: new SlashCommandBuilder()
         .setName('ping')
-        .setDescription('Check the bot latency'),
+        .setDescription('Check the bot latency')
+        .setDMPermission(false),
 
     async execute(interaction) {
+        // Check permissions
+        const permissionCheck = await canExecuteCommand(interaction);
+        if (!permissionCheck.allowed) {
+            return interaction.reply({
+                embeds: [createErrorEmbed(permissionCheck.reason)],
+                ephemeral: true
+            });
+        }
         await interaction.reply({
             content: 'Pinging...'
         });

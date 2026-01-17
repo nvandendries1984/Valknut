@@ -1,27 +1,30 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { User } from '../../models/User.js';
 import { Role } from '../../models/Role.js';
-import { createEmbed, createSuccessEmbed, createErrorEmbed } from '../../utils/embedBuilder.js';
+import { createSuccessEmbed, createErrorEmbed } from '../../utils/embedBuilder.js';
 import { config } from '../../config/config.js';
 import { logger } from '../../utils/logger.js';
+import { canExecuteCommand } from '../../utils/permissions.js';
 
 export default {
     category: 'utility',
     data: new SlashCommandBuilder()
         .setName('register')
-        .setDescription('Register a user in the database (Owner only)')
+        .setDescription('Register a user in the database')
         .addUserOption(option =>
             option
                 .setName('user')
                 .setDescription('The user to register')
                 .setRequired(true)
-        ),
+        )
+        .setDMPermission(false),
 
     async execute(interaction) {
-        // Owner check
-        if (interaction.user.id !== config.ownerId) {
+        // Check permissions
+        const permissionCheck = await canExecuteCommand(interaction);
+        if (!permissionCheck.allowed) {
             return interaction.reply({
-                embeds: [createErrorEmbed('🚫 This command is only available to the bot owner.')],
+                embeds: [createErrorEmbed(permissionCheck.reason)],
                 ephemeral: true
             });
         }

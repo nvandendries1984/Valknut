@@ -1,6 +1,7 @@
-import { SlashCommandBuilder, PermissionFlagsBits, ChannelType, MessageFlags } from 'discord.js';
+import { SlashCommandBuilder, ChannelType, MessageFlags } from 'discord.js';
 import { createSuccessEmbed, createErrorEmbed } from '../../utils/embedBuilder.js';
 import { Guild } from '../../models/Guild.js';
+import { canExecuteCommand } from '../../utils/permissions.js';
 
 export default {
     category: 'utility',
@@ -13,9 +14,17 @@ export default {
                 .setDescription('The channel to send logs to')
                 .addChannelTypes(ChannelType.GuildText)
                 .setRequired(true))
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+        .setDMPermission(false),
 
     async execute(interaction) {
+        // Check permissions
+        const permissionCheck = await canExecuteCommand(interaction);
+        if (!permissionCheck.allowed) {
+            return interaction.reply({
+                embeds: [createErrorEmbed(permissionCheck.reason)],
+                ephemeral: true
+            });
+        }
         const channel = interaction.options.getChannel('channel');
 
         // Check if bot has permission to send messages in the channel

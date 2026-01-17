@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
+import { SlashCommandBuilder } from 'discord.js';
 import { createSuccessEmbed, createErrorEmbed } from '../../utils/embedBuilder.js';
 import { Guild } from '../../models/Guild.js';
 import { logger } from '../../utils/logger.js';
@@ -7,7 +7,7 @@ export default {
     category: 'utility',
     data: new SlashCommandBuilder()
         .setName('setmod')
-        .setDescription('Set the moderator role for this server')
+        .setDescription('Set the moderator role for this server (Server Owner only)')
         .addRoleOption(option =>
             option
                 .setName('role')
@@ -25,10 +25,10 @@ export default {
             });
         }
 
-        // Check if user has Administrator permission
-        if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator)) {
+        // Only server owner can set mod role
+        if (interaction.user.id !== interaction.guild.ownerId) {
             return interaction.reply({
-                embeds: [createErrorEmbed('You need Administrator permission to use this command!')],
+                embeds: [createErrorEmbed('Only the server owner can use this command!')],
                 ephemeral: true
             });
         }

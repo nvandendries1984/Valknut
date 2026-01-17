@@ -2,23 +2,26 @@ import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { Guild } from '../../models/Guild.js';
 import { createEmbed, createErrorEmbed } from '../../utils/embedBuilder.js';
 import { config } from '../../config/config.js';
+import { canExecuteCommand } from '../../utils/permissions.js';
 
 export default {
     category: 'utility',
     data: new SlashCommandBuilder()
         .setName('listguilds')
-        .setDescription('List all guilds the bot is in (Owner only)')
+        .setDescription('List all guilds the bot is in')
         .addBooleanOption(option =>
             option
                 .setName('active')
                 .setDescription('Show only active guilds')
-                .setRequired(false)),
+                .setRequired(false))
+        .setDMPermission(false),
 
     async execute(interaction) {
-        // Owner check
-        if (interaction.user.id !== config.ownerId) {
+        // Check permissions
+        const permissionCheck = await canExecuteCommand(interaction);
+        if (!permissionCheck.allowed) {
             return interaction.reply({
-                embeds: [createErrorEmbed('🚫 This command is only available to the bot owner.')],
+                embeds: [createErrorEmbed(permissionCheck.reason)],
                 ephemeral: true
             });
         }

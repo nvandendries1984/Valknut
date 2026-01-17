@@ -1,13 +1,24 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { createEmbed } from '../../utils/embedBuilder.js';
+import { createEmbed, createErrorEmbed } from '../../utils/embedBuilder.js';
 import { config } from '../../config/config.js';
+import { canExecuteCommand } from '../../utils/permissions.js';
 
 export default {
+    category: 'utility',
     data: new SlashCommandBuilder()
         .setName('help')
-        .setDescription('Show all available commands'),
+        .setDescription('Show all available commands')
+        .setDMPermission(false),
 
     async execute(interaction) {
+        // Check permissions
+        const permissionCheck = await canExecuteCommand(interaction);
+        if (!permissionCheck.allowed) {
+            return interaction.reply({
+                embeds: [createErrorEmbed(permissionCheck.reason)],
+                ephemeral: true
+            });
+        }
         const commands = interaction.client.commands;
 
         // Group commands by category

@@ -1,5 +1,6 @@
-import { SlashCommandBuilder, PermissionFlagsBits, MessageFlags } from 'discord.js';
+import { SlashCommandBuilder, MessageFlags } from 'discord.js';
 import { createSuccessEmbed, createErrorEmbed } from '../../utils/embedBuilder.js';
+import { canExecuteCommand } from '../../utils/permissions.js';
 
 export default {
     category: 'moderation',
@@ -15,9 +16,17 @@ export default {
             option
                 .setName('reason')
                 .setDescription('Reason for the kick'))
-        .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers),
+        .setDMPermission(false),
 
     async execute(interaction) {
+        // Check permissions
+        const permissionCheck = await canExecuteCommand(interaction);
+        if (!permissionCheck.allowed) {
+            return interaction.reply({
+                embeds: [createErrorEmbed(permissionCheck.reason)],
+                ephemeral: true
+            });
+        }
         const target = interaction.options.getMember('target');
         const reason = interaction.options.getString('reason') || 'No reason provided';
 

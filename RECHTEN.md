@@ -184,15 +184,21 @@ OWNER_ID=746692172304351272
 
 | Command | Toegang | Beschrijving |
 |---------|---------|--------------|
-| `/backup` | Owner only | Handmatige database backup |
-| `/register` | Alle server leden | Registreer jezelf in database |
-| `/kick` | Kick Members permission | Kick een gebruiker |
-| `/setlogchannel` | Manage Channels permission | Stel log kanaal in |
-| `/help` | Iedereen | Toon alle beschikbare commands |
-| `/ping` | Iedereen | Check bot latency |
-| `/guildinfo` | Iedereen | Toon server informatie |
-| `/listguilds` | Owner only | Lijst alle servers |
+| `/backup` | Server Owner + Mod Role | Handmatige database backup |
+| `/register` | Server Owner + Mod Role | Registreer jezelf in database |
+| `/kick` | Server Owner + Mod Role | Kick een gebruiker |
+| `/setlogchannel` | Server Owner + Mod Role | Stel log kanaal in |
+| `/setmod` | Server Owner + Mod Role | Stel moderator role in |
+| `/help` | Server Owner + Mod Role | Toon alle beschikbare commands |
+| `/ping` | Server Owner + Mod Role | Check bot latency |
+| `/guildinfo` | Server Owner + Mod Role | Toon server informatie |
+| `/listguilds` | Server Owner + Mod Role | Lijst alle servers |
+| `/onboarding` | Server Owner + Mod Role | Beheer onboarding instellingen |
+
+**Belangrijk**: Alle commands kunnen alleen worden uitgevoerd door:
+- De **Server Owner** (eigenaar van de Discord server)
+- Gebruikers met de **Mod Role** die is ingesteld via `/setmod`
 
 ---
 
-*Laatst bijgewerkt: 16 januari 2026*
+*Laatst bijgewerkt: 17 januari 2026*

@@ -1,16 +1,26 @@
-import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
+import { SlashCommandBuilder } from 'discord.js';
 import { Guild } from '../../models/Guild.js';
 import { User } from '../../models/User.js';
 import { createEmbed, createErrorEmbed } from '../../utils/embedBuilder.js';
+import { canExecuteCommand } from '../../utils/permissions.js';
 
 export default {
     category: 'utility',
     data: new SlashCommandBuilder()
         .setName('guildinfo')
         .setDescription('Display information about this server')
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+        .setDMPermission(false),
 
     async execute(interaction) {
+        // Check permissions
+        const permissionCheck = await canExecuteCommand(interaction);
+        if (!permissionCheck.allowed) {
+            return interaction.reply({
+                embeds: [createErrorEmbed(permissionCheck.reason)],
+                ephemeral: true
+            });
+        }
+
         await interaction.deferReply();
 
         try {
