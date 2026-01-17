@@ -28,7 +28,9 @@
                     <p>Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.):</p>
 
                     <div class="text-center mb-4">
-                        <img src="<%= qrCode %>" alt="2FA QR Code" class="img-fluid" style="max-width: 300px;">
+                        <div class="qr-code-container">
+                            <img src="<%= qrCode %>" alt="2FA QR Code" class="img-fluid" style="max-width: 300px;">
+                        </div>
                     </div>
 
                     <h5>Step 2: Manual Entry (Optional)</h5>
@@ -59,7 +61,7 @@
                         <div class="alert alert-warning">
                             <h5><i class="fas fa-exclamation-triangle"></i> Save Your Backup Codes</h5>
                             <p>Store these backup codes in a safe place. You can use them to access your account if you lose your authenticator device.</p>
-                            <div class="backup-codes bg-light p-3 rounded" id="codesContainer"></div>
+                            <div class="backup-codes p-3 rounded" id="codesContainer"></div>
                             <button class="btn btn-sm btn-primary mt-2" onclick="copyBackupCodes()">
                                 <i class="fas fa-copy"></i> Copy All Codes
                             </button>

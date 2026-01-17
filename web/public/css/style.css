@@ -10,7 +10,7 @@
 
 /* Body & Background */
 body {
-    background-color: var(--viking-dark);
+    background-color: var(--viking-dark) !important;
     color: #e5e7eb;
     min-height: 100vh;
     display: flex;
@@ -26,63 +26,93 @@ main {
     background-color: var(--viking-darker) !important;
 }
 
-.card {
-    border: 1px solid rgba(255, 255, 255, 0.1);
+.card,
+.card .card,
+div.card {
+    background-color: var(--viking-darker) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.card-body,
+.card .card-body,
+div.card-body {
+    background-color: var(--viking-darker) !important;
+    color: #e5e7eb !important;
+}
+
+.card-header,
+.card .card-header,
+div.card-header {
+    background-color: var(--viking-dark) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #e5e7eb !important;
+}
+
+.card-header.bg-primary {
+    background-color: var(--viking-blue) !important;
+    color: #fff !important;
+    border-bottom: 1px solid rgba(74, 111, 165, 0.5) !important;
+}
+
+.card-header.bg-warning {
+    background-color: rgba(198, 167, 94, 0.3) !important;
+    color: #fcd34d !important;
+    border-bottom: 1px solid rgba(198, 167, 94, 0.4) !important;
 }
 
 .form-control,
 .form-select {
-    background-color: var(--viking-dark);
-    border-color: rgba(255, 255, 255, 0.2);
-    color: #e5e7eb;
+    background-color: var(--viking-dark) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    color: #e5e7eb !important;
 }
 
 .form-control:focus,
 .form-select:focus {
-    background-color: var(--viking-dark);
-    border-color: var(--viking-blue);
-    color: #e5e7eb;
-    box-shadow: 0 0 0 0.25rem rgba(74, 111, 165, 0.25);
+    background-color: var(--viking-dark) !important;
+    border-color: var(--viking-blue) !important;
+    color: #e5e7eb !important;
+    box-shadow: 0 0 0 0.25rem rgba(74, 111, 165, 0.25) !important;
 }
 
 .form-control::placeholder {
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.4) !important;
 }
 
 .form-text {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.5) !important;
 }
 
 /* Buttons */
 .btn-primary {
-    background-color: var(--viking-blue);
-    border-color: var(--viking-blue);
+    background-color: var(--viking-blue) !important;
+    border-color: var(--viking-blue) !important;
 }
 
 .btn-primary:hover {
-    background-color: #3d5a8a;
-    border-color: #3d5a8a;
+    background-color: #3d5a8a !important;
+    border-color: #3d5a8a !important;
 }
 
 .btn-secondary {
-    background-color: var(--viking-silver);
-    border-color: var(--viking-silver);
-    color: #fff;
+    background-color: var(--viking-silver) !important;
+    border-color: var(--viking-silver) !important;
+    color: #fff !important;
 }
 
 .btn-secondary:hover {
-    background-color: #778892;
-    border-color: #778892;
+    background-color: #778892 !important;
+    border-color: #778892 !important;
 }
 
 .btn-danger {
-    background-color: var(--viking-blood);
-    border-color: var(--viking-blood);
+    background-color: var(--viking-blood) !important;
+    border-color: var(--viking-blood) !important;
 }
 
 .btn-danger:hover {
-    background-color: #731818;
-    border-color: #731818;
+    background-color: #731818 !important;
+    border-color: #731818 !important;
 }
 
 /* Navbar */
@@ -110,17 +140,17 @@ main {
 }
 
 .dropdown-menu {
-    background-color: var(--viking-darker);
-    border-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--viking-darker) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 .dropdown-item {
-    color: #e5e7eb;
+    color: #e5e7eb !important;
 }
 
 .dropdown-item:hover {
-    background-color: var(--viking-dark);
-    color: var(--viking-gold);
+    background-color: var(--viking-dark) !important;
+    color: var(--viking-gold) !important;
 }
 
 /* Footer */
@@ -145,13 +175,13 @@ footer {
 
 /* Modals */
 .modal-content {
-    background-color: var(--viking-darker);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: var(--viking-darker) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
 }
 
 .modal-header,
 .modal-footer {
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Custom Scrollbar */
@@ -175,10 +205,10 @@ footer {
 
 /* Code blocks */
 code {
-    background-color: var(--viking-dark);
+    background-color: var(--viking-dark) !important;
     padding: 0.2rem 0.4rem;
     border-radius: 3px;
-    color: var(--viking-gold);
+    color: var(--viking-gold) !important;
 }
 
 /* Badges */
@@ -196,21 +226,110 @@ code {
     border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
+.border-danger {
+    border-color: rgba(139, 30, 30, 0.5) !important;
+}
+
 /* Alert colors */
 .alert-success {
-    background-color: rgba(34, 197, 94, 0.2);
-    border-color: rgba(34, 197, 94, 0.3);
-    color: #86efac;
+    background-color: rgba(34, 197, 94, 0.15) !important;
+    border-color: rgba(34, 197, 94, 0.3) !important;
+    color: #86efac !important;
+}
+
+.alert-success i {
+    color: #86efac !important;
 }
 
 .alert-danger {
-    background-color: rgba(139, 30, 30, 0.2);
-    border-color: rgba(139, 30, 30, 0.3);
-    color: #fca5a5;
+    background-color: rgba(139, 30, 30, 0.2) !important;
+    border-color: rgba(139, 30, 30, 0.3) !important;
+    color: #fca5a5 !important;
+}
+
+.alert-info {
+    background-color: rgba(74, 111, 165, 0.2) !important;
+    border-color: rgba(74, 111, 165, 0.3) !important;
+    color: #93c5fd !important;
+}
+
+.alert-warning {
+    background-color: rgba(198, 167, 94, 0.2) !important;
+    border-color: rgba(198, 167, 94, 0.3) !important;
+    color: #fcd34d !important;
 }
 
 /* Spinner */
 .spinner-border {
-    border-color: var(--viking-blue);
-    border-right-color: transparent;
+    border-color: var(--viking-blue) !important;
+    border-right-color: transparent !important;
+}
+
+/* 2FA Pages Dark Mode */
+.backup-codes {
+    background-color: var(--viking-dark) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #e5e7eb !important;
+}
+
+.backup-codes code {
+    background-color: var(--viking-darker) !important;
+    color: var(--viking-gold) !important;
+    display: block;
+    padding: 0.5rem;
+    margin: 0.25rem 0;
+    border-radius: 4px;
+}
+
+/* QR Code container */
+.qr-code-container {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+/* Input group button styling for dark mode */
+.input-group .btn-outline-secondary {
+    background-color: transparent !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    color: #e5e7eb !important;
+}
+
+.input-group .btn-outline-secondary:hover {
+    background-color: var(--viking-silver) !important;
+    border-color: var(--viking-silver) !important;
+    color: #fff !important;
+}
+
+/* Extra aggressive overrides for Bootstrap cards */
+body .card,
+body div.card,
+body .card.card {
+    background-color: var(--viking-darker) !important;
+}
+
+body .card-body,
+body div.card-body,
+body .card .card-body,
+body .card-body.card-body {
+    background-color: var(--viking-darker) !important;
+    color: #e5e7eb !important;
+}
+
+body .card-header,
+body div.card-header,
+body .card .card-header {
+    background-color: var(--viking-dark) !important;
+    color: #e5e7eb !important;
+}
+
+/* Override any remaining white backgrounds */
+.container .card {
+    background-color: var(--viking-darker) !important;
+}
+
+.container .card-body {
+    background-color: var(--viking-darker) !important;
+    color: #e5e7eb !important;
 }

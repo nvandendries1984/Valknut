@@ -1,0 +1,297 @@
+/* Viking Theme Colors */
+:root {
+    --viking-dark: #1C1F24;
+    --viking-darker: #15171a;
+    --viking-blood: #8B1E1E;
+    --viking-gold: #C6A75E;
+    --viking-silver: #8B9AA3;
+    --viking-blue: #4A6FA5;
+}
+
+/* Body & Background */
+body {
+    background-color: var(--viking-dark) !important;
+    color: #e5e7eb;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* Bootstrap Overrides */
+.bg-dark {
+    background-color: var(--viking-darker) !important;
+}
+
+.card {
+    background-color: var(--viking-darker) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-body {
+    background-color: var(--viking-darker) !important;
+    color: #e5e7eb !important;
+}
+
+.card-header {
+    background-color: var(--viking-dark) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e5e7eb !important;
+}
+
+.form-control,
+.form-select {
+    background-color: var(--viking-dark);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #e5e7eb;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: var(--viking-dark);
+    border-color: var(--viking-blue);
+    color: #e5e7eb;
+    box-shadow: 0 0 0 0.25rem rgba(74, 111, 165, 0.25);
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.form-text {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--viking-blue);
+    border-color: var(--viking-blue);
+}
+
+.btn-primary:hover {
+    background-color: #3d5a8a;
+    border-color: #3d5a8a;
+}
+
+.btn-secondary {
+    background-color: var(--viking-silver);
+    border-color: var(--viking-silver);
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background-color: #778892;
+    border-color: #778892;
+}
+
+.btn-danger {
+    background-color: var(--viking-blood);
+    border-color: var(--viking-blood);
+}
+
+.btn-danger:hover {
+    background-color: #731818;
+    border-color: #731818;
+}
+
+/* Navbar */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--viking-gold) !important;
+}
+
+.navbar-brand:hover {
+    color: var(--viking-gold) !important;
+    opacity: 0.8;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.nav-link:hover {
+    color: var(--viking-gold) !important;
+}
+
+.dropdown-menu {
+    background-color: var(--viking-darker);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-item {
+    color: #e5e7eb;
+}
+
+.dropdown-item:hover {
+    background-color: var(--viking-dark);
+    color: var(--viking-gold);
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+}
+
+/* Tables */
+.table-dark {
+    --bs-table-bg: transparent;
+    --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
+}
+
+.table-dark thead th {
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.table-dark td,
+.table-dark th {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Modals */
+.modal-content {
+    background-color: var(--viking-darker);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-header,
+.modal-footer {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--viking-darker);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--viking-silver);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--viking-gold);
+}
+
+/* Code blocks */
+code {
+    background-color: var(--viking-dark);
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    color: var(--viking-gold);
+}
+
+/* Badges */
+.badge {
+    font-weight: 500;
+}
+
+/* Text colors */
+.text-muted {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Border colors */
+.border-secondary {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.border-danger {
+    border-color: rgba(139, 30, 30, 0.5) !important;
+}15);
+    border-color: rgba(34, 197, 94, 0.3);
+    color: #86efac;
+}
+
+.alert-success i {
+/* Alert colors */
+.alert-success {
+    background-color: rgba(34, 197, 94, 0.2);
+    border-color: rgba(34, 197, 94, 0.3);
+    color: #86efac;
+}
+
+.alert-danger {
+    background-color: rgba(139, 30, 30, 0.2);
+    border-color: rgba(139, 30, 30, 0.3);
+    color: #fca5a5;
+}
+
+/* Spinner */
+.spinner-border {
+    border-color: var(--viking-blue);
+    border-right-color: transparent;
+}
+
+/* 2FA Pages Dark Mode */
+.backup-codes {
+    background-color: var(--viking-dark) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e5e7eb !important;
+}
+
+.backup-codes code {
+    background-color: var(--viking-darker);
+    color: var(--viking-gold);
+    display: block;
+    padding: 0.5rem;
+    margin: 0.25rem 0;
+    border-radius: 4px;
+}
+
+.alert-info {
+    background-color: rgba(74, 111, 165, 0.2);
+    border-color: rgba(74, 111, 165, 0.3);
+    color: #93c5fd;
+}
+
+.alert-warning {
+    background-color: rgba(198, 167, 94, 0.2);
+    border-colorprimary {
+    background-color: var(--viking-blue) !important;
+    color: #fff !important;
+    border-bottom: 1px solid rgba(74, 111, 165, 0.5);
+}
+
+.card-header.bg-: rgba(198, 167, 94, 0.3);
+    color: #fcd34d;
+}
+
+.card-header.bg-warning {
+    background-color: rgba(198, 167, 94, 0.3) !important;
+    color: #fcd34d !important;
+    border-bottom: 1px solid rgba(198, 167, 94, 0.4);
+}
+
+/* QR Code container */
+.qr-code-container {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+/* Input group button styling for dark mode */
+.input-group .btn-outline-secondary {
+    background-color: transparent;
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #e5e7eb;
+}
+
+.input-group .btn-outline-secondary:hover {
+    background-color: var(--viking-silver);
+    border-color: var(--viking-silver);
+    color: #fff;
+}
