@@ -344,6 +344,24 @@ function showOnboardingData(userId) {
                                         <option value="Shieldmaiden" ${data.saga === 'Shieldmaiden' ? 'selected' : ''}>🛡️ Shieldmaiden</option>
                                     </select>
                                 </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted">
+                                        <i class="fas fa-home me-1"></i>Adres
+                                    </label>
+                                    <input type="text" name="address" class="form-control bg-dark text-white border-secondary" value="${data.address || ''}" placeholder="Voer volledig adres in">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label text-muted">
+                                        <i class="fas fa-map-pin me-1"></i>Postcode
+                                    </label>
+                                    <input type="text" name="postcode" class="form-control bg-dark text-white border-secondary" value="${data.postcode || ''}" placeholder="Voer postcode in">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label text-muted">
+                                        <i class="fas fa-city me-1"></i>Woonplaats
+                                    </label>
+                                    <input type="text" name="woonplaats" class="form-control bg-dark text-white border-secondary" value="${data.woonplaats || ''}" placeholder="Voer woonplaats in">
+                                </div>
                                 <div class="col-md-4">
                                     <label class="form-label text-muted">
                                         <i class="fas fa-calendar me-1"></i>Geboortedatum
@@ -352,39 +370,21 @@ function showOnboardingData(userId) {
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label text-muted">
-                                        <i class="fas fa-map-pin me-1"></i>Postcode
+                                        <i class="fas fa-envelope me-1"></i>Email
                                     </label>
-                                    <input type="text" name="postcode" class="form-control bg-dark text-white border-secondary" value="${data.postcode || ''}" placeholder="Voer postcode in">
+                                    <input type="email" name="email" class="form-control bg-dark text-white border-secondary" value="${data.email || ''}" placeholder="Voer email in">
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label text-muted">
-                                        <i class="fas fa-city me-1"></i>Woonplaats
-                                    </label>
-                                    <input type="text" name="woonplaats" class="form-control bg-dark text-white border-secondary" value="${data.woonplaats || ''}" placeholder="Voer woonplaats in">
-                                </div>
-                                <div class="col-md-6">
                                     <label class="form-label text-muted">
                                         <i class="fas fa-phone me-1"></i>Telefoonnummer
                                     </label>
                                     <input type="text" name="phoneNumber" class="form-control bg-dark text-white border-secondary" value="${data.phoneNumber || ''}" placeholder="Voer telefoonnummer in">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label text-muted">
-                                        <i class="fas fa-envelope me-1"></i>Email
-                                    </label>
-                                    <input type="email" name="email" class="form-control bg-dark text-white border-secondary" value="${data.email || ''}" placeholder="Voer email in">
                                 </div>
                             </div>
 
                             <hr class="border-secondary">
                             <h6 class="text-success mb-3">Saga & Progressie</h6>
                             <div class="row g-3 mb-4">
-                                <div class="col-md-12">
-                                    <label class="form-label text-muted">
-                                        <i class="fas fa-home me-1"></i>Adres
-                                    </label>
-                                    <input type="text" name="address" class="form-control bg-dark text-white border-secondary" value="${data.address || ''}" placeholder="Voer volledig adres in">
-                                </div>
                                 <div class="col-md-4">
                                     <label class="form-label text-muted">
                                         <i class="fas fa-layer-group me-1"></i>Saga Level
