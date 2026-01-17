@@ -87,9 +87,10 @@ app.use(passport.session());
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Make user available in all views
+// Make user and bot info available in all views
 app.use((req, res, next) => {
     res.locals.user = req.user;
+    res.locals.botUser = discordClient?.user || null;
     next();
 });
 
