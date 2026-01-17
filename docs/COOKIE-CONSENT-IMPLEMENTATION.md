@@ -96,7 +96,7 @@ Dit document beschrijft de implementatie van GDPR/AVG-compliant cookie consent e
 
 1. **Cookie consent check bij elke request:**
    ```
-   Request → checkCookieConsent middleware → 
+   Request → checkCookieConsent middleware →
    Als consent ontbreekt → Logout → Redirect
    ```
 
@@ -291,6 +291,6 @@ Voor vragen over deze implementatie:
 
 ---
 
-**Versie:** 1.0  
-**Datum:** 17 januari 2026  
+**Versie:** 1.0
+**Datum:** 17 januari 2026
 **Status:** ✅ Compleet en getest

@@ -10,12 +10,12 @@
             <div class="modal-body">
                 <div class="alert border-0 text-white" style="background-color: rgba(74, 111, 165, 0.3);">
                     <i class="fas fa-info-circle me-2"></i>
-                    Wij gebruiken cookies en vergelijkbare technologieën om jouw ervaring te verbeteren en onze diensten te leveren. 
-                    Door onze website te gebruiken, ga je akkoord met het gebruik van cookies en het opslaan van persoonlijke gegevens 
-                    zoals beschreven in ons <a href="/privacy" class="text-warning text-decoration-underline fw-bold" target="_blank">privacybeleid</a> 
+                    Wij gebruiken cookies en vergelijkbare technologieën om jouw ervaring te verbeteren en onze diensten te leveren.
+                    Door onze website te gebruiken, ga je akkoord met het gebruik van cookies en het opslaan van persoonlijke gegevens
+                    zoals beschreven in ons <a href="/privacy" class="text-warning text-decoration-underline fw-bold" target="_blank">privacybeleid</a>
                     en onze <a href="/terms" class="text-warning text-decoration-underline fw-bold" target="_blank">gebruiksvoorwaarden</a>.
                 </div>
-                
+
                 <div class="card bg-dark border-secondary mb-3">
                     <div class="card-header border-secondary" style="background-color: rgba(198, 167, 94, 0.1);">
                         <h6 class="mb-0" style="color: #C6A75E;">
@@ -50,8 +50,8 @@
 
                 <p class="small text-white-50 mb-0">
                     <i class="fas fa-shield-alt me-1"></i>
-                    Door op "Accepteren" te klikken, ga je akkoord met het gebruik van alle cookies en het verwerken 
-                    van jouw persoonlijke gegevens zoals beschreven. Je kunt je toestemming op elk moment intrekken 
+                    Door op "Accepteren" te klikken, ga je akkoord met het gebruik van alle cookies en het verwerken
+                    van jouw persoonlijke gegevens zoals beschreven. Je kunt je toestemming op elk moment intrekken
                     door contact met ons op te nemen.
                 </p>
             </div>
@@ -120,7 +120,7 @@
                 </div>
             `;
             document.body.insertAdjacentHTML('afterbegin', alertHtml);
-            
+
             // Auto-dismiss after 5 seconds
             setTimeout(() => {
                 const alert = document.querySelector('.alert-warning');
@@ -133,10 +133,10 @@
 
         // Check if user hasn't made a choice yet
         const consent = getCookie(COOKIE_NAME);
-        
+
         document.addEventListener('DOMContentLoaded', function() {
             const modalElement = document.getElementById('cookieConsentModal');
-            
+
             if (!consent) {
                 // Show modal after a short delay
                 setTimeout(() => {
@@ -172,17 +172,17 @@
                                 </div>
                             </div>
                         `;
-                        
+
                         // Remove old modal if exists
                         const oldModal = document.getElementById('cookieRequiredModal');
                         if (oldModal) {
                             oldModal.remove();
                         }
-                        
+
                         document.body.insertAdjacentHTML('beforeend', confirmHtml);
                         const requiredModal = new bootstrap.Modal(document.getElementById('cookieRequiredModal'));
                         requiredModal.show();
-                        
+
                         document.getElementById('reopenConsent').addEventListener('click', function() {
                             requiredModal.hide();
                             // Clear the declined cookie and show banner again

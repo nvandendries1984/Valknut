@@ -5,12 +5,12 @@ import { logger } from '../../src/utils/logger.js';
  */
 export function requireCookieConsent(req, res, next) {
     const consent = req.cookies.cookie_consent;
-    
+
     if (!consent || consent !== 'accepted') {
         logger.warn(`Login attempt without cookie consent from IP: ${req.ip}`);
         return res.redirect('/?error=consent_required');
     }
-    
+
     next();
 }
 
@@ -20,7 +20,7 @@ export function requireCookieConsent(req, res, next) {
 export function checkCookieConsent(req, res, next) {
     if (req.isAuthenticated()) {
         const consent = req.cookies.cookie_consent;
-        
+
         if (!consent || consent !== 'accepted') {
             logger.warn(`User ${req.user.username} lost cookie consent, logging out`);
             req.logout((err) => {
@@ -32,7 +32,7 @@ export function checkCookieConsent(req, res, next) {
             return;
         }
     }
-    
+
     next();
 }
 
