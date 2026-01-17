@@ -1,6 +1,7 @@
 {
   "nav": {
     "dashboard": "Dashboard",
+    "help": "Help",
     "manageUsers": "Manage Users",
     "twoFaSettings": "2FA Settings",
     "logout": "Logout",

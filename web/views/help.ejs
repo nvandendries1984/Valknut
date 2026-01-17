@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help & Documentatie - Valknut</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .command-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            height: 100%;
+            border-left: 4px solid #5865F2;
+        }
+        .command-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(88, 101, 242, 0.2);
+        }
+        .category-header {
+            background: linear-gradient(135deg, #5865F2 0%, #7289DA 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        .badge-permission {
+            font-size: 0.85rem;
+            padding: 0.4rem 0.8rem;
+        }
+        .permission-all { background-color: #57F287; color: #000; }
+        .permission-mod { background-color: #FEE75C; color: #000; }
+        .permission-owner { background-color: #ED4245; color: #fff; }
+    </style>
+</head>
+<body class="bg-dark text-white">
+    <%- include('partials/navbar', { user: user, botUser: typeof botUser !== 'undefined' ? botUser : null, currentLang: 'nl' }) %>
+
+    <div class="container my-5">
+        <div class="category-header text-center">
+            <h1 class="display-4"><i class="fas fa-book me-3"></i>Help & Documentatie</h1>
+            <p class="lead mb-0">Complete gids voor alle Valknut Discord Bot functies en rechten</p>
+        </div>
+
+        <!-- Permission System Explanation -->
+        <div class="card bg-secondary text-white mb-5">
+            <div class="card-header">
+                <h3><i class="fas fa-shield-alt me-2"></i>Rechten Systeem</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="d-flex align-items-center">
+                            <span class="badge permission-all me-2">
+                                <i class="fas fa-users me-1"></i>Alle Gebruikers
+                            </span>
+                        </div>
+                        <p class="mt-2 mb-0">Basis commands beschikbaar voor alle geregistreerde gebruikers</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="d-flex align-items-center">
+                            <span class="badge permission-mod me-2">
+                                <i class="fas fa-user-shield me-1"></i>Moderators
+                            </span>
+                        </div>
+                        <p class="mt-2 mb-0">Uitgebreide rechten via ingestelde moderator rol (<code>/setmod</code>)</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="d-flex align-items-center">
+                            <span class="badge permission-owner me-2">
+                                <i class="fas fa-crown me-1"></i>Server Owner
+                            </span>
+                        </div>
+                        <p class="mt-2 mb-0">Volledige toegang tot alle bot functies en instellingen</p>
+                    </div>
+                </div>
+                <hr class="my-3">
+                <p class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Belangrijk:</strong> Gebruikers moeten eerst geregistreerd zijn via <code>/register</code> voordat ze commands kunnen gebruiken.
+                </p>
+            </div>
+        </div>
+
+        <!-- Utility Commands -->
+        <div class="mb-5">
+            <h2 class="mb-4">
+                <i class="fas fa-tools me-2"></i>Utility Commands
+                <span class="badge bg-primary ms-2">9 Commands</span>
+            </h2>
+            <div class="row g-4">
+                <!-- Ping -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card command-card bg-secondary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-table-tennis me-2"></i>/ping
+                                <span class="badge permission-all float-end">Alle</span>
+                            </h5>
+                            <p class="card-text">Check de bot latency en API responstijd. Handig om te zien of de bot goed reageert.</p>
+                            <hr>
+                            <small class="text-muted">
+                                <strong>Gebruik:</strong> <code>/ping</code>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Help -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card command-card bg-secondary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-question-circle me-2"></i>/help
+                                <span class="badge permission-all float-end">Alle</span>
+                            </h5>
+                            <p class="card-text">Toon alle beschikbare commands met uitgebreide uitleg en rechten informatie.</p>
+                            <hr>
+                            <small class="text-muted">
+                                <strong>Gebruik:</strong> <code>/help [command]</code><br>
+                                <strong>Optioneel:</strong> Specifiek command voor details
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GuildInfo -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card command-card bg-secondary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-info-circle me-2"></i>/guildinfo
+                                <span class="badge permission-all float-end">Alle</span>
+                            </h5>
+                            <p class="card-text">Toon gedetailleerde informatie over deze server: leden, rollen, instellingen en database stats.</p>
+                            <hr>
+                            <small class="text-muted">
+                                <strong>Gebruik:</strong> <code>/guildinfo</code>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Register -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card command-card bg-secondary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-user-plus me-2"></i>/register
+                                <span class="badge permission-mod float-end">Mod</span>
+                            </h5>
+                            <p class="card-text">Registreer een gebruiker in de database voor toegang tot bot functies. Vereist voor alle andere commands.</p>
+                            <hr>
+                            <small class="text-muted">
+                                <strong>Gebruik:</strong> <code>/register @gebruiker</code><br>
+                                <strong>Verplicht:</strong> Discord gebruiker
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Onboarding -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card command-card bg-secondary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-clipboard-check me-2"></i>/onboarding
+                                <span class="badge permission-mod float-end">Mod</span>
+                            </h5>
+                            <p class="card-text">Start uitgebreid onboarding proces: Saga selectie, naam, geboortedatum, postcode en meer.</p>
+                            <hr>
+                            <small class="text-muted">
+                                <strong>Gebruik:</strong> <code>/onboarding @gebruiker</code><br>
+                                <strong>Verplicht:</strong> Discord gebruiker
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SetLogChannel -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card command-card bg-secondary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-bullhorn me-2"></i>/setlogchannel
+                                <span class="badge permission-mod float-end">Mod</span>
+                            </h5>
+                            <p class="card-text">Stel het kanaal in waar alle bot logs en notificaties naartoe gestuurd worden.</p>
+                            <hr>
+                            <small class="text-muted">
+                                <strong>Gebruik:</strong> <code>/setlogchannel #kanaal</code><br>
+                                <strong>Verplicht:</strong> Discord kanaal (text)
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SetMod -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card command-card bg-secondary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-shield-alt me-2"></i>/setmod
+                                <span class="badge permission-owner float-end">Owner</span>
+                            </h5>
+                            <p class="card-text">Stel de moderator rol in die toegang krijgt tot geavanceerde bot functies.</p>
+                            <hr>
+                            <small class="text-muted">
+                                <strong>Gebruik:</strong> <code>/setmod @rol</code><br>
+                                <strong>Verplicht:</strong> Discord rol
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ListGuilds -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card command-card bg-secondary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-server me-2"></i>/listguilds
+                                <span class="badge permission-mod float-end">Mod</span>
+                            </h5>
+                            <p class="card-text">Toon lijst van alle servers waar de bot actief is met member counts en instellingen.</p>
+                            <hr>
+                            <small class="text-muted">
+                                <strong>Gebruik:</strong> <code>/listguilds [active]</code><br>
+                                <strong>Optioneel:</strong> Alleen actieve servers
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Backup -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card command-card bg-secondary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-database me-2"></i>/backup
+                                <span class="badge permission-mod float-end">Mod</span>
+                            </h5>
+                            <p class="card-text">Maak een handmatige database backup. Automatische backups gebeuren dagelijks om 00:00 uur.</p>
+                            <hr>
+                            <small class="text-muted">
+                                <strong>Gebruik:</strong> <code>/backup</code><br>
+                                <strong>Info:</strong> Houdt laatste 7 backups bij
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Moderation Commands -->
+        <div class="mb-5">
+            <h2 class="mb-4">
+                <i class="fas fa-gavel me-2"></i>Moderation Commands
+                <span class="badge bg-warning text-dark ms-2">1 Command</span>
+            </h2>
+            <div class="row g-4">
+                <!-- Kick -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card command-card bg-secondary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-user-slash me-2"></i>/kick
+                                <span class="badge permission-mod float-end">Mod</span>
+                            </h5>
+                            <p class="card-text">Kick een lid van de server met optionele reden. Respecteert rol hiërarchie.</p>
+                            <hr>
+                            <small class="text-muted">
+                                <strong>Gebruik:</strong> <code>/kick @gebruiker [reden]</code><br>
+                                <strong>Verplicht:</strong> Discord gebruiker<br>
+                                <strong>Optioneel:</strong> Reden voor kick
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Web Dashboard Info -->
+        <div class="card bg-secondary text-white mb-5">
+            <div class="card-header bg-primary">
+                <h3><i class="fas fa-desktop me-2"></i>Web Dashboard</h3>
+            </div>
+            <div class="card-body">
+                <p>Naast Discord commands biedt Valknut ook een uitgebreide webinterface met extra functionaliteiten:</p>
+                <ul>
+                    <li><strong>Server Beheer:</strong> Overzicht van alle servers waar de bot actief is</li>
+                    <li><strong>Gebruikers Management:</strong> Bekijk en beheer geregistreerde gebruikers</li>
+                    <li><strong>Onboarding Interface:</strong> Uitgebreide onboarding formulieren voor nieuwe leden</li>
+                    <li><strong>Database Backups:</strong> Download en beheer database backups</li>
+                    <li><strong>Admin Panel:</strong> Uitgebreide beheer opties voor moderators en owners</li>
+                    <li><strong>2FA Beveiliging:</strong> Twee-factor authenticatie voor extra beveiliging</li>
+                </ul>
+                <a href="/dashboard" class="btn btn-primary mt-3">
+                    <i class="fas fa-tachometer-alt me-2"></i>Ga naar Dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- Quick Tips -->
+        <div class="card bg-secondary text-white">
+            <div class="card-header bg-info">
+                <h3><i class="fas fa-lightbulb me-2"></i>Tips & Tricks</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <h5><i class="fas fa-star me-2 text-warning"></i>Command Sneltoetsen</h5>
+                        <p>Typ <code>/</code> in Discord om alle beschikbare slash commands te zien. Discord toont automatisch welke commands beschikbaar zijn.</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h5><i class="fas fa-history me-2 text-info"></i>Command Geschiedenis</h5>
+                        <p>Gebruik de pijltjestoetsen (↑↓) om door je recente commands te bladeren in Discord.</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h5><i class="fas fa-question me-2 text-success"></i>Hulp Nodig?</h5>
+                        <p>Gebruik <code>/help [command]</code> voor gedetailleerde informatie over een specifiek command direct in Discord.</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h5><i class="fas fa-bell me-2 text-danger"></i>Log Kanaal</h5>
+                        <p>Stel altijd een log kanaal in met <code>/setlogchannel</code> om belangrijke bot notificaties te ontvangen.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
+    <%- include('partials/cookie-consent') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

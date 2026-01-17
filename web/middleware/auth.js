@@ -1,5 +1,28 @@
 import { AllowedUser } from '../../src/models/AllowedUser.js';
 
+/**
+ * Fetch fresh guild data from Discord API
+ * Falls back to cached data if API call fails
+ */
+async function fetchUserGuilds(accessToken, cachedGuilds = []) {
+    try {
+        const response = await fetch('https://discord.com/api/v10/users/@me/guilds', {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+
+        if (response.ok) {
+            return await response.json();
+        }
+    } catch (error) {
+        console.error('Failed to fetch fresh guilds from Discord API:', error.message);
+    }
+
+    // Fallback to cached guilds
+    return cachedGuilds;
+}
+
 export function isAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
@@ -76,8 +99,12 @@ export async function hasGuildAccess(req, res, next) {
         return next();
     }
 
-    // Get user's guilds
-    const userGuild = req.user.guilds?.find(g => g.id === guildId);
+    // Get user's guilds with fresh data (or use cached if already fetched this request)
+    if (!req.freshGuilds) {
+        req.freshGuilds = await fetchUserGuilds(req.user.accessToken, req.user.guilds);
+    }
+
+    const userGuild = req.freshGuilds.find(g => g.id === guildId);
     if (!userGuild) {
         return res.status(403).json({ error: 'You are not a member of this guild' });
     }

@@ -7,11 +7,35 @@ import { AllowedUser } from '../../src/models/AllowedUser.js';
 
 const router = express.Router();
 
+/**
+ * Fetch fresh guild data from Discord API
+ * Falls back to cached data if API call fails
+ */
+async function fetchUserGuilds(accessToken, cachedGuilds = []) {
+    try {
+        const response = await fetch('https://discord.com/api/v10/users/@me/guilds', {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+
+        if (response.ok) {
+            return await response.json();
+        }
+    } catch (error) {
+        console.error('Failed to fetch fresh guilds from Discord API:', error.message);
+    }
+
+    // Fallback to cached guilds
+    return cachedGuilds;
+}
+
 // Dashboard home
 router.get('/', isAllowedUser, async (req, res) => {
     try {
-        // Get user's guilds from Discord
-        const userGuilds = req.user.guilds || [];
+        // Get user's guilds from Discord API (fresh data, not cached)
+        // Use req.freshGuilds if already fetched by middleware, otherwise fetch now
+        const userGuilds = req.freshGuilds || await fetchUserGuilds(req.user.accessToken, req.user.guilds);
 
         // Get bot's guilds from database
         const botGuilds = await Guild.find({ active: true });
@@ -106,8 +130,10 @@ router.get('/guild/:guildId', isAllowedUser, hasGuildAccess, async (req, res) =>
     try {
         const guildId = req.params.guildId;
 
-        // Get user's guild info from Discord
-        const userGuild = req.user.guilds?.find(g => g.id === guildId);
+        // Use guilds fetched by middleware
+        const userGuilds = req.freshGuilds || await fetchUserGuilds(req.user.accessToken, req.user.guilds);
+        const userGuild = userGuilds.find(g => g.id === guildId);
+
         if (!userGuild) {
             return res.status(403).render('error', {
                 title: 'Access Denied',
@@ -155,8 +181,10 @@ router.get('/guild/:guildId/onboarding', isAllowedUser, hasGuildAccess, async (r
     try {
         const guildId = req.params.guildId;
 
-        // Get user's guild info from Discord
-        const userGuild = req.user.guilds?.find(g => g.id === guildId);
+        // Use guilds fetched by middleware
+        const userGuilds = req.freshGuilds || await fetchUserGuilds(req.user.accessToken, req.user.guilds);
+        const userGuild = userGuilds.find(g => g.id === guildId);
+
         if (!userGuild) {
             return res.status(403).render('error', {
                 title: 'Access Denied',
@@ -192,6 +220,23 @@ router.get('/guild/:guildId/onboarding', isAllowedUser, hasGuildAccess, async (r
         res.status(500).render('error', {
             title: 'Error',
             error: { message: 'Failed to load onboarding data' }
+        });
+    }
+});
+
+// Help page - documentation for all commands
+router.get('/help', isAllowedUser, async (req, res) => {
+    try {
+        res.render('help', {
+            title: 'Help & Documentatie',
+            user: req.user,
+            botUser: req.app.get('client')?.user || null
+        });
+    } catch (error) {
+        console.error('Help page error:', error);
+        res.status(500).render('error', {
+            title: 'Error',
+            error: { message: 'Failed to load help page' }
         });
     }
 });
