@@ -78,6 +78,69 @@
                             </div>
                         </div>
 
+                        <hr class="border-secondary my-4">
+                        <h6 class="text-primary mb-3">
+                            <i class="fas fa-user-shield me-2"></i>
+                            Rank Duration Settings
+                        </h6>
+
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="freemanDurationDays" class="form-label">
+                                    <i class="fas fa-clock me-1"></i>
+                                    Freeman Duur (dagen)
+                                </label>
+                                <input type="number" class="form-control" id="freemanDurationDays" name="freemanDurationDays"
+                                       value="<%= guild.dbInfo.settings?.freemanDurationDays || 30 %>"
+                                       min="1" placeholder="30">
+                                <div class="form-text">Maximale duur voor Freeman rank</div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="recruitDurationDays" class="form-label">
+                                    <i class="fas fa-clock me-1"></i>
+                                    Recruit Duur (dagen)
+                                </label>
+                                <input type="number" class="form-control" id="recruitDurationDays" name="recruitDurationDays"
+                                       value="<%= guild.dbInfo.settings?.recruitDurationDays || 120 %>"
+                                       min="1" placeholder="120">
+                                <div class="form-text">Maximale duur voor Recruit rank</div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="modRoleId" class="form-label">
+                                    <i class="fas fa-user-shield me-1"></i>
+                                    Mod Role ID
+                                </label>
+                                <input type="text" class="form-control" id="modRoleId" name="modRoleId"
+                                       value="<%= guild.dbInfo.settings?.modRoleId || '' %>"
+                                       placeholder="123456789012345678">
+                                <div class="form-text">Role ID voor moderators (voor notificaties)</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="freemanRoleId" class="form-label">
+                                    <i class="fas fa-id-badge me-1"></i>
+                                    Freeman Role ID
+                                </label>
+                                <input type="text" class="form-control" id="freemanRoleId" name="freemanRoleId"
+                                       value="<%= guild.dbInfo.settings?.freemanRoleId || '' %>"
+                                       placeholder="123456789012345678">
+                                <div class="form-text">Discord Role ID voor Freeman rank</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="recruitRoleId" class="form-label">
+                                    <i class="fas fa-id-badge me-1"></i>
+                                    Recruit Role ID
+                                </label>
+                                <input type="text" class="form-control" id="recruitRoleId" name="recruitRoleId"
+                                       value="<%= guild.dbInfo.settings?.recruitRoleId || '' %>"
+                                       placeholder="123456789012345678">
+                                <div class="form-text">Discord Role ID voor Recruit rank</div>
+                            </div>
+                        </div>
+
                         <button type="submit" class="btn btn-primary mt-3">
                             <i class="fas fa-save me-2"></i>
                             Opslaan
@@ -104,7 +167,7 @@
                         <div class="card-body text-center">
                             <i class="fas fa-user-check fa-3x mb-2 text-primary"></i>
                             <h3 class="mb-0"><%= guild.users.length %></h3>
-                            <p class="text-muted mb-0">Geregistreerde Users</p>
+                            <p class="text-muted mb-0">Geregistreerde Vikings</p>
                         </div>
                     </div>
                 </div>
@@ -123,7 +186,7 @@
             <% if (guild.users.length > 0) { %>
                 <div class="card bg-dark text-white border-secondary">
                     <div class="card-header">
-                        <h5 class="mb-0"><i class="fas fa-users me-2"></i>Geregistreerde Users (Laatste 50)</h5>
+                        <h5 class="mb-0"><i class="fas fa-users me-2"></i>Geregistreerde Vikings (Laatste 50)</h5>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
