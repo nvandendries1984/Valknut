@@ -87,6 +87,22 @@ export default {
                 .setPlaceholder('01-01-2000')
                 .setMaxLength(10);
 
+            // Postcode
+            const postcodeInput = new TextInputBuilder()
+                .setCustomId('postcode')
+                .setLabel('Postcode')
+                .setStyle(TextInputStyle.Short)
+                .setRequired(false)
+                .setMaxLength(10);
+
+            // Woonplaats
+            const woonplaatsInput = new TextInputBuilder()
+                .setCustomId('woonplaats')
+                .setLabel('Woonplaats')
+                .setStyle(TextInputStyle.Short)
+                .setRequired(false)
+                .setMaxLength(100);
+
             // Address
             const addressInput = new TextInputBuilder()
                 .setCustomId('address')
@@ -103,20 +119,12 @@ export default {
                 .setRequired(false)
                 .setMaxLength(20);
 
-            // Email
-            const emailInput = new TextInputBuilder()
-                .setCustomId('email')
-                .setLabel('Email')
-                .setStyle(TextInputStyle.Short)
-                .setRequired(false)
-                .setMaxLength(100);
-
             // Create action rows
             const firstRow = new ActionRowBuilder().addComponents(nameInput);
             const secondRow = new ActionRowBuilder().addComponents(dobInput);
-            const thirdRow = new ActionRowBuilder().addComponents(addressInput);
-            const fourthRow = new ActionRowBuilder().addComponents(phoneInput);
-            const fifthRow = new ActionRowBuilder().addComponents(emailInput);
+            const thirdRow = new ActionRowBuilder().addComponents(postcodeInput);
+            const fourthRow = new ActionRowBuilder().addComponents(woonplaatsInput);
+            const fifthRow = new ActionRowBuilder().addComponents(addressInput);
 
             modal.addComponents(firstRow, secondRow, thirdRow, fourthRow, fifthRow);
 
@@ -132,9 +140,10 @@ export default {
                 // Get values from modal
                 const name = submitted.fields.getTextInputValue('name');
                 const dateOfBirth = submitted.fields.getTextInputValue('dateOfBirth') || null;
+                const postcode = submitted.fields.getTextInputValue('postcode') || null;
+                const woonplaats = submitted.fields.getTextInputValue('woonplaats') || null;
                 const address = submitted.fields.getTextInputValue('address') || null;
                 const phoneNumber = submitted.fields.getTextInputValue('phoneNumber') || null;
-                const email = submitted.fields.getTextInputValue('email') || null;
 
                 // Save to database
                 try {
@@ -149,9 +158,10 @@ export default {
                             onboarding: {
                                 name,
                                 dateOfBirth,
+                                postcode,
+                                woonplaats,
                                 address,
                                 phoneNumber,
-                                email,
                                 rank: null,
                                 dateRegistered: new Date(),
                                 year: new Date().getFullYear(),
@@ -171,9 +181,10 @@ export default {
                             `**Saga:** ${selectedSaga}\n` +
                             `**Name:** ${name}\n` +
                             `${dateOfBirth ? `**Date of Birth:** ${dateOfBirth}\n` : ''}` +
+                            `${postcode ? `**Postcode:** ${postcode}\n` : ''}` +
+                            `${woonplaats ? `**Woonplaats:** ${woonplaats}\n` : ''}` +
                             `${address ? `**Address:** ${address}\n` : ''}` +
                             `${phoneNumber ? `**Phone:** ${phoneNumber}\n` : ''}` +
-                            `${email ? `**Email:** ${email}\n` : ''}` +
                             `**Year:** ${new Date().getFullYear()}`
                         )],
                         ephemeral: true

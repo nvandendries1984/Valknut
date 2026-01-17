@@ -144,6 +144,38 @@ const userSchema = new mongoose.Schema({
             enum: ['Beardserker', 'Sideburn Soldier', 'Moustache Militia', 'Goatee Gladiator', 'Whaler', 'Shieldmaiden', null],
             default: null
         },
+        postcode: {
+            type: String,
+            default: null
+        },
+        woonplaats: {
+            type: String,
+            default: null
+        },
+        sagaLevel: {
+            type: Number,
+            default: null
+        },
+        datumRecruit: {
+            type: Date,
+            default: null
+        },
+        datumWarrior: {
+            type: Date,
+            default: null
+        },
+        punten: {
+            type: Number,
+            default: 0
+        },
+        strafpunten: {
+            type: Number,
+            default: 0
+        },
+        strikes: {
+            type: Number,
+            default: 0
+        },
         notes: {
             type: String,
             default: null

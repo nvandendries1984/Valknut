@@ -150,4 +150,41 @@ router.get('/guild/:guildId/users/:userId', isAllowedUser, hasGuildAccess, async
     }
 });
 
+// Update user onboarding data
+router.post('/guild/:guildId/user/:userId/onboarding', isAllowedUser, hasGuildAccess, async (req, res) => {
+    try {
+        const { guildId, userId } = req.params;
+        const { name, saga, dateOfBirth, phoneNumber, email, address, postcode, woonplaats, sagaLevel, datumRecruit, datumWarrior, punten, strafpunten, strikes, notes } = req.body;
+
+        const user = await User.findOne({ userId, guildId });
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Update onboarding fields
+        if (name !== undefined) user.onboarding.name = name || null;
+        if (saga !== undefined) user.onboarding.saga = saga || null;
+        if (dateOfBirth !== undefined) user.onboarding.dateOfBirth = dateOfBirth || null;
+        if (phoneNumber !== undefined) user.onboarding.phoneNumber = phoneNumber || null;
+        if (email !== undefined) user.onboarding.email = email || null;
+        if (address !== undefined) user.onboarding.address = address || null;
+        if (postcode !== undefined) user.onboarding.postcode = postcode || null;
+        if (woonplaats !== undefined) user.onboarding.woonplaats = woonplaats || null;
+        if (sagaLevel !== undefined) user.onboarding.sagaLevel = sagaLevel || null;
+        if (datumRecruit !== undefined) user.onboarding.datumRecruit = datumRecruit ? new Date(datumRecruit) : null;
+        if (datumWarrior !== undefined) user.onboarding.datumWarrior = datumWarrior ? new Date(datumWarrior) : null;
+        if (punten !== undefined) user.onboarding.punten = parseInt(punten) || 0;
+        if (strafpunten !== undefined) user.onboarding.strafpunten = parseInt(strafpunten) || 0;
+        if (strikes !== undefined) user.onboarding.strikes = parseInt(strikes) || 0;
+        if (notes !== undefined) user.onboarding.notes = notes || null;
+
+        await user.save();
+
+        res.json({ success: true, user });
+    } catch (error) {
+        console.error('Update onboarding error:', error);
+        res.status(500).json({ error: 'Failed to update onboarding data' });
+    }
+});
+
 export default router;

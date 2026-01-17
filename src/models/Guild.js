@@ -60,6 +60,10 @@ const guildSchema = new mongoose.Schema({
         language: {
             type: String,
             default: 'en'
+        },
+        modRoleId: {
+            type: String,
+            default: null
         }
     }
 }, {
