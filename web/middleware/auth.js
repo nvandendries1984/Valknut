@@ -67,7 +67,8 @@ export async function isAllowedUser(req, res, next) {
 
     res.status(403).render('error', {
         title: 'Access Denied',
-        error: { message: 'You do not have permission to access this application. Contact the bot owner for access.' }
+        error: { message: 'You do not have permission to access this application. Contact the bot owner for access.' },
+        showUserNav: false
     });
 }
 
@@ -87,7 +88,8 @@ export function isOwner(req, res, next) {
 
     res.status(403).render('error', {
         title: 'Access Denied',
-        error: { message: 'This page is only accessible to the bot owner' }
+        error: { message: 'This page is only accessible to the bot owner' },
+        showUserNav: false
     });
 }
 

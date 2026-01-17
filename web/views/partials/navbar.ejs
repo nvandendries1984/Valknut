@@ -14,17 +14,17 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-center">
-                <% if (typeof user !== 'undefined' && user) { %>
+                <% if (typeof user !== 'undefined' && user && (typeof showUserNav === 'undefined' || showUserNav !== false)) { %>
                     <li class="nav-item">
                         <a class="nav-link" href="/dashboard">
                             <i class="fas fa-tachometer-alt me-1"></i>
-                            <%= __('nav.dashboard') %>
+                            <%= (typeof __ !== 'undefined' ? __('nav.dashboard') : 'Dashboard') %>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/dashboard/help">
                             <i class="fas fa-question-circle me-1"></i>
-                            <%= __('nav.help') || 'Help' %>
+                            <%= (typeof __ !== 'undefined' ? __('nav.help') : 'Help') %>
                         </a>
                     </li>
                     <li class="nav-item dropdown">
@@ -36,16 +36,16 @@
                         <ul class="dropdown-menu dropdown-menu-end">
                             <% if (process.env.OWNER_ID === user.id) { %>
                                 <li><a class="dropdown-item" href="/admin/users">
-                                    <i class="fas fa-user-shield me-2"></i><%= __('nav.manageUsers') %>
+                                    <i class="fas fa-user-shield me-2"></i><%= (typeof __ !== 'undefined' ? __('nav.manageUsers') : 'Manage Users') %>
                                 </a></li>
                                 <li><hr class="dropdown-divider"></li>
                             <% } %>
                             <li><a class="dropdown-item" href="/auth/2fa/status">
-                                <i class="fas fa-shield-alt me-2"></i><%= __('nav.twoFaSettings') %>
+                                <i class="fas fa-shield-alt me-2"></i><%= (typeof __ !== 'undefined' ? __('nav.twoFaSettings') : '2FA Settings') %>
                             </a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="/auth/logout">
-                                <i class="fas fa-sign-out-alt me-2"></i><%= __('nav.logout') %>
+                                <i class="fas fa-sign-out-alt me-2"></i><%= (typeof __ !== 'undefined' ? __('nav.logout') : 'Logout') %>
                             </a></li>
                         </ul>
                     </li>
