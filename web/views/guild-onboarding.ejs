@@ -1,0 +1,107 @@
+<%- include('layout', { body: `
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-dark p-3 rounded">
+                    <li class="breadcrumb-item"><a href="/dashboard" class="text-decoration-none">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="/dashboard/guild/${guild.id}" class="text-decoration-none">${guild.name}</a></li>
+                    <li class="breadcrumb-item active text-white" aria-current="page">Onboarding</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col">
+            <div class="card bg-dark border-secondary">
+                <div class="card-header bg-dark border-secondary d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-plus me-2"></i>Onboarding Data
+                    </h4>
+                    <span class="badge bg-primary">${users.length} Users</span>
+                </div>
+                <div class="card-body">
+                    ${users.length === 0 ? `
+                        <div class="alert alert-info bg-dark border-info text-white">
+                            <i class="fas fa-info-circle me-2"></i>
+                            No onboarding data available yet. Use <code>/onboarding</code> command in Discord to add users.
+                        </div>
+                    ` : `
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Username</th>
+                                        <th>Name</th>
+                                        <th>Saga</th>
+                                        <th>Date of Birth</th>
+                                        <th>Contact</th>
+                                        <th>Year</th>
+                                        <th>Registered</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${users.map(user => `
+                                        <tr>
+                                            <td>
+                                                <strong>${user.username}</strong>
+                                                ${user.discriminator !== '0' ? `<span class="text-muted">#${user.discriminator}</span>` : ''}
+                                            </td>
+                                            <td>${user.onboarding.name || '-'}</td>
+                                            <td>
+                                                ${user.onboarding.saga ? `
+                                                    <span class="badge" style="background-color: ${getSagaColor(user.onboarding.saga)}">
+                                                        ${getSagaEmoji(user.onboarding.saga)} ${user.onboarding.saga}
+                                                    </span>
+                                                ` : '-'}
+                                            </td>
+                                            <td>${user.onboarding.dateOfBirth || '-'}</td>
+                                            <td>
+                                                ${user.onboarding.phoneNumber ? `<div><i class="fas fa-phone me-1"></i>${user.onboarding.phoneNumber}</div>` : ''}
+                                                ${user.onboarding.email ? `<div><i class="fas fa-envelope me-1"></i><a href="mailto:${user.onboarding.email}" class="text-decoration-none">${user.onboarding.email}</a></div>` : ''}
+                                                ${user.onboarding.address ? `<div><i class="fas fa-home me-1"></i>${user.onboarding.address}</div>` : ''}
+                                                ${!user.onboarding.phoneNumber && !user.onboarding.email && !user.onboarding.address ? '-' : ''}
+                                            </td>
+                                            <td>${user.onboarding.year || '-'}</td>
+                                            <td>
+                                                ${user.onboarding.dateRegistered ? new Date(user.onboarding.dateRegistered).toLocaleDateString('nl-NL') : '-'}
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function getSagaEmoji(saga) {
+        const emojis = {
+            'Beardserker': '🧔',
+            'Sideburn Soldier': '👨',
+            'Moustache Militia': '🥸',
+            'Goatee Gladiator': '🗡️',
+            'Whaler': '🐋',
+            'Shieldmaiden': '🛡️'
+        };
+        return emojis[saga] || '';
+    }
+
+    function getSagaColor(saga) {
+        const colors = {
+            'Beardserker': '#8B4513',
+            'Sideburn Soldier': '#4169E1',
+            'Moustache Militia': '#9370DB',
+            'Goatee Gladiator': '#DC143C',
+            'Whaler': '#20B2AA',
+            'Shieldmaiden': '#FFD700'
+        };
+        return colors[saga] || '#6c757d';
+    }
+</script>
+` }) %>

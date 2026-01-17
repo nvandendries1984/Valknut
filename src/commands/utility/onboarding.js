@@ -1,0 +1,216 @@
+import { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, PermissionFlagsBits, StringSelectMenuBuilder } from 'discord.js';
+import { User } from '../../models/User.js';
+import { createSuccessEmbed, createErrorEmbed, createEmbed } from '../../utils/embedBuilder.js';
+import { logger } from '../../utils/logger.js';
+
+export default {
+    category: 'utility',
+    data: new SlashCommandBuilder()
+        .setName('onboarding')
+        .setDescription('Start onboarding process for a user')
+        .addUserOption(option =>
+            option
+                .setName('user')
+                .setDescription('The user to onboard')
+                .setRequired(true)
+        )
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
+
+    async execute(interaction) {
+        // Check if command is used in a guild
+        if (!interaction.guild) {
+            return interaction.reply({
+                embeds: [createErrorEmbed('This command can only be used in a server!')],
+                ephemeral: true
+            });
+        }
+
+        const targetUser = interaction.options.getUser('user');
+        const guildId = interaction.guild.id;
+
+        logger.info(`Starting onboarding for ${targetUser.tag} in guild ${interaction.guild.name}`);
+
+        // Create select menu for Saga selection
+        const sagaSelect = new StringSelectMenuBuilder()
+            .setCustomId(`saga-select-${targetUser.id}`)
+            .setPlaceholder('Select a Saga')
+            .addOptions([
+                { label: 'Beardserker', value: 'Beardserker', emoji: '🧔' },
+                { label: 'Sideburn Soldier', value: 'Sideburn Soldier', emoji: '👨' },
+                { label: 'Moustache Militia', value: 'Moustache Militia', emoji: '🥸' },
+                { label: 'Goatee Gladiator', value: 'Goatee Gladiator', emoji: '🗡️' },
+                { label: 'Whaler', value: 'Whaler', emoji: '🐋' },
+                { label: 'Shieldmaiden', value: 'Shieldmaiden', emoji: '🛡️' }
+            ]);
+
+        const row = new ActionRowBuilder().addComponents(sagaSelect);
+
+        const embed = createEmbed(
+            `**Onboarding: ${targetUser.username}**\n\n` +
+            `First, select the Saga for this user, then fill in their details.`
+        );
+
+        await interaction.reply({
+            embeds: [embed],
+            components: [row],
+            ephemeral: true
+        });
+
+        // Wait for saga selection
+        try {
+            const sagaResponse = await interaction.channel.awaitMessageComponent({
+                filter: i => i.customId === `saga-select-${targetUser.id}` && i.user.id === interaction.user.id,
+                time: 60000
+            });
+
+            const selectedSaga = sagaResponse.values[0];
+
+            // Create modal for remaining fields
+            const modal = new ModalBuilder()
+                .setCustomId(`onboarding-${targetUser.id}`)
+                .setTitle(`Onboarding: ${targetUser.username}`);
+
+            // Name
+            const nameInput = new TextInputBuilder()
+                .setCustomId('name')
+                .setLabel('Name')
+                .setStyle(TextInputStyle.Short)
+                .setRequired(true)
+                .setMaxLength(100);
+
+            // Date of Birth
+            const dobInput = new TextInputBuilder()
+                .setCustomId('dateOfBirth')
+                .setLabel('Date of Birth (DD-MM-YYYY)')
+                .setStyle(TextInputStyle.Short)
+                .setRequired(false)
+                .setPlaceholder('01-01-2000')
+                .setMaxLength(10);
+
+            // Address
+            const addressInput = new TextInputBuilder()
+                .setCustomId('address')
+                .setLabel('Address')
+                .setStyle(TextInputStyle.Short)
+                .setRequired(false)
+                .setMaxLength(200);
+
+            // Phone Number
+            const phoneInput = new TextInputBuilder()
+                .setCustomId('phoneNumber')
+                .setLabel('Phone Number')
+                .setStyle(TextInputStyle.Short)
+                .setRequired(false)
+                .setMaxLength(20);
+
+            // Email
+            const emailInput = new TextInputBuilder()
+                .setCustomId('email')
+                .setLabel('Email')
+                .setStyle(TextInputStyle.Short)
+                .setRequired(false)
+                .setMaxLength(100);
+
+            // Create action rows
+            const firstRow = new ActionRowBuilder().addComponents(nameInput);
+            const secondRow = new ActionRowBuilder().addComponents(dobInput);
+            const thirdRow = new ActionRowBuilder().addComponents(addressInput);
+            const fourthRow = new ActionRowBuilder().addComponents(phoneInput);
+            const fifthRow = new ActionRowBuilder().addComponents(emailInput);
+
+            modal.addComponents(firstRow, secondRow, thirdRow, fourthRow, fifthRow);
+
+            await sagaResponse.showModal(modal);
+
+            // Wait for modal submission
+            try {
+                const submitted = await sagaResponse.awaitModalSubmit({
+                    filter: i => i.customId === `onboarding-${targetUser.id}` && i.user.id === interaction.user.id,
+                    time: 300000 // 5 minutes
+                });
+
+                // Get values from modal
+                const name = submitted.fields.getTextInputValue('name');
+                const dateOfBirth = submitted.fields.getTextInputValue('dateOfBirth') || null;
+                const address = submitted.fields.getTextInputValue('address') || null;
+                const phoneNumber = submitted.fields.getTextInputValue('phoneNumber') || null;
+                const email = submitted.fields.getTextInputValue('email') || null;
+
+                // Save to database
+                try {
+                    const user = await User.findOneAndUpdate(
+                        { userId: targetUser.id, guildId },
+                        {
+                            userId: targetUser.id,
+                            guildId,
+                            username: targetUser.username,
+                            discriminator: targetUser.discriminator,
+                            registeredBy: interaction.user.id,
+                            onboarding: {
+                                name,
+                                dateOfBirth,
+                                address,
+                                phoneNumber,
+                                email,
+                                rank: null,
+                                dateRegistered: new Date(),
+                                year: new Date().getFullYear(),
+                                saga: selectedSaga,
+                                notes: null
+                            },
+                            registeredAt: new Date()
+                        },
+                        { upsert: true, new: true }
+                    );
+
+                    logger.info(`Onboarding data saved for ${targetUser.tag} in guild ${guildId}`);
+
+                    await submitted.reply({
+                        embeds: [createSuccessEmbed(
+                            `✅ Onboarding completed for ${targetUser.username}!\n\n` +
+                            `**Saga:** ${selectedSaga}\n` +
+                            `**Name:** ${name}\n` +
+                            `${dateOfBirth ? `**Date of Birth:** ${dateOfBirth}\n` : ''}` +
+                            `${address ? `**Address:** ${address}\n` : ''}` +
+                            `${phoneNumber ? `**Phone:** ${phoneNumber}\n` : ''}` +
+                            `${email ? `**Email:** ${email}\n` : ''}` +
+                            `**Year:** ${new Date().getFullYear()}`
+                        )],
+                        ephemeral: true
+                    });
+
+                } catch (error) {
+                    logger.error(`Failed to save onboarding data: ${error.message}`);
+                    await submitted.reply({
+                        embeds: [createErrorEmbed('Failed to save onboarding data. Please try again.')],
+                        ephemeral: true
+                    });
+                }
+
+            } catch (error) {
+                if (error.message.includes('time')) {
+                    logger.info(`Onboarding modal timed out for ${targetUser.tag}`);
+                    await interaction.editReply({
+                        content: 'Onboarding timed out. Please try again.',
+                        components: [],
+                        embeds: []
+                    });
+                } else {
+                    logger.error(`Onboarding modal error: ${error.message}`);
+                }
+            }
+
+        } catch (error) {
+            if (error.message.includes('time')) {
+                logger.info(`Saga selection timed out for ${targetUser.tag}`);
+                await interaction.editReply({
+                    content: 'Selection timed out. Please try again.',
+                    components: [],
+                    embeds: []
+                });
+            } else {
+                logger.error(`Saga selection error: ${error.message}`);
+            }
+        }
+    }
+};

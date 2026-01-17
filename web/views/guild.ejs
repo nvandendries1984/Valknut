@@ -135,6 +135,7 @@
                                         <th>Rollen</th>
                                         <th>User ID</th>
                                         <th>Geregistreerd op</th>
+                                        <th>Onboarding</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -163,6 +164,29 @@
                                             </td>
                                             <td><code><%= user.userId %></code></td>
                                             <td><%= new Date(user.registeredAt).toLocaleString('nl-NL') %></td>
+                                            <td>
+                                                <% if (user.onboarding && user.onboarding.name) { %>
+                                                    <button class="btn btn-sm btn-primary" onclick="showOnboardingData('<%= user._id %>')">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <script>
+                                                        window.onboardingData = window.onboardingData || {};
+                                                        window.onboardingData['<%= user._id %>'] = {
+                                                            username: '<%= user.username %>',
+                                                            name: '<%= user.onboarding.name %>',
+                                                            saga: '<%= user.onboarding.saga || "" %>',
+                                                            dateOfBirth: '<%= user.onboarding.dateOfBirth || "" %>',
+                                                            address: '<%= user.onboarding.address || "" %>',
+                                                            phoneNumber: '<%= user.onboarding.phoneNumber || "" %>',
+                                                            email: '<%= user.onboarding.email || "" %>',
+                                                            year: '<%= user.onboarding.year || "" %>',
+                                                            dateRegistered: '<%= user.onboarding.dateRegistered ? new Date(user.onboarding.dateRegistered).toLocaleDateString("nl-NL") : "" %>'
+                                                        };
+                                                    </script>
+                                                <% } else { %>
+                                                    <span class="text-muted">-</span>
+                                                <% } %>
+                                            </td>
                                         </tr>
                                     <% }); %>
                                 </tbody>
@@ -245,6 +269,130 @@ document.getElementById('settingsForm').addEventListener('submit', async (e) => 
         messageEl.style.display = 'block';
     }
 });
+
+// Onboarding modal functions
+function getSagaEmoji(saga) {
+    const emojis = {
+        'Beardserker': '🧔',
+        'Sideburn Soldier': '👨',
+        'Moustache Militia': '🥸',
+        'Goatee Gladiator': '🗡️',
+        'Whaler': '🐋',
+        'Shieldmaiden': '🛡️'
+    };
+    return emojis[saga] || '';
+}
+
+function getSagaColor(saga) {
+    const colors = {
+        'Beardserker': '#8B4513',
+        'Sideburn Soldier': '#4169E1',
+        'Moustache Militia': '#9370DB',
+        'Goatee Gladiator': '#DC143C',
+        'Whaler': '#20B2AA',
+        'Shieldmaiden': '#FFD700'
+    };
+    return colors[saga] || '#6c757d';
+}
+
+function showOnboardingData(userId) {
+    const data = window.onboardingData[userId];
+    if (!data) return;
+
+    const modalHtml = `
+        <div class="modal fade" id="onboardingModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content bg-dark text-white border-secondary">
+                    <div class="modal-header border-secondary">
+                        <h5 class="modal-title">
+                            <i class="fas fa-user-plus me-2"></i>
+                            Onboarding: ${data.username}
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label text-muted">
+                                    <i class="fas fa-user me-1"></i>Naam
+                                </label>
+                                <input type="text" class="form-control bg-dark text-white border-secondary" value="${data.name}" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted">
+                                    <i class="fas fa-flag me-1"></i>Saga
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-dark border-secondary" style="background-color: ${getSagaColor(data.saga)} !important;">
+                                        ${getSagaEmoji(data.saga)}
+                                    </span>
+                                    <input type="text" class="form-control bg-dark text-white border-secondary" value="${data.saga}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted">
+                                    <i class="fas fa-calendar me-1"></i>Geboortedatum
+                                </label>
+                                <input type="text" class="form-control bg-dark text-white border-secondary" value="${data.dateOfBirth || '-'}" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted">
+                                    <i class="fas fa-calendar-check me-1"></i>Jaar
+                                </label>
+                                <input type="text" class="form-control bg-dark text-white border-secondary" value="${data.year || '-'}" readonly>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label text-muted">
+                                    <i class="fas fa-home me-1"></i>Adres
+                                </label>
+                                <input type="text" class="form-control bg-dark text-white border-secondary" value="${data.address || '-'}" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted">
+                                    <i class="fas fa-phone me-1"></i>Telefoonnummer
+                                </label>
+                                <input type="text" class="form-control bg-dark text-white border-secondary" value="${data.phoneNumber || '-'}" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted">
+                                    <i class="fas fa-envelope me-1"></i>Email
+                                </label>
+                                <input type="text" class="form-control bg-dark text-white border-secondary" value="${data.email || '-'}" readonly>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label text-muted">
+                                    <i class="fas fa-clock me-1"></i>Geregistreerd op
+                                </label>
+                                <input type="text" class="form-control bg-dark text-white border-secondary" value="${data.dateRegistered || '-'}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-secondary">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sluiten</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Remove existing modal if any
+    const existingModal = document.getElementById('onboardingModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+    // Add modal to body
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('onboardingModal'));
+    modal.show();
+
+    // Clean up modal after it's hidden
+    document.getElementById('onboardingModal').addEventListener('hidden.bs.modal', function() {
+        this.remove();
+    });
+}
     </script>
 </body>
 </html>

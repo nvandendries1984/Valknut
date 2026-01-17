@@ -24,7 +24,7 @@
         <!-- Backups List -->
         <div class="row">
             <div class="col-12">
-                <div class="card">
+                <div class="card bg-dark text-white border-secondary">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0"><i class="fas fa-archive"></i> Available Backups (<span id="backupCount"><%= backups.length %></span>)</h5>
                         <span class="badge bg-info">Retention: Last 7 backups</span>
@@ -38,7 +38,7 @@
                             </div>
                         <% } else { %>
                             <div class="table-responsive">
-                                <table class="table table-hover" id="backupsTable">
+                                <table class="table table-dark table-hover" id="backupsTable">
                                     <thead>
                                         <tr>
                                             <th><i class="fas fa-file-archive"></i> Filename</th>
@@ -58,14 +58,10 @@
                                                 <td><%= backup.date %></td>
                                                 <td class="text-end">
                                                     <a href="/admin/backups/download/<%= backup.filename %>"
-                                                       class="btn btn-sm btn-primary me-2"
+                                                       class="btn btn-sm btn-primary"
                                                        download>
                                                         <i class="fas fa-download"></i> Download
                                                     </a>
-                                                    <button class="btn btn-sm btn-danger delete-backup-btn"
-                                                            data-filename="<%= backup.filename %>">
-                                                        <i class="fas fa-trash"></i> Delete
-                                                    </button>
                                                 </td>
                                             </tr>
                                         <% }); %>

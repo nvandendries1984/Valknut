@@ -32,6 +32,7 @@ services:
     volumes:
       - ./web:/app/web
       - ./src:/app/src
+      - ./db-backups:/app/db-backups
     depends_on:
       - valknut-bot
     networks:

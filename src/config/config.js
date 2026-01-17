@@ -1,5 +1,29 @@
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import path from 'path';
+import fs from 'fs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 dotenv.config();
+
+// Determine backup directory (Docker vs local)
+const getBackupDir = () => {
+    const dockerPath = '/app/db-backups';
+    const localPath = path.join(path.dirname(__dirname), '..', 'db-backups');
+
+    // Check if Docker path exists
+    if (fs.existsSync(dockerPath)) {
+        return dockerPath;
+    }
+
+    // Use local path and ensure it exists
+    if (!fs.existsSync(localPath)) {
+        fs.mkdirSync(localPath, { recursive: true });
+    }
+    return localPath;
+};
 
 export const config = {
     // Discord credentials
@@ -17,6 +41,9 @@ export const config = {
 
     // MongoDB
     mongodbUri: process.env.MONGODB_URI,
+
+    // Backup directory
+    backupDir: getBackupDir(),
 
     // Bot intents and configuration
     intents: [

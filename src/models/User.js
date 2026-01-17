@@ -103,7 +103,52 @@ const userSchema = new mongoose.Schema({
     roles: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Role'
-    }]
+    }],
+
+    // Onboarding information
+    onboarding: {
+        name: {
+            type: String,
+            default: null
+        },
+        dateOfBirth: {
+            type: String,
+            default: null
+        },
+        address: {
+            type: String,
+            default: null
+        },
+        phoneNumber: {
+            type: String,
+            default: null
+        },
+        email: {
+            type: String,
+            default: null
+        },
+        rank: {
+            type: String,
+            default: null
+        },
+        dateRegistered: {
+            type: Date,
+            default: null
+        },
+        year: {
+            type: Number,
+            default: null
+        },
+        saga: {
+            type: String,
+            enum: ['Beardserker', 'Sideburn Soldier', 'Moustache Militia', 'Goatee Gladiator', 'Whaler', 'Shieldmaiden', null],
+            default: null
+        },
+        notes: {
+            type: String,
+            default: null
+        }
+    }
 }, {
     timestamps: true,
     collection: 'users'

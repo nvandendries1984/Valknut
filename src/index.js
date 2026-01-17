@@ -75,8 +75,11 @@ process.on('SIGTERM', async () => {
     process.exit(0);
 });
 
-// Login
+// Login to Discord
 client.login(config.token).catch(error => {
-    logger.error(`Failed to login: ${error.message}`);
+    logger.error(`Failed to login to Discord: ${error.message}`);
     process.exit(1);
 });
+
+// Export client for potential external use
+export { client };

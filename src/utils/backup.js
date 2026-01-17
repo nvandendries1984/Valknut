@@ -2,13 +2,14 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 import path from 'path';
 import { logger } from './logger.js';
+import { config } from '../config/config.js';
 
 const execAsync = promisify(exec);
 
 export async function createDatabaseBackup() {
     try {
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        const backupDir = '/app/db-backups';
+        const backupDir = config.backupDir;
         const backupName = `valknut-backup-${timestamp}`;
         const tempBackupPath = path.join(backupDir, 'temp', backupName);
         const archivePath = path.join(backupDir, `${backupName}.tar.gz`);

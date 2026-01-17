@@ -150,4 +150,50 @@ router.get('/guild/:guildId', isAllowedUser, hasGuildAccess, async (req, res) =>
     }
 });
 
+// Onboarding data page
+router.get('/guild/:guildId/onboarding', isAllowedUser, hasGuildAccess, async (req, res) => {
+    try {
+        const guildId = req.params.guildId;
+
+        // Get user's guild info from Discord
+        const userGuild = req.user.guilds?.find(g => g.id === guildId);
+        if (!userGuild) {
+            return res.status(403).render('error', {
+                title: 'Access Denied',
+                error: { message: 'You are not a member of this guild' }
+            });
+        }
+
+        // Get guild from database
+        const guild = await Guild.findByGuildId(guildId);
+        if (!guild) {
+            return res.status(404).render('error', {
+                title: 'Guild Not Found',
+                error: { message: 'This guild is not in the database' }
+            });
+        }
+
+        // Get users with onboarding data
+        const users = await User.find({ 
+            guildId,
+            'onboarding.name': { $ne: null }
+        }).sort({ 'onboarding.dateRegistered': -1 });
+
+        res.render('guild-onboarding', {
+            title: `Onboarding - ${userGuild.name}`,
+            guild: {
+                ...userGuild,
+                dbInfo: guild
+            },
+            users
+        });
+    } catch (error) {
+        console.error('Onboarding page error:', error);
+        res.status(500).render('error', {
+            title: 'Error',
+            error: { message: 'Failed to load onboarding data' }
+        });
+    }
+});
+
 export default router;

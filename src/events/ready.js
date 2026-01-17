@@ -34,14 +34,5 @@ export default {
         } catch (error) {
             logger.error('Failed to connect to database');
         }
-
-        // Set bot status
-        client.user.setPresence({
-            activities: [{
-                name: `${config.prefix}help | ${client.guilds.cache.size} servers`,
-                type: ActivityType.Watching
-            }],
-            status: 'online'
-        });
     }
 };

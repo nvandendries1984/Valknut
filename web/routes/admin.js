@@ -5,6 +5,7 @@ import { promisify } from 'util';
 import { exec } from 'child_process';
 import path from 'path';
 import fs from 'fs';
+import { config } from '../../src/config/config.js';
 
 const router = express.Router();
 const execAsync = promisify(exec);
@@ -138,91 +139,6 @@ router.get('/users/api', isOwner, async (req, res) => {
     } catch (error) {
         console.error('Error fetching allowed users:', error);
         res.status(500).json({ error: 'Error fetching users' });
-    }
-});
-
-// Backup management page
-router.get('/backups', isOwner, async (req, res) => {
-    try {
-        const backupDir = '/app/db-backups';
-
-        // Get list of backup files
-        const { stdout } = await execAsync(`ls -lt ${backupDir}/*.tar.gz 2>/dev/null || echo ""`);
-        const backupFiles = stdout.trim().split('\n').filter(line => line.includes('.tar.gz'));
-
-        const backups = backupFiles.map(line => {
-            const parts = line.split(/\s+/);
-            const filename = parts[parts.length - 1].split('/').pop();
-            const size = parts[4];
-            const date = `${parts[5]} ${parts[6]} ${parts[7]}`;
-
-            return {
-                filename,
-                size,
-                date,
-                path: parts[parts.length - 1]
-            };
-        });
-
-        res.render('admin-backups', {
-            user: req.user,
-            backups,
-            title: 'Database Backups'
-        });
-    } catch (error) {
-        console.error('Error loading backups page:', error);
-        res.status(500).send('Error loading backups page');
-    }
-});
-
-// Download backup file
-router.get('/backups/download/:filename', isOwner, async (req, res) => {
-    try {
-        const { filename } = req.params;
-
-        // Validate filename (prevent directory traversal)
-        if (!filename.match(/^valknut-backup-[\d-T]+\.tar\.gz$/)) {
-            return res.status(400).send('Invalid filename');
-        }
-
-        const filePath = path.join('/app/db-backups', filename);
-
-        // Check if file exists
-        if (!fs.existsSync(filePath)) {
-            return res.status(404).send('Backup file not found');
-        }
-
-        res.download(filePath, filename);
-    } catch (error) {
-        console.error('Error downloading backup:', error);
-        res.status(500).send('Error downloading backup');
-    }
-});
-
-// Delete backup file
-router.delete('/backups/:filename', isOwner, async (req, res) => {
-    try {
-        const { filename } = req.params;
-
-        // Validate filename (prevent directory traversal)
-        if (!filename.match(/^valknut-backup-[\d-T]+\.tar\.gz$/)) {
-            return res.status(400).json({ error: 'Invalid filename' });
-        }
-
-        const filePath = path.join('/app/db-backups', filename);
-
-        // Check if file exists
-        if (!fs.existsSync(filePath)) {
-            return res.status(404).json({ error: 'Backup file not found' });
-        }
-
-        // Delete file
-        fs.unlinkSync(filePath);
-
-        res.json({ success: true, message: 'Backup deleted successfully' });
-    } catch (error) {
-        console.error('Error deleting backup:', error);
-        res.status(500).json({ error: 'Error deleting backup' });
     }
 });
 

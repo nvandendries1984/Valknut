@@ -38,10 +38,14 @@ export default {
             // Add button handling logic here
         }
 
-        // Handle select menu interactions
+        // Handle select menu interactions - these are handled by the commands themselves
         if (interaction.isStringSelectMenu()) {
-            logger.debug(`Select menu interaction: ${interaction.customId}`);
-            // Add select menu handling logic here
+            logger.debug(`Select menu interaction: ${interaction.customId} by ${interaction.user.tag}`);
+        }
+
+        // Handle modal submissions - these are handled by the commands themselves
+        if (interaction.isModalSubmit()) {
+            logger.debug(`Modal submit interaction: ${interaction.customId} by ${interaction.user.tag}`);
         }
     }
 };
