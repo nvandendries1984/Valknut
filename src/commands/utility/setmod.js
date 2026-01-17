@@ -14,7 +14,6 @@ export default {
                 .setDescription('The moderator role')
                 .setRequired(true)
         )
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
         .setDMPermission(false),
 
     async execute(interaction) {
@@ -22,6 +21,14 @@ export default {
         if (!interaction.guild) {
             return interaction.reply({
                 embeds: [createErrorEmbed('This command can only be used in a server!')],
+                ephemeral: true
+            });
+        }
+
+        // Check if user has Administrator permission
+        if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator)) {
+            return interaction.reply({
+                embeds: [createErrorEmbed('You need Administrator permission to use this command!')],
                 ephemeral: true
             });
         }

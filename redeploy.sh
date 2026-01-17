@@ -6,7 +6,7 @@ echo "🛑 Docker containers stoppen..."
 docker compose down
 
 echo "🔨 Docker images bouwen..."
-docker compose build
+docker compose build --force-rm
 
 echo "🚀 Docker containers starten (detached)..."
 docker compose up -d
