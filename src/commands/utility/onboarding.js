@@ -114,15 +114,7 @@ export default {
                 .setRequired(false)
                 .setMaxLength(200);
 
-            // Phone Number
-            const phoneInput = new TextInputBuilder()
-                .setCustomId('phoneNumber')
-                .setLabel('Phone Number')
-                .setStyle(TextInputStyle.Short)
-                .setRequired(false)
-                .setMaxLength(20);
-
-            // Create action rows
+            // Create action rows (Discord modals support max 5 text inputs)
             const firstRow = new ActionRowBuilder().addComponents(nameInput);
             const secondRow = new ActionRowBuilder().addComponents(dobInput);
             const thirdRow = new ActionRowBuilder().addComponents(postcodeInput);
@@ -146,7 +138,6 @@ export default {
                 const postcode = submitted.fields.getTextInputValue('postcode') || null;
                 const woonplaats = submitted.fields.getTextInputValue('woonplaats') || null;
                 const address = submitted.fields.getTextInputValue('address') || null;
-                const phoneNumber = submitted.fields.getTextInputValue('phoneNumber') || null;
 
                 // Save to database
                 try {
@@ -164,7 +155,7 @@ export default {
                                 postcode,
                                 woonplaats,
                                 address,
-                                phoneNumber,
+                                phoneNumber: null,
                                 rank: null,
                                 dateRegistered: new Date(),
                                 year: new Date().getFullYear(),
@@ -187,7 +178,6 @@ export default {
                             `${postcode ? `**Postcode:** ${postcode}\n` : ''}` +
                             `${woonplaats ? `**Woonplaats:** ${woonplaats}\n` : ''}` +
                             `${address ? `**Address:** ${address}\n` : ''}` +
-                            `${phoneNumber ? `**Phone:** ${phoneNumber}\n` : ''}` +
                             `**Year:** ${new Date().getFullYear()}`
                         )],
                         ephemeral: true
