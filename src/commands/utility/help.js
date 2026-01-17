@@ -15,7 +15,7 @@ const commandDetails = {
     'setmod': { emoji: '🛡️', permissions: 'Alleen Server Owner', description: 'Stel de moderator rol in voor deze server' },
     'listguilds': { emoji: '🌐', permissions: 'Moderators + Server Owner', description: 'Toon lijst van alle servers waar de bot actief is' },
     'backup': { emoji: '💾', permissions: 'Moderators + Server Owner', description: 'Maak een handmatige database backup (automatisch elke dag om 00:00)' },
-    
+
     // Moderation Commands
     'kick': { emoji: '👢', permissions: 'Moderators + Server Owner', description: 'Kick een lid van de server met optionele reden' }
 };
@@ -55,10 +55,10 @@ export default {
                 });
             }
 
-            const details = commandDetails[specificCommand] || { 
-                emoji: '❔', 
-                permissions: 'Onbekend', 
-                description: cmd.data.description 
+            const details = commandDetails[specificCommand] || {
+                emoji: '❔',
+                permissions: 'Onbekend',
+                description: cmd.data.description
             };
 
             const embed = createEmbed({
@@ -74,7 +74,7 @@ export default {
 
             // Add options if any
             if (cmd.data.options && cmd.data.options.length > 0) {
-                const optionsText = cmd.data.options.map(opt => 
+                const optionsText = cmd.data.options.map(opt =>
                     `\`${opt.name}\` - ${opt.description} ${opt.required ? '(Verplicht)' : '(Optioneel)'}`
                 ).join('\n');
                 embed.addFields({ name: '⚙️ Opties', value: optionsText, inline: false });
@@ -95,7 +95,7 @@ export default {
 
         // Create fields for each category with emojis and permissions
         const fields = [];
-        
+
         // Utility commands
         if (categories['utility']) {
             const utilityCommands = categories['utility'].map(cmd => {
@@ -125,7 +125,7 @@ export default {
         // Add permissions info
         fields.push({
             name: '🔐 Rechten Systeem',
-            value: 
+            value:
                 '**Server Owner:** Volledige toegang tot alle commands\n' +
                 '**Moderators:** Toegang via ingestelde moderator rol (`/setmod`)\n' +
                 '**Geregistreerde Gebruikers:** Basis commands zoals `/ping`, `/help`, `/guildinfo`\n\n' +
@@ -135,7 +135,7 @@ export default {
 
         const embed = createEmbed({
             title: `📚 ${config.botName} - Help`,
-            description: 
+            description:
                 '**Welkom bij de Valknut Discord Bot!**\n\n' +
                 'Deze bot helpt bij het beheren van je server met handige utility en moderation tools.\n' +
                 'Alle commands zijn beschikbaar via slash commands (`/`).\n\n' +
