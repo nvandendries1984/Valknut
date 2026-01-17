@@ -3,6 +3,7 @@ import { logger } from '../utils/logger.js';
 import { config } from '../config/config.js';
 import { connectDatabase } from '../utils/database.js';
 import { Guild } from '../models/Guild.js';
+import { startRoleSync } from '../utils/roleSync.js';
 
 export default {
     name: 'clientReady',
@@ -30,6 +31,9 @@ export default {
             }
 
             logger.success(`✓ Registered ${registeredCount} guild(s) in database`);
+
+            // Start automatic role synchronization
+            startRoleSync(client);
 
         } catch (error) {
             logger.error('Failed to connect to database');

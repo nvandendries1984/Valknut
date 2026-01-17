@@ -205,7 +205,7 @@ router.get('/guild/:guildId/onboarding', isAllowedUser, hasGuildAccess, async (r
         const users = await User.find({
             guildId,
             'onboarding.name': { $ne: null }
-        }).sort({ 'onboarding.dateRegistered': -1 });
+        }).populate('roles').sort({ 'onboarding.dateRegistered': -1 });
 
         res.render('guild-onboarding', {
             title: `Onboarding - ${userGuild.name}`,

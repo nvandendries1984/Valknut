@@ -27,9 +27,28 @@ export default {
                 return;
             }
 
-            // Get all Discord role IDs from the member
+            // Ensure all Discord roles exist in database first
             const memberDiscordRoleIds = Array.from(newRoles.keys())
                 .filter(roleId => roleId !== guildId); // Exclude @everyone
+
+            // Sync Discord roles to database
+            for (const roleId of memberDiscordRoleIds) {
+                const discordRole = newRoles.get(roleId);
+                if (discordRole && !discordRole.managed) {
+                    await Role.findOneAndUpdate(
+                        { guildId, discordRoleId: roleId },
+                        {
+                            guildId,
+                            name: discordRole.name,
+                            discordRoleId: roleId,
+                            color: discordRole.hexColor,
+                            position: discordRole.position,
+                            active: true
+                        },
+                        { upsert: true, new: true }
+                    );
+                }
+            }
 
             // Find corresponding roles in database
             const dbRoles = await Role.find({

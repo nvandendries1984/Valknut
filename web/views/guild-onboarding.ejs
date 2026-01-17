@@ -34,6 +34,7 @@
                                     <tr>
                                         <th>Username</th>
                                         <th>Name</th>
+                                        <th>Roles</th>
                                         <th>Saga</th>
                                         <th>Date of Birth</th>
                                         <th>Contact</th>
@@ -49,6 +50,13 @@
                                                 ${user.discriminator !== '0' ? `<span class="text-muted">#${user.discriminator}</span>` : ''}
                                             </td>
                                             <td>${user.onboarding.name || '-'}</td>
+                                            <td>
+                                                ${user.roles && user.roles.length > 0 ?
+                                                    user.roles.map(role => `
+                                                        <span class="badge bg-secondary me-1">${role.name}</span>
+                                                    `).join('')
+                                                    : '<span class="text-muted">No roles</span>'}
+                                            </td>
                                             <td>
                                                 ${user.onboarding.saga ? `
                                                     <span class="badge" style="background-color: ${getSagaColor(user.onboarding.saga)}">

@@ -184,7 +184,7 @@
                                                             email: '<%= user.onboarding.email || "" %>',
                                                             year: '<%= user.onboarding.year || "" %>',
                                                             sagaLevel: '<%= user.onboarding.sagaLevel || "" %>',
-                                                            dateRecruit: '<%= user.onboarding.dateRecruit ? user.onboarding.dateRecruit.toISOString().split("T")[0] : "" %>',
+                                                            datumRecruit: '<%= user.onboarding.datumRecruit ? user.onboarding.datumRecruit.toISOString().split("T")[0] : "" %>',
                                                             datumWarrior: '<%= user.onboarding.datumWarrior ? user.onboarding.datumWarrior.toISOString().split("T")[0] : "" %>',
                                                             punten: '<%= user.onboarding.punten || 0 %>',
                                                             strafpunten: '<%= user.onboarding.strafpunten || 0 %>',
@@ -395,7 +395,7 @@ function showOnboardingData(userId) {
                                     <label class="form-label text-muted">
                                         <i class="fas fa-calendar-plus me-1"></i>Recruit Date
                                     </label>
-                                    <input type="date" name="dateRecruit" class="form-control bg-dark text-white border-secondary" value="${data.dateRecruit || ''}">
+                                    <input type="date" name="datumRecruit" class="form-control bg-dark text-white border-secondary" value="${data.datumRecruit || ''}">
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label text-muted">
