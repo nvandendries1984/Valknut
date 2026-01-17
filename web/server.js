@@ -70,8 +70,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // i18n configuration
 i18n.configure({
-    locales: ['nl', 'en'],
-    defaultLocale: 'nl',
+    locales: ['en'],
+    defaultLocale: 'en',
     directory: path.join(__dirname, 'locales'),
     cookie: 'language',
     queryParameter: 'lang',
@@ -142,10 +142,10 @@ app.use('/dashboard', dashboardRoutes);
 app.use('/api', apiRoutes);
 app.use('/admin', adminRoutes);
 
-// Language switcher
+// Language switcher (disabled - English only)
 app.get('/language/:lang', (req, res) => {
     const { lang } = req.params;
-    if (['nl', 'en'].includes(lang)) {
+    if (lang === 'en') {
         res.cookie('language', lang, { maxAge: 365 * 24 * 60 * 60 * 1000 }); // 1 year
         req.setLocale(lang);
     }
@@ -165,7 +165,7 @@ app.get('/', (req, res) => {
 // Privacy Policy page
 app.get('/privacy', (req, res) => {
     res.render('privacy', {
-        title: 'Privacybeleid',
+        title: 'Privacy Policy',
         user: req.user,
         botName: config.botName
     });
@@ -174,7 +174,7 @@ app.get('/privacy', (req, res) => {
 // Terms of Service page
 app.get('/terms', (req, res) => {
     res.render('terms', {
-        title: 'Gebruiksvoorwaarden',
+        title: 'Terms of Service',
         user: req.user,
         botName: config.botName
     });

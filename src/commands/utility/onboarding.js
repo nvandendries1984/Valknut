@@ -98,10 +98,10 @@ export default {
                 .setRequired(false)
                 .setMaxLength(10);
 
-            // Woonplaats
+            // City
             const woonplaatsInput = new TextInputBuilder()
                 .setCustomId('woonplaats')
-                .setLabel('Woonplaats')
+                .setLabel('City')
                 .setStyle(TextInputStyle.Short)
                 .setRequired(false)
                 .setMaxLength(100);
@@ -176,7 +176,7 @@ export default {
                             `**Name:** ${name}\n` +
                             `${dateOfBirth ? `**Date of Birth:** ${dateOfBirth}\n` : ''}` +
                             `${postcode ? `**Postcode:** ${postcode}\n` : ''}` +
-                            `${woonplaats ? `**Woonplaats:** ${woonplaats}\n` : ''}` +
+                            `${woonplaats ? `**City:** ${woonplaats}\n` : ''}` +
                             `${address ? `**Address:** ${address}\n` : ''}` +
                             `**Year:** ${new Date().getFullYear()}`
                         )],

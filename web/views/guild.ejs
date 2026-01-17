@@ -48,12 +48,12 @@
                             <div class="col-md-4">
                                 <label for="logChannelId" class="form-label">
                                     <i class="fas fa-hashtag me-1"></i>
-                                    Log Kanaal ID
+                                    Log Channel ID
                                 </label>
                                 <input type="text" class="form-control" id="logChannelId" name="logChannelId"
                                        value="<%= guild.dbInfo.logChannelId || '' %>"
                                        placeholder="123456789012345678">
-                                <div class="form-text">Kanaal waar bot logs naartoe worden gestuurd</div>
+                                <div class="form-text">Channel where bot logs are sent</div>
                             </div>
 
                             <div class="col-md-4">
@@ -63,18 +63,17 @@
                                 </label>
                                 <input type="text" class="form-control" id="prefix" name="prefix"
                                        value="<%= guild.dbInfo.settings?.prefix || '' %>"
-                                       placeholder="! (standaard)">
-                                <div class="form-text">Laat leeg voor standaard prefix</div>
+                                       placeholder="! (default)">
+                                <div class="form-text">Leave empty for default prefix</div>
                             </div>
 
                             <div class="col-md-4">
                                 <label for="language" class="form-label">
                                     <i class="fas fa-language me-1"></i>
-                                    Taal
+                                    Language
                                 </label>
                                 <select class="form-select" id="language" name="language">
                                     <option value="en" <%= guild.dbInfo.settings?.language === 'en' ? 'selected' : '' %>>English</option>
-                                    <option value="nl" <%= guild.dbInfo.settings?.language === 'nl' ? 'selected' : '' %>>Nederlands</option>
                                 </select>
                             </div>
                         </div>
@@ -96,7 +95,7 @@
                         <div class="card-body text-center">
                             <i class="fas fa-users fa-3x mb-2 text-primary"></i>
                             <h3 class="mb-0"><%= guild.dbInfo.memberCount %></h3>
-                            <p class="text-muted mb-0">Totaal Leden</p>
+                            <p class="text-muted mb-0">Total Members</p>
                         </div>
                     </div>
                 </div>
@@ -105,7 +104,7 @@
                         <div class="card-body text-center">
                             <i class="fas fa-user-check fa-3x mb-2 text-primary"></i>
                             <h3 class="mb-0"><%= guild.users.length %></h3>
-                            <p class="text-muted mb-0">Geregistreerde Vikings</p>
+                            <p class="text-muted mb-0">Registered Vikings</p>
                         </div>
                     </div>
                 </div>
@@ -113,8 +112,8 @@
                     <div class="card bg-dark text-white border-secondary h-100">
                         <div class="card-body text-center">
                             <i class="fas fa-calendar fa-3x mb-2 text-primary"></i>
-                            <h5 class="mb-0"><%= new Date(guild.dbInfo.joinedAt).toLocaleDateString('nl-NL') %></h5>
-                            <p class="text-muted mb-0">Bot Toegevoegd</p>
+                            <h5 class="mb-0"><%= new Date(guild.dbInfo.joinedAt).toLocaleDateString('en-US') %></h5>
+                            <p class="text-muted mb-0">Bot Added</p>
                         </div>
                     </div>
                 </div>
@@ -124,7 +123,7 @@
             <% if (guild.users.length > 0) { %>
                 <div class="card bg-dark text-white border-secondary">
                     <div class="card-header">
-                        <h5 class="mb-0"><i class="fas fa-users me-2"></i>Geregistreerde Vikings (Laatste 50)</h5>
+                        <h5 class="mb-0"><i class="fas fa-users me-2"></i>Registered Vikings (Last 50)</h5>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
@@ -133,9 +132,9 @@
                                     <tr>
                                         <th>Avatar</th>
                                         <th>Username</th>
-                                        <th>Rollen</th>
+                                        <th>Roles</th>
                                         <th>User ID</th>
-                                        <th>Geregistreerd op</th>
+                                        <th>Registered at</th>
                                         <th>Onboarding</th>
                                     </tr>
                                 </thead>
@@ -160,11 +159,11 @@
                                                         </span>
                                                     <% }); %>
                                                 <% } else { %>
-                                                    <span class="text-muted">Geen rollen</span>
+                                                    <span class="text-muted">No roles</span>
                                                 <% } %>
                                             </td>
                                             <td><code><%= user.userId %></code></td>
-                                            <td><%= new Date(user.registeredAt).toLocaleString('nl-NL') %></td>
+                                            <td><%= new Date(user.registeredAt).toLocaleString('en-US') %></td>
                                             <td>
                                                 <% if (user.onboarding && user.onboarding.name) { %>
                                                     <button class="btn btn-sm btn-primary" onclick="showOnboardingData('<%= user._id %>')">
@@ -185,13 +184,13 @@
                                                             email: '<%= user.onboarding.email || "" %>',
                                                             year: '<%= user.onboarding.year || "" %>',
                                                             sagaLevel: '<%= user.onboarding.sagaLevel || "" %>',
-                                                            datumRecruit: '<%= user.onboarding.datumRecruit ? user.onboarding.datumRecruit.toISOString().split("T")[0] : "" %>',
+                                                            dateRecruit: '<%= user.onboarding.dateRecruit ? user.onboarding.dateRecruit.toISOString().split("T")[0] : "" %>',
                                                             datumWarrior: '<%= user.onboarding.datumWarrior ? user.onboarding.datumWarrior.toISOString().split("T")[0] : "" %>',
                                                             punten: '<%= user.onboarding.punten || 0 %>',
                                                             strafpunten: '<%= user.onboarding.strafpunten || 0 %>',
                                                             strikes: '<%= user.onboarding.strikes || 0 %>',
                                                             notes: '<%= (user.onboarding.notes || "").replace(/'/g, "\\'").replace(/\n/g, "\\n") %>',
-                                                            dateRegistered: '<%= user.onboarding.dateRegistered ? new Date(user.onboarding.dateRegistered).toLocaleDateString("nl-NL") : "" %>'
+                                                            dateRegistered: '<%= user.onboarding.dateRegistered ? new Date(user.onboarding.dateRegistered).toLocaleDateString("en-US") : "" %>'
                                                         };
                                                     </script>
                                                 <% } else { %>
@@ -226,7 +225,7 @@ async function syncDiscordRoles() {
     const btn = document.getElementById('syncRolesBtn');
     const originalText = btn.innerHTML;
     btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Synchroniseren...';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Synchronizing...';
 
     try {
         const response = await fetch(`/api/guild/${guildId}/roles/sync`, {
@@ -236,13 +235,13 @@ async function syncDiscordRoles() {
         const data = await response.json();
 
         if (response.ok) {
-            alert(`✓ Rollen gesynchroniseerd!\n\nGeïmporteerd: ${data.imported}\nBijgewerkt: ${data.updated}\nTotaal: ${data.total}`);
+            alert(`✓ Roles synchronized!\n\nImported: ${data.imported}\nUpdated: ${data.updated}\nTotal: ${data.total}`);
             location.reload();
         } else {
             throw new Error(data.error || 'Sync failed');
         }
     } catch (error) {
-        alert('✗ Fout bij synchroniseren van rollen: ' + error.message);
+        alert('✗ Error synchronizing roles: ' + error.message);
         btn.disabled = false;
         btn.innerHTML = originalText;
     }
@@ -265,7 +264,7 @@ document.getElementById('settingsForm').addEventListener('submit', async (e) => 
 
         if (response.ok) {
             messageEl.className = 'alert alert-success mt-3 mb-0';
-            messageEl.textContent = '✓ Instellingen opgeslagen!';
+            messageEl.textContent = '✓ Settings saved!';
             messageEl.style.display = 'block';
 
             setTimeout(() => {
@@ -276,7 +275,7 @@ document.getElementById('settingsForm').addEventListener('submit', async (e) => 
         }
     } catch (error) {
         messageEl.className = 'alert alert-danger mt-3 mb-0';
-        messageEl.textContent = '✗ Fout bij opslaan van instellingen';
+        messageEl.textContent = '✗ Error saving settings';
         messageEl.style.display = 'block';
     }
 });
@@ -317,26 +316,26 @@ function showOnboardingData(userId) {
                     <div class="modal-header border-secondary">
                         <h5 class="modal-title">
                             <i class="fas fa-user-plus me-2"></i>
-                            Gegevens: ${data.username}
+                            Details: ${data.username}
                         </h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
                     <form id="onboardingForm">
                         <div class="modal-body">
-                            <h6 class="text-primary mb-3">Persoonlijke Gegevens</h6>
+                            <h6 class="text-primary mb-3">Personal Information</h6>
                             <div class="row g-3 mb-4">
                                 <div class="col-md-6">
                                     <label class="form-label text-muted">
-                                        <i class="fas fa-user me-1"></i>Naam
+                                        <i class="fas fa-user me-1"></i>Name
                                     </label>
-                                    <input type="text" name="name" class="form-control bg-dark text-white border-secondary" value="${data.name}" placeholder="Voer naam in">
+                                    <input type="text" name="name" class="form-control bg-dark text-white border-secondary" value="${data.name}" placeholder="Enter name">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label text-muted">
                                         <i class="fas fa-flag me-1"></i>Saga
                                     </label>
                                     <select name="saga" class="form-select bg-dark text-white border-secondary">
-                                        <option value="">Selecteer Saga</option>
+                                        <option value="">Select Saga</option>
                                         <option value="Beardserker" ${data.saga === 'Beardserker' ? 'selected' : ''}>🧔 Beardserker</option>
                                         <option value="Sideburn Soldier" ${data.saga === 'Sideburn Soldier' ? 'selected' : ''}>👨 Sideburn Soldier</option>
                                         <option value="Moustache Militia" ${data.saga === 'Moustache Militia' ? 'selected' : ''}>🥸 Moustache Militia</option>
@@ -347,25 +346,25 @@ function showOnboardingData(userId) {
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label text-muted">
-                                        <i class="fas fa-home me-1"></i>Adres
+                                        <i class="fas fa-home me-1"></i>Address
                                     </label>
-                                    <input type="text" name="address" class="form-control bg-dark text-white border-secondary" value="${data.address || ''}" placeholder="Voer volledig adres in">
+                                    <input type="text" name="address" class="form-control bg-dark text-white border-secondary" value="${data.address || ''}" placeholder="Enter full address">
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label text-muted">
                                         <i class="fas fa-map-pin me-1"></i>Postcode
                                     </label>
-                                    <input type="text" name="postcode" class="form-control bg-dark text-white border-secondary" value="${data.postcode || ''}" placeholder="Voer postcode in">
+                                    <input type="text" name="postcode" class="form-control bg-dark text-white border-secondary" value="${data.postcode || ''}" placeholder="Enter postcode">
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label text-muted">
-                                        <i class="fas fa-city me-1"></i>Woonplaats
+                                        <i class="fas fa-city me-1"></i>City
                                     </label>
-                                    <input type="text" name="woonplaats" class="form-control bg-dark text-white border-secondary" value="${data.woonplaats || ''}" placeholder="Voer woonplaats in">
+                                    <input type="text" name="woonplaats" class="form-control bg-dark text-white border-secondary" value="${data.woonplaats || ''}" placeholder="Enter city">
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label text-muted">
-                                        <i class="fas fa-calendar me-1"></i>Geboortedatum
+                                        <i class="fas fa-calendar me-1"></i>Date of Birth
                                     </label>
                                     <input type="text" name="dateOfBirth" class="form-control bg-dark text-white border-secondary" value="${data.dateOfBirth || ''}" placeholder="DD-MM-YYYY">
                                 </div>
@@ -373,18 +372,18 @@ function showOnboardingData(userId) {
                                     <label class="form-label text-muted">
                                         <i class="fas fa-envelope me-1"></i>Email
                                     </label>
-                                    <input type="email" name="email" class="form-control bg-dark text-white border-secondary" value="${data.email || ''}" placeholder="Voer email in">
+                                    <input type="email" name="email" class="form-control bg-dark text-white border-secondary" value="${data.email || ''}" placeholder="Enter email">
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label text-muted">
-                                        <i class="fas fa-phone me-1"></i>Telefoonnummer
+                                        <i class="fas fa-phone me-1"></i>Phone Number
                                     </label>
-                                    <input type="text" name="phoneNumber" class="form-control bg-dark text-white border-secondary" value="${data.phoneNumber || ''}" placeholder="Voer telefoonnummer in">
+                                    <input type="text" name="phoneNumber" class="form-control bg-dark text-white border-secondary" value="${data.phoneNumber || ''}" placeholder="Enter phone number">
                                 </div>
                             </div>
 
                             <hr class="border-secondary">
-                            <h6 class="text-success mb-3">Saga & Progressie</h6>
+                            <h6 class="text-success mb-3">Saga & Progress</h6>
                             <div class="row g-3 mb-4">
                                 <div class="col-md-4">
                                     <label class="form-label text-muted">
@@ -394,30 +393,30 @@ function showOnboardingData(userId) {
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label text-muted">
-                                        <i class="fas fa-calendar-plus me-1"></i>Datum Recruit
+                                        <i class="fas fa-calendar-plus me-1"></i>Recruit Date
                                     </label>
-                                    <input type="date" name="datumRecruit" class="form-control bg-dark text-white border-secondary" value="${data.datumRecruit || ''}">
+                                    <input type="date" name="dateRecruit" class="form-control bg-dark text-white border-secondary" value="${data.dateRecruit || ''}">
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label text-muted">
-                                        <i class="fas fa-calendar-check me-1"></i>Datum Warrior
+                                        <i class="fas fa-calendar-check me-1"></i>Warrior Date
                                     </label>
                                     <input type="date" name="datumWarrior" class="form-control bg-dark text-white border-secondary" value="${data.datumWarrior || ''}">
                                 </div>
                             </div>
 
                             <hr class="border-secondary">
-                            <h6 class="text-warning mb-3">Punten & Statistieken</h6>
+                            <h6 class="text-warning mb-3">Points & Statistics</h6>
                             <div class="row g-3">
                                 <div class="col-md-4">
                                     <label class="form-label text-muted">
-                                        <i class="fas fa-star me-1"></i>Punten
+                                        <i class="fas fa-star me-1"></i>Points
                                     </label>
                                     <input type="number" name="punten" class="form-control bg-dark text-white border-secondary" value="${data.punten || 0}">
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label text-muted">
-                                        <i class="fas fa-exclamation-triangle me-1"></i>Strafpunten
+                                        <i class="fas fa-exclamation-triangle me-1"></i>Penalty Points
                                     </label>
                                     <input type="number" name="strafpunten" class="form-control bg-dark text-white border-secondary" value="${data.strafpunten || 0}">
                                 </div>
@@ -429,16 +428,16 @@ function showOnboardingData(userId) {
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label text-muted">
-                                        <i class="fas fa-comment me-1"></i>Opmerkingen
+                                        <i class="fas fa-comment me-1"></i>Notes
                                     </label>
-                                    <textarea name="notes" class="form-control bg-dark text-white border-secondary" rows="3" placeholder="Voer opmerkingen in">${data.notes || ''}</textarea>
+                                    <textarea name="notes" class="form-control bg-dark text-white border-secondary" rows="3" placeholder="Enter notes">${data.notes || ''}</textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer border-secondary">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sluiten</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-success">
-                                <i class="fas fa-save me-1"></i>Opslaan
+                                <i class="fas fa-save me-1"></i>Save
                             </button>
                         </div>
                     </form>
@@ -469,7 +468,7 @@ function showOnboardingData(userId) {
         const originalText = submitBtn.innerHTML;
 
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Opslaan...';
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Saving...';
 
         try {
             const response = await fetch('/api/guild/<%= guild.id %>/user/' + data.userId + '/onboarding', {
@@ -479,7 +478,7 @@ function showOnboardingData(userId) {
             });
 
             if (response.ok) {
-                submitBtn.innerHTML = '<i class="fas fa-check me-1"></i>Opgeslagen!';
+                submitBtn.innerHTML = '<i class="fas fa-check me-1"></i>Saved!';
                 submitBtn.classList.remove('btn-success');
                 submitBtn.classList.add('btn-primary');
 
@@ -493,7 +492,7 @@ function showOnboardingData(userId) {
         } catch (error) {
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalText;
-            alert('✗ Fout bij opslaan van onboarding data');
+            alert('✗ Error saving onboarding data');
         }
     });
 

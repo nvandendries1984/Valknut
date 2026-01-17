@@ -1,17 +1,17 @@
-# Internationalisatie (i18n) Documentatie
+# Internationalization (i18n) Documentation
 
-## Overzicht
+## Overview
 
-Valknut maakt gebruik van de `i18n` package om meertalige ondersteuning te bieden voor de webinterface. Momenteel zijn Nederlands (nl) en Engels (en) ondersteund, maar je kunt eenvoudig extra talen toevoegen.
+Valknut's web interface is currently **English-only**. The i18n infrastructure remains in place for potential future multi-language support.
 
-## Configuratie
+## Configuration
 
-De i18n configuratie is ingesteld in `web/server.js`:
+The i18n configuration is set in `web/server.js`:
 
 ```javascript
 i18n.configure({
-    locales: ['nl', 'en'],
-    defaultLocale: 'nl',
+    locales: ['en'],
+    defaultLocale: 'en',
     directory: path.join(__dirname, 'locales'),
     cookie: 'language',
     queryParameter: 'lang',
@@ -21,32 +21,31 @@ i18n.configure({
 });
 ```
 
-## Vertaalbestanden
+## Translation Files
 
-Vertaalbestanden bevinden zich in `web/locales/`:
-- `nl.json` - Nederlandse vertalingen
-- `en.json` - Engelse vertalingen
+Translation files are located in `web/locales/`:
+- `en.json` - English translations (current and only language)
 
-### Structuur
+### Structure
 
-De vertalingen zijn georganiseerd met objectnotatie voor betere structuur:
+Translations are organized with object notation for better structure:
 
 ```json
 {
   "nav": {
     "dashboard": "Dashboard",
-    "logout": "Uitloggen"
+    "logout": "Logout"
   },
   "home": {
-    "title": "Welkom bij Valknut",
-    "subtitle": "Een krachtige Discord bot voor jouw server"
+    "title": "Welcome to Valknut",
+    "subtitle": "A powerful Discord bot for your server"
   }
 }
 ```
 
-## Gebruik in EJS Templates
+## Usage in EJS Templates
 
-### Basis gebruik
+### Basic usage
 
 ```ejs
 <h1><%= __('home.title') %></h1>

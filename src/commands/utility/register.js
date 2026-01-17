@@ -49,7 +49,7 @@ export default {
                 return interaction.editReply({
                     embeds: [createErrorEmbed(
                         `**${targetUser.tag}** is already registered in this server.\n\n` +
-                        `**Registered at:** ${existingUser.registeredAt.toLocaleString('nl-NL')}\n` +
+                        `**Registered at:** ${existingUser.registeredAt.toLocaleString('en-US')}\n` +
                         `**Registered by:** <@${existingUser.registeredBy}>`
                     )]
                 });

@@ -58,33 +58,7 @@
                     </li>
                 <% } %>
 
-                <!-- Language Switcher -->
-                <li class="nav-item dropdown ms-2">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-globe me-1"></i>
-                        <% if (currentLang === 'nl') { %>
-                            <img src="https://flagcdn.com/16x12/nl.png" alt="Nederlands" class="me-1">
-                            NL
-                        <% } else { %>
-                            <img src="https://flagcdn.com/16x12/gb.png" alt="English" class="me-1">
-                            EN
-                        <% } %>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <a class="dropdown-item <%= currentLang === 'nl' ? 'active' : '' %>" href="/language/nl">
-                                <img src="https://flagcdn.com/16x12/nl.png" alt="Nederlands" class="me-2">
-                                Nederlands
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item <%= currentLang === 'en' ? 'active' : '' %>" href="/language/en">
-                                <img src="https://flagcdn.com/16x12/gb.png" alt="English" class="me-2">
-                                English
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+
             </ul>
         </div>
     </div>

@@ -6,18 +6,18 @@ import { canExecuteCommand } from '../../utils/permissions.js';
 // Command details with permissions
 const commandDetails = {
     // Utility Commands
-    'ping': { emoji: '🏓', permissions: 'Alle geregistreerde gebruikers', description: 'Check de bot latency en API responstijd' },
-    'help': { emoji: '📚', permissions: 'Alle geregistreerde gebruikers', description: 'Toon alle beschikbare commands met uitleg' },
-    'guildinfo': { emoji: 'ℹ️', permissions: 'Alle geregistreerde gebruikers', description: 'Toon informatie over deze server, zoals leden, rollen en instellingen' },
-    'register': { emoji: '📝', permissions: 'Moderators + Server Owner', description: 'Registreer een gebruiker in de database voor toegang tot bot functies' },
-    'onboarding': { emoji: '👤', permissions: 'Moderators + Server Owner', description: 'Start onboarding proces voor een gebruiker (Saga, naam, geboortedatum, etc.)' },
-    'setlogchannel': { emoji: '📢', permissions: 'Moderators + Server Owner', description: 'Stel het kanaal in waar bot logs naartoe gestuurd worden' },
-    'setmod': { emoji: '🛡️', permissions: 'Alleen Server Owner', description: 'Stel de moderator rol in voor deze server' },
-    'listguilds': { emoji: '🌐', permissions: 'Moderators + Server Owner', description: 'Toon lijst van alle servers waar de bot actief is' },
-    'backup': { emoji: '💾', permissions: 'Moderators + Server Owner', description: 'Maak een handmatige database backup (automatisch elke dag om 00:00)' },
+    'ping': { emoji: '🏓', permissions: 'All registered users', description: 'Check the bot latency and API response time' },
+    'help': { emoji: '📚', permissions: 'All registered users', description: 'Show all available commands with explanations' },
+    'guildinfo': { emoji: 'ℹ️', permissions: 'All registered users', description: 'Display information about this server, such as members, roles, and settings' },
+    'register': { emoji: '📝', permissions: 'Moderators + Server Owner', description: 'Register a user in the database for access to bot functions' },
+    'onboarding': { emoji: '👤', permissions: 'Moderators + Server Owner', description: 'Start onboarding process for a user (Saga, name, date of birth, etc.)' },
+    'setlogchannel': { emoji: '📢', permissions: 'Moderators + Server Owner', description: 'Set the channel where bot logs will be sent' },
+    'setmod': { emoji: '🛡️', permissions: 'Server Owner only', description: 'Set the moderator role for this server' },
+    'listguilds': { emoji: '🌐', permissions: 'Moderators + Server Owner', description: 'Show list of all servers where the bot is active' },
+    'backup': { emoji: '💾', permissions: 'Moderators + Server Owner', description: 'Create a manual database backup (automatic backup daily at 00:00)' },
 
     // Moderation Commands
-    'kick': { emoji: '👢', permissions: 'Moderators + Server Owner', description: 'Kick een lid van de server met optionele reden' }
+    'kick': { emoji: '👢', permissions: 'Moderators + Server Owner', description: 'Kick a member from the server with optional reason' }
 };
 
 export default {
@@ -50,14 +50,14 @@ export default {
             const cmd = commands.get(specificCommand);
             if (!cmd) {
                 return interaction.reply({
-                    embeds: [createErrorEmbed(`Command \`/${specificCommand}\` niet gevonden!`)],
+                    embeds: [createErrorEmbed(`Command \`/${specificCommand}\` not found!`)],
                     ephemeral: true
                 });
             }
 
             const details = commandDetails[specificCommand] || {
                 emoji: '❔',
-                permissions: 'Onbekend',
+                permissions: 'Unknown',
                 description: cmd.data.description
             };
 
@@ -65,9 +65,9 @@ export default {
                 title: `${details.emoji} /${specificCommand}`,
                 description: details.description,
                 fields: [
-                    { name: '📋 Categorie', value: cmd.category || 'General', inline: true },
-                    { name: '🔐 Rechten', value: details.permissions, inline: true },
-                    { name: '📝 Gebruik', value: `\`/${cmd.data.name}\``, inline: false }
+                    { name: '📋 Category', value: cmd.category || 'General', inline: true },
+                    { name: '🔐 Permissions', value: details.permissions, inline: true },
+                    { name: '📝 Usage', value: `\`/${cmd.data.name}\``, inline: false }
                 ],
                 color: 0x5865F2
             });
@@ -75,9 +75,9 @@ export default {
             // Add options if any
             if (cmd.data.options && cmd.data.options.length > 0) {
                 const optionsText = cmd.data.options.map(opt =>
-                    `\`${opt.name}\` - ${opt.description} ${opt.required ? '(Verplicht)' : '(Optioneel)'}`
+                    `\`${opt.name}\` - ${opt.description} ${opt.required ? '(Required)' : '(Optional)'}`
                 ).join('\n');
-                embed.addFields({ name: '⚙️ Opties', value: optionsText, inline: false });
+                embed.addFields({ name: '⚙️ Options', value: optionsText, inline: false });
             }
 
             return interaction.reply({ embeds: [embed] });
@@ -124,22 +124,22 @@ export default {
 
         // Add permissions info
         fields.push({
-            name: '🔐 Rechten Systeem',
+            name: '🔐 Permission System',
             value:
-                '**Server Owner:** Volledige toegang tot alle commands\n' +
-                '**Moderators:** Toegang via ingestelde moderator rol (`/setmod`)\n' +
-                '**Geregistreerde Gebruikers:** Basis commands zoals `/ping`, `/help`, `/guildinfo`\n\n' +
-                '💡 *Gebruik `/help <command>` voor gedetailleerde info over een specifiek command*',
+                '**Server Owner:** Full access to all commands\n' +
+                '**Moderators:** Access via configured moderator role (`/setmod`)\n' +
+                '**Registered Users:** Basic commands like `/ping`, `/help`, `/guildinfo`\n\n' +
+                '💡 *Use `/help <command>` for detailed info about a specific command*',
             inline: false
         });
 
         const embed = createEmbed({
             title: `📚 ${config.botName} - Help`,
             description:
-                '**Welkom bij de Valknut Discord Bot!**\n\n' +
-                'Deze bot helpt bij het beheren van je server met handige utility en moderation tools.\n' +
-                'Alle commands zijn beschikbaar via slash commands (`/`).\n\n' +
-                '🌐 **Web Dashboard:** Beheer je server via de webinterface voor uitgebreide opties!',
+                '**Welcome to the Valknut Discord Bot!**\n\n' +
+                'This bot helps manage your server with handy utility and moderation tools.\n' +
+                'All commands are available via slash commands (`/`).\n\n' +
+                '🌐 **Web Dashboard:** Manage your server via the web interface for extended options!',
             fields: fields,
             color: 0x5865F2
         });
