@@ -2,11 +2,12 @@ import express from 'express';
 import passport from 'passport';
 import { logger } from '../../src/utils/logger.js';
 import { AllowedUser } from '../../src/models/AllowedUser.js';
+import { requireCookieConsent } from '../middleware/cookieConsent.js';
 
 const router = express.Router();
 
-// Login route
-router.get('/login', (req, res, next) => {
+// Login route - require cookie consent first
+router.get('/login', requireCookieConsent, (req, res, next) => {
     logger.info('Login attempt initiated');
     passport.authenticate('discord')(req, res, next);
 });

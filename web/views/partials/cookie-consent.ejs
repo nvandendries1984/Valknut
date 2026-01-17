@@ -1,0 +1,210 @@
+<!-- Cookie Consent Banner -->
+<div class="modal fade" id="cookieConsentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="cookieConsentLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content bg-dark text-white border-secondary">
+            <div class="modal-header border-secondary" style="background: linear-gradient(135deg, #8B1E1E 0%, #6B1515 100%);">
+                <h5 class="modal-title" id="cookieConsentLabel">
+                    <i class="fas fa-cookie-bite me-2"></i>Cookie & Privacy Melding
+                </h5>
+            </div>
+            <div class="modal-body">
+                <div class="alert border-0 text-white" style="background-color: rgba(74, 111, 165, 0.3);">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Wij gebruiken cookies en vergelijkbare technologieën om jouw ervaring te verbeteren en onze diensten te leveren. 
+                    Door onze website te gebruiken, ga je akkoord met het gebruik van cookies en het opslaan van persoonlijke gegevens 
+                    zoals beschreven in ons <a href="/privacy" class="text-warning text-decoration-underline fw-bold" target="_blank">privacybeleid</a> 
+                    en onze <a href="/terms" class="text-warning text-decoration-underline fw-bold" target="_blank">gebruiksvoorwaarden</a>.
+                </div>
+                
+                <div class="card bg-dark border-secondary mb-3">
+                    <div class="card-header border-secondary" style="background-color: rgba(198, 167, 94, 0.1);">
+                        <h6 class="mb-0" style="color: #C6A75E;">
+                            <i class="fas fa-database me-2"></i>Welke gegevens verzamelen we?
+                        </h6>
+                    </div>
+                    <div class="card-body text-white">
+                        <ul class="mb-0">
+                            <li class="mb-2">Discord gebruikersinformatie (ID, gebruikersnaam, avatar)</li>
+                            <li class="mb-2">Server configuratie-instellingen</li>
+                            <li class="mb-2">Authenticatie cookies voor inloggen</li>
+                            <li class="mb-2">Sessie gegevens en voorkeuren</li>
+                            <li class="mb-2">Two-Factor Authentication (2FA) instellingen</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card bg-dark border-secondary mb-3">
+                    <div class="card-header border-secondary" style="background-color: rgba(198, 167, 94, 0.1);">
+                        <h6 class="mb-0" style="color: #C6A75E;">
+                            <i class="fas fa-cookie me-2"></i>Type cookies
+                        </h6>
+                    </div>
+                    <div class="card-body text-white">
+                        <ul class="mb-0">
+                            <li class="mb-2"><strong class="text-warning">Noodzakelijk:</strong> Voor authenticatie en beveiliging (verplicht)</li>
+                            <li class="mb-2"><strong class="text-warning">Functioneel:</strong> Voor het onthouden van voorkeuren</li>
+                            <li class="mb-2"><strong class="text-warning">Sessie:</strong> Voor het beheren van jouw inlog sessie</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <p class="small text-white-50 mb-0">
+                    <i class="fas fa-shield-alt me-1"></i>
+                    Door op "Accepteren" te klikken, ga je akkoord met het gebruik van alle cookies en het verwerken 
+                    van jouw persoonlijke gegevens zoals beschreven. Je kunt je toestemming op elk moment intrekken 
+                    door contact met ons op te nemen.
+                </p>
+            </div>
+            <div class="modal-footer border-secondary">
+                <a href="/privacy" class="btn btn-outline-light me-auto" target="_blank">
+                    <i class="fas fa-info-circle me-1"></i>Meer informatie
+                </a>
+                <button type="button" class="btn btn-secondary" id="cookieDecline">
+                    <i class="fas fa-times me-1"></i>Weigeren
+                </button>
+                <button type="button" class="btn btn-primary" id="cookieAccept">
+                    <i class="fas fa-check me-1"></i>Accepteren & Doorgaan
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Cookie Consent Logic with Bootstrap Modal
+    (function() {
+        const COOKIE_NAME = 'cookie_consent';
+        const COOKIE_EXPIRY_DAYS = 365;
+
+        function setCookie(name, value, days) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+            document.cookie = name + '=' + value + ';expires=' + expires.toUTCString() + ';path=/;SameSite=Lax';
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + '=';
+            const ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        function handleAccept() {
+            setCookie(COOKIE_NAME, 'accepted', COOKIE_EXPIRY_DAYS);
+            const modalElement = document.getElementById('cookieConsentModal');
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            if (modal) {
+                modal.hide();
+            }
+            // Reload page to enable full functionality
+            window.location.reload();
+        }
+
+        function handleDecline() {
+            setCookie(COOKIE_NAME, 'declined', COOKIE_EXPIRY_DAYS);
+            const modalElement = document.getElementById('cookieConsentModal');
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            if (modal) {
+                modal.hide();
+            }
+            // Show Bootstrap alert that functionality is limited
+            const alertHtml = `
+                <div class="alert alert-warning alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" role="alert" style="z-index: 9999; max-width: 500px;">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Let op:</strong> Je hebt cookies geweigerd. Je kunt niet inloggen zonder cookies te accepteren.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('afterbegin', alertHtml);
+            
+            // Auto-dismiss after 5 seconds
+            setTimeout(() => {
+                const alert = document.querySelector('.alert-warning');
+                if (alert) {
+                    const bsAlert = bootstrap.Alert.getInstance(alert) || new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }
+            }, 5000);
+        }
+
+        // Check if user hasn't made a choice yet
+        const consent = getCookie(COOKIE_NAME);
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalElement = document.getElementById('cookieConsentModal');
+            
+            if (!consent) {
+                // Show modal after a short delay
+                setTimeout(() => {
+                    const modal = new bootstrap.Modal(modalElement);
+                    modal.show();
+                }, 500);
+            } else if (consent === 'declined') {
+                // If declined, show warning on login attempts
+                const loginButtons = document.querySelectorAll('a[href*="/auth/login"], button[onclick*="login"]');
+                loginButtons.forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        // Show Bootstrap modal asking if they want to accept cookies
+                        const confirmHtml = `
+                            <div class="modal fade" id="cookieRequiredModal" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content bg-dark text-white border-warning">
+                                        <div class="modal-header border-warning bg-warning bg-opacity-10">
+                                            <h5 class="modal-title">
+                                                <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                                                Cookies Vereist
+                                            </h5>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Om in te loggen moet je cookies accepteren. Wil je de cookie-instellingen bekijken?</p>
+                                        </div>
+                                        <div class="modal-footer border-warning">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
+                                            <button type="button" class="btn btn-primary" id="reopenConsent">Cookie Instellingen</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        // Remove old modal if exists
+                        const oldModal = document.getElementById('cookieRequiredModal');
+                        if (oldModal) {
+                            oldModal.remove();
+                        }
+                        
+                        document.body.insertAdjacentHTML('beforeend', confirmHtml);
+                        const requiredModal = new bootstrap.Modal(document.getElementById('cookieRequiredModal'));
+                        requiredModal.show();
+                        
+                        document.getElementById('reopenConsent').addEventListener('click', function() {
+                            requiredModal.hide();
+                            // Clear the declined cookie and show banner again
+                            document.cookie = COOKIE_NAME + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                            const consentModal = new bootstrap.Modal(modalElement);
+                            consentModal.show();
+                        });
+                    });
+                });
+            }
+
+            // Event listeners for accept/decline buttons
+            const acceptBtn = document.getElementById('cookieAccept');
+            const declineBtn = document.getElementById('cookieDecline');
+
+            if (acceptBtn) {
+                acceptBtn.addEventListener('click', handleAccept);
+            }
+
+            if (declineBtn) {
+                declineBtn.addEventListener('click', handleDecline);
+            }
+        });
+    })();
+</script>

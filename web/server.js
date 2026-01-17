@@ -14,6 +14,7 @@ import dashboardRoutes from './routes/dashboard.js';
 import apiRoutes from './routes/api.js';
 import adminRoutes from './routes/admin.js';
 import twofaRoutes from './routes/twofa.js';
+import { checkCookieConsent } from './middleware/cookieConsent.js';
 import { Client, GatewayIntentBits } from 'discord.js';
 import { AllowedUser } from '../src/models/AllowedUser.js';
 
@@ -95,8 +96,12 @@ app.set('views', path.join(__dirname, 'views'));
 app.use((req, res, next) => {
     res.locals.user = req.user;
     res.locals.botUser = discordClient?.user || null;
+    res.locals.botName = config.botName;
     next();
 });
+
+// Check cookie consent for authenticated users
+app.use(checkCookieConsent);
 
 // Check 2FA status for all authenticated requests
 app.use(async (req, res, next) => {
@@ -124,7 +129,26 @@ app.use('/admin', adminRoutes);
 app.get('/', (req, res) => {
     res.render('index', {
         title: config.botName,
-        user: req.user
+        user: req.user,
+        query: req.query
+    });
+});
+
+// Privacy Policy page
+app.get('/privacy', (req, res) => {
+    res.render('privacy', {
+        title: 'Privacybeleid',
+        user: req.user,
+        botName: config.botName
+    });
+});
+
+// Terms of Service page
+app.get('/terms', (req, res) => {
+    res.render('terms', {
+        title: 'Gebruiksvoorwaarden',
+        user: req.user,
+        botName: config.botName
     });
 });
 
