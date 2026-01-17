@@ -2,6 +2,7 @@ import express from 'express';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import passport from 'passport';
+import cookieParser from 'cookie-parser';
 import { Strategy as DiscordStrategy } from 'passport-discord';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -12,7 +13,9 @@ import authRoutes from './routes/auth.js';
 import dashboardRoutes from './routes/dashboard.js';
 import apiRoutes from './routes/api.js';
 import adminRoutes from './routes/admin.js';
+import twofaRoutes from './routes/twofa.js';
 import { Client, GatewayIntentBits } from 'discord.js';
+import { AllowedUser } from '../src/models/AllowedUser.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -60,6 +63,7 @@ passport.deserializeUser((obj, done) => {
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Session configuration
@@ -94,8 +98,24 @@ app.use((req, res, next) => {
     next();
 });
 
+// Check 2FA status for all authenticated requests
+app.use(async (req, res, next) => {
+    if (req.isAuthenticated()) {
+        try {
+            const allowedUser = await AllowedUser.findOne({ userId: req.user.id });
+            res.locals.twoFactorEnabled = allowedUser?.twoFactorEnabled || false;
+        } catch (error) {
+            res.locals.twoFactorEnabled = false;
+        }
+    } else {
+        res.locals.twoFactorEnabled = false;
+    }
+    next();
+});
+
 // Routes
 app.use('/auth', authRoutes);
+app.use('/auth/2fa', twofaRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/api', apiRoutes);
 app.use('/admin', adminRoutes);

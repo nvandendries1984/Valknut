@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('partials/navbar') %>
+
+    <main>
+        <div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0"><i class="fas fa-shield-alt"></i> Two-Factor Authentication Setup</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> Two-Factor Authentication adds an extra layer of security to your account.
+                    </div>
+
+                    <h5>Step 1: Scan QR Code</h5>
+                    <p>Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.):</p>
+
+                    <div class="text-center mb-4">
+                        <img src="<%= qrCode %>" alt="2FA QR Code" class="img-fluid" style="max-width: 300px;">
+                    </div>
+
+                    <h5>Step 2: Manual Entry (Optional)</h5>
+                    <p>If you can't scan the QR code, enter this secret manually:</p>
+                    <div class="input-group mb-4">
+                        <input type="text" class="form-control" id="secretKey" value="<%= secret %>" readonly>
+                        <button class="btn btn-outline-secondary" type="button" onclick="copySecret()">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+
+                    <h5>Step 3: Verify Setup</h5>
+                    <p>Enter the 6-digit code from your authenticator app to complete setup:</p>
+
+                    <form id="enableForm">
+                        <input type="hidden" id="secret" value="<%= secret %>">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="token" placeholder="Enter 6-digit code"
+                                   maxlength="6" pattern="[0-9]{6}" required autofocus>
+                            <button class="btn btn-success" type="submit">
+                                <i class="fas fa-check"></i> Enable 2FA
+                            </button>
+                        </div>
+                    </form>
+
+                    <div id="result" class="mt-3"></div>
+                    <div id="backupCodes" class="mt-4" style="display: none;">
+                        <div class="alert alert-warning">
+                            <h5><i class="fas fa-exclamation-triangle"></i> Save Your Backup Codes</h5>
+                            <p>Store these backup codes in a safe place. You can use them to access your account if you lose your authenticator device.</p>
+                            <div class="backup-codes bg-light p-3 rounded" id="codesContainer"></div>
+                            <button class="btn btn-sm btn-primary mt-2" onclick="copyBackupCodes()">
+                                <i class="fas fa-copy"></i> Copy All Codes
+                            </button>
+                            <a href="/dashboard" class="btn btn-sm btn-success mt-2">
+                                <i class="fas fa-check"></i> Continue to Dashboard
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <a href="/dashboard" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Cancel
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function copySecret() {
+    const secretInput = document.getElementById('secretKey');
+    secretInput.select();
+    document.execCommand('copy');
+
+    const btn = event.target.closest('button');
+    const originalHTML = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+    setTimeout(() => {
+        btn.innerHTML = originalHTML;
+    }, 2000);
+}
+
+function copyBackupCodes() {
+    const codes = document.querySelectorAll('.backup-codes code');
+    let text = 'Valknut 2FA Backup Codes:\n\n';
+    codes.forEach(code => {
+        text += code.textContent + '\n';
+    });
+
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = event.target;
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+        }, 2000);
+    });
+}
+
+document.getElementById('enableForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const token = document.getElementById('token').value;
+    const secret = document.getElementById('secret').value;
+    const resultDiv = document.getElementById('result');
+
+    try {
+        const response = await fetch('/auth/2fa/enable', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ token, secret })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            resultDiv.innerHTML = `<div class="alert alert-success">
+                <i class="fas fa-check-circle"></i> ${data.message}
+            </div>`;
+
+            // Display backup codes
+            if (data.backupCodes) {
+                const codesContainer = document.getElementById('codesContainer');
+                codesContainer.innerHTML = data.backupCodes.map(code =>
+                    `<code class="d-block mb-1">${code}</code>`
+                ).join('');
+                document.getElementById('backupCodes').style.display = 'block';
+                document.getElementById('enableForm').style.display = 'none';
+            }
+        } else {
+            resultDiv.innerHTML = `<div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> ${data.message}
+            </div>`;
+        }
+    } catch (error) {
+        resultDiv.innerHTML = `<div class="alert alert-danger">
+            <i class="fas fa-exclamation-circle"></i> An error occurred. Please try again.
+        </div>`;
+    }
+});
+
+// Auto-submit when 6 digits are entered
+document.getElementById('token').addEventListener('input', (e) => {
+    if (e.target.value.length === 6) {
+        document.getElementById('enableForm').dispatchEvent(new Event('submit'));
+    }
+});
+</script>
+
+    </main>
+
+    <%- include('partials/footer') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

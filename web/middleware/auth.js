@@ -7,9 +7,28 @@ export function isAuthenticated(req, res, next) {
     res.redirect('/auth/login');
 }
 
+export function isTwoFactorVerified(req, res, next) {
+    if (!req.isAuthenticated()) {
+        return res.redirect('/auth/login');
+    }
+
+    // Check if 2FA is verified in session
+    if (req.session.twoFactorVerified === true) {
+        return next();
+    }
+
+    // Redirect to 2FA verification
+    res.redirect('/auth/2fa/verify');
+}
+
 export async function isAllowedUser(req, res, next) {
     if (!req.isAuthenticated()) {
         return res.redirect('/auth/login');
+    }
+
+    // Check 2FA verification
+    if (!req.session.twoFactorVerified) {
+        return res.redirect('/auth/2fa/verify');
     }
 
     // Owner always has access
@@ -30,9 +49,19 @@ export async function isAllowedUser(req, res, next) {
 }
 
 export function isOwner(req, res, next) {
-    if (req.isAuthenticated() && req.user.id === process.env.OWNER_ID) {
+    if (!req.isAuthenticated()) {
+        return res.redirect('/auth/login');
+    }
+
+    // Check 2FA verification
+    if (!req.session.twoFactorVerified) {
+        return res.redirect('/auth/2fa/verify');
+    }
+
+    if (req.user.id === process.env.OWNER_ID) {
         return next();
     }
+
     res.status(403).render('error', {
         title: 'Access Denied',
         error: { message: 'This page is only accessible to the bot owner' }

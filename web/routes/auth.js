@@ -1,6 +1,7 @@
 import express from 'express';
 import passport from 'passport';
 import { logger } from '../../src/utils/logger.js';
+import { AllowedUser } from '../../src/models/AllowedUser.js';
 
 const router = express.Router();
 
@@ -20,9 +21,47 @@ router.get('/callback',
         failureRedirect: '/',
         failureMessage: true
     }),
-    (req, res) => {
+    async (req, res) => {
         logger.info(`User logged in successfully: ${req.user.username}`);
-        res.redirect('/dashboard');
+
+        // Check if user has 2FA enabled
+        try {
+            const user = await AllowedUser.findOne({ userId: req.user.id });
+
+            if (user && user.twoFactorEnabled) {
+                // Check for remember device cookie
+                const rememberToken = req.cookies.remember_2fa;
+                if (rememberToken && user.rememberToken === rememberToken) {
+                    // Check if token is still valid
+                    if (user.rememberTokenExpiry && user.rememberTokenExpiry > new Date()) {
+                        // Valid remember token, skip 2FA
+                        req.session.twoFactorVerified = true;
+                        logger.info(`2FA skipped (remembered device) for user: ${req.user.username}`);
+                        return res.redirect('/dashboard');
+                    } else {
+                        // Token expired, clear it
+                        res.clearCookie('remember_2fa');
+                        user.rememberToken = null;
+                        user.rememberTokenExpiry = null;
+                        await user.save();
+                    }
+                }
+
+                // User has 2FA enabled, redirect to verification
+                req.session.twoFactorVerified = false;
+                logger.info(`2FA required for user: ${req.user.username}`);
+                return res.redirect('/auth/2fa/verify');
+            } else {
+                // No 2FA, mark as verified and continue to dashboard
+                req.session.twoFactorVerified = true;
+                return res.redirect('/dashboard');
+            }
+        } catch (error) {
+            logger.error(`Error checking 2FA status: ${error.message}`);
+            // On error, continue to dashboard (fail open for now)
+            req.session.twoFactorVerified = true;
+            return res.redirect('/dashboard');
+        }
     }
 );
 
@@ -32,6 +71,8 @@ router.get('/logout', (req, res) => {
         if (err) {
             return res.redirect('/dashboard');
         }
+        // Clear 2FA session flag
+        req.session.twoFactorVerified = false;
         res.redirect('/');
     });
 });

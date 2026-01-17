@@ -26,6 +26,28 @@ const allowedUserSchema = new mongoose.Schema({
     reason: {
         type: String,
         default: ''
+    },
+    // 2FA fields
+    twoFactorSecret: {
+        type: String,
+        default: null
+    },
+    twoFactorEnabled: {
+        type: Boolean,
+        default: false
+    },
+    backupCodes: {
+        type: [String],
+        default: []
+    },
+    // Remember device fields
+    rememberToken: {
+        type: String,
+        default: null
+    },
+    rememberTokenExpiry: {
+        type: Date,
+        default: null
     }
 });
 

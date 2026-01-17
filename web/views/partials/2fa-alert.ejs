@@ -1,0 +1,20 @@
+<% if (typeof twoFactorEnabled !== 'undefined' && twoFactorEnabled === false && typeof user !== 'undefined' && user) { %>
+<div class="alert alert-danger fade show border-danger mb-0" role="alert" style="position: sticky; top: 0; z-index: 1000; border-radius: 0; border-left: 0; border-right: 0;">
+    <div class="container">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
+            <div class="flex-grow-1">
+                <h5 class="alert-heading mb-1">
+                    <i class="fas fa-shield-alt"></i> Two-Factor Authentication Niet Ingesteld
+                </h5>
+                <p class="mb-0">
+                    Bescherm je account met een extra beveiligingslaag. Enable 2FA om ongeautoriseerde toegang te voorkomen.
+                    <a href="/auth/2fa/setup" class="alert-link fw-bold ms-2 btn btn-sm btn-warning">
+                        <i class="fas fa-shield-alt"></i> Stel nu in
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<% } %>

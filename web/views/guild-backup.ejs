@@ -10,6 +10,7 @@
 </head>
 <body>
     <%- include('partials/navbar') %>
+    <%- include('partials/2fa-alert') %>
 
     <main>
         <div class="container py-4">
@@ -181,7 +182,7 @@
                                     <% guild.users.forEach(user => { %>
                                         <tr>
                                             <td>
-                                                <img src="<%= user.avatarURL %>" alt="<%= user.username %>" 
+                                                <img src="<%= user.avatarURL %>" alt="<%= user.username %>"
                                                      class="rounded-circle" width="32" height="32">
                                             </td>
                                             <td>
@@ -224,7 +225,7 @@
                     <form id="roleForm">
                         <div class="modal-body">
                             <input type="hidden" id="roleId" name="roleId">
-                            
+
                             <div class="mb-3">
                                 <label for="roleName" class="form-label">
                                     <i class="fas fa-tag me-1"></i>
@@ -238,7 +239,7 @@
                                     <i class="fas fa-palette me-1"></i>
                                     Kleur
                                 </label>
-                                <input type="color" class="form-control form-control-color w-100" 
+                                <input type="color" class="form-control form-control-color w-100"
                                        id="roleColor" name="color" value="#6B7280">
                             </div>
 
