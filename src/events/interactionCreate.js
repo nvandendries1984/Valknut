@@ -86,6 +86,26 @@ export default {
                     }
                 }
             }
+
+            // Handle setprogress modal
+            if (interaction.customId.startsWith('setprogress_')) {
+                const setprogressCommand = interaction.client.commands.get('setprogress');
+                if (setprogressCommand && setprogressCommand.handleModalSubmit) {
+                    try {
+                        await setprogressCommand.handleModalSubmit(interaction);
+                    } catch (error) {
+                        logger.error(`Error handling setprogress modal: ${error.message}`);
+
+                        const errorEmbed = createErrorEmbed('An error occurred while saving the progress.');
+
+                        if (interaction.replied || interaction.deferred) {
+                            await interaction.followUp({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+                        } else {
+                            await interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+                        }
+                    }
+                }
+            }
         }
     }
 };

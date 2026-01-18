@@ -18,6 +18,7 @@ const commandDetails = {
     'backup': { emoji: '💾', permissions: 'Moderators + Server Owner', description: 'Create a manual database backup (automatic backup daily at 00:00)' },
     'feedback': { emoji: '💬', permissions: 'Everyone', description: 'Submit feedback to the bot owner via interactive modal' },
     'bug': { emoji: '🐞', permissions: 'Moderators + Server Owner', description: 'Report a bug to moderators via interactive modal' },
+    'setprogress': { emoji: '📈', permissions: 'Moderators + Server Owner', description: 'Set Saga & Progress information for a member via interactive modal' },
 
     // Moderation Commands
     'kick': { emoji: '👢', permissions: 'Moderators + Server Owner', description: 'Kick a member from the server with optional reason' },
