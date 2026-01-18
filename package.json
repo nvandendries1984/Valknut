@@ -1,6 +1,6 @@
 {
   "name": "valknut-discord-bot-template",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "Modulaire Discord.js bot template met volledige event en command handling",
   "main": "src/index.js",
   "type": "module",

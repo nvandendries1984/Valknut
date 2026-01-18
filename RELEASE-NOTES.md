@@ -2,6 +2,78 @@
 
 ---
 
+## v1.0.4 - Documentation & UX Improvements
+
+**Release Date:** January 18, 2026
+**Status:** ✅ Stable Update
+
+### 🎉 What's New
+
+#### Documentation Improvements
+- ✅ **Updated Web Help Page** - Aligned help.ejs with Discord help command structure
+  - Synchronized all command descriptions between web and Discord interfaces
+  - Consistent terminology across all platforms
+  - Improved clarity and conciseness
+  - English language standardization throughout
+
+#### User Experience Enhancements
+- ✅ **Standardized Command Descriptions** - All commands now have consistent, clear descriptions
+  - Removed redundant explanations from command descriptions
+  - Focused on core functionality in descriptions
+  - Detailed usage information available via command parameters
+
+#### Web Interface Updates
+- ✅ **Help Page Refinements**
+  - Updated section titles to match Discord help command categories
+  - Improved command card descriptions for better readability
+  - Enhanced permission system explanation clarity
+  - Streamlined tips and tricks section
+
+### 🔧 Technical Changes
+- Updated `help.ejs` template with aligned descriptions
+- Standardized command documentation format
+- Improved consistency between Discord bot and web dashboard
+
+### 📋 Updated Documentation
+
+All command descriptions have been standardized:
+
+| Command | Updated Description |
+|---------|-------------------|
+| `/help` | Show all available commands with detailed information |
+| `/feedback` | Submit feedback to the bot owner via interactive modal |
+| `/register` | Register a user in the database for access to bot functions |
+| `/onboarding` | Start onboarding process for a user (Saga, name, date of birth, etc.) |
+| `/viewuserstats` | View complete user profile with personal information, saga progress, points, and activity statistics |
+| `/setprogress` | Set Saga & Progress information for a member via interactive modal |
+| `/setpoints` | Set Points & Statistics for a user via interactive modal (Points, Penalty Points, Strikes, Notes) |
+| `/kick` | Kick a member from the server via interactive modal (message, standing) |
+| `/stats` | View user statistics (messages, voice time) for 1, 7, and 14 days |
+| `/userlist` | Generate Excel file with all registered users and their data |
+| `/guildinfo` | Display information about this server, such as members, roles, and settings |
+| `/setmod` | Set the moderator role for this server |
+| `/setlogchannel` | Set the channel where bot logs will be sent |
+| `/setbugchannel` | Set the channel where bug reports will be sent |
+| `/listguilds` | Show list of all servers where the bot is active |
+| `/bug` | Report a bug to moderators via interactive modal |
+| `/backup` | Create a manual database backup (automatic backup daily at 00:00) |
+
+### 🎯 Benefits
+**For Users:**
+- Clearer understanding of command functionality
+- Consistent information across Discord and web interfaces
+- Easier to learn and use bot commands
+
+**For Administrators:**
+- Better documentation for training new moderators
+- Unified command reference
+- Professional, polished presentation
+
+### 📝 Notes
+This release focuses on improving documentation quality and user experience without introducing breaking changes. All existing commands and features remain fully functional.
+
+---
+
 ## v1.0.3 - Advanced User Management & Statistics
 
 **Release Date:** January 18, 2026
