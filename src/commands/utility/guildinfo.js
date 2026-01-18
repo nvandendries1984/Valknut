@@ -41,18 +41,28 @@ export default {
                 ? `<#${dbGuild.logChannelId}>`
                 : 'Not configured';
 
+            // Get bug channel
+            const bugChannel = dbGuild.bugChannelId
+                ? `<#${dbGuild.bugChannelId}>`
+                : 'Not configured';
+
+            // Get mod role
+            const modRole = dbGuild.settings?.modRoleId
+                ? `<@&${dbGuild.settings.modRoleId}>`
+                : 'Not configured';
+
             const embed = createEmbed('Guild Information')
                 .addFields(
                     { name: '📝 Name', value: guild.name, inline: true },
                     { name: '🆔 Guild ID', value: guild.id, inline: true },
                     { name: '👑 Owner', value: `<@${guild.ownerId}>`, inline: true },
-                    { name: '👥 Members', value: guild.memberCount.toString(), inline: true },
+                    { name: '👥 Total Members', value: guild.memberCount.toString(), inline: true },
                     { name: '📊 Registered Users', value: registeredUsers.toString(), inline: true },
-                    { name: '📅 Created', value: `<t:${Math.floor(guild.createdTimestamp / 1000)}:F>`, inline: true },
+                    { name: '📅 Server Created', value: `<t:${Math.floor(guild.createdTimestamp / 1000)}:F>`, inline: true },
                     { name: '🤖 Bot Joined', value: `<t:${Math.floor(dbGuild.joinedAt.getTime() / 1000)}:F>`, inline: true },
                     { name: '📢 Log Channel', value: logChannel, inline: true },
-                    { name: '💬 Prefix', value: dbGuild.settings?.prefix || 'Default (!)', inline: true },
-                    { name: '🌐 Language', value: dbGuild.settings?.language || 'en', inline: true },
+                    { name: '🐛 Bug Channel', value: bugChannel, inline: true },
+                    { name: '🛡️ Moderator Role', value: modRole, inline: true },
                     { name: '✅ Status', value: dbGuild.active ? 'Active' : 'Inactive', inline: true }
                 );
 

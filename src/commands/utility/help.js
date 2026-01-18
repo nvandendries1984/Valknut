@@ -8,16 +8,21 @@ const commandDetails = {
     // Utility Commands
     'ping': { emoji: '🏓', permissions: 'All registered users', description: 'Check the bot latency and API response time' },
     'help': { emoji: '📚', permissions: 'All registered users', description: 'Show all available commands with explanations' },
-    'guildinfo': { emoji: 'ℹ️', permissions: 'All registered users', description: 'Display information about this server, such as members, roles, and settings' },
+    'guildinfo': { emoji: 'ℹ️', permissions: 'Moderators + Server Owner', description: 'Display information about this server, such as members, roles, and settings' },
     'register': { emoji: '📝', permissions: 'Moderators + Server Owner', description: 'Register a user in the database for access to bot functions' },
     'onboarding': { emoji: '👤', permissions: 'Moderators + Server Owner', description: 'Start onboarding process for a user (Saga, name, date of birth, etc.)' },
     'setlogchannel': { emoji: '📢', permissions: 'Moderators + Server Owner', description: 'Set the channel where bot logs will be sent' },
+    'setbugchannel': { emoji: '🐛', permissions: 'Moderators + Server Owner', description: 'Set the channel where bug reports will be sent' },
     'setmod': { emoji: '🛡️', permissions: 'Server Owner only', description: 'Set the moderator role for this server' },
     'listguilds': { emoji: '🌐', permissions: 'Moderators + Server Owner', description: 'Show list of all servers where the bot is active' },
     'backup': { emoji: '💾', permissions: 'Moderators + Server Owner', description: 'Create a manual database backup (automatic backup daily at 00:00)' },
+    'feedback': { emoji: '💬', permissions: 'Everyone', description: 'Submit feedback to the bot owner via interactive modal' },
+    'bug': { emoji: '🐞', permissions: 'Moderators + Server Owner', description: 'Report a bug to moderators via interactive modal' },
 
     // Moderation Commands
-    'kick': { emoji: '👢', permissions: 'Moderators + Server Owner', description: 'Kick a member from the server with optional reason' }
+    'kick': { emoji: '👢', permissions: 'Moderators + Server Owner', description: 'Kick a member from the server with optional reason' },
+    'stats': { emoji: '📊', permissions: 'Moderators + Server Owner', description: 'View user statistics (messages, voice time) for 1, 7, and 14 days' },
+    'userlist': { emoji: '📋', permissions: 'Moderators + Server Owner', description: 'Generate Excel file with all registered users and their data' }
 };
 
 export default {
