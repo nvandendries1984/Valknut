@@ -23,6 +23,7 @@ const commandDetails = {
     // Moderation Commands
     'kick': { emoji: '👢', permissions: 'Moderators + Server Owner', description: 'Kick a member from the server with optional reason' },
     'stats': { emoji: '📊', permissions: 'Moderators + Server Owner', description: 'View user statistics (messages, voice time) for 1, 7, and 14 days' },
+    'viewuserstats': { emoji: '👤', permissions: 'Moderators + Server Owner', description: 'View complete user profile with personal information, saga progress, points, and activity statistics' },
     'userlist': { emoji: '📋', permissions: 'Moderators + Server Owner', description: 'Generate Excel file with all registered users and their data' },
     'setpoints': { emoji: '⭐', permissions: 'Moderators + Server Owner', description: 'Set Points & Statistics for a user via interactive modal (Points, Penalty Points, Strikes, Notes)' }
 };
