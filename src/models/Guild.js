@@ -39,6 +39,12 @@ const guildSchema = new mongoose.Schema({
         default: null
     },
 
+    // Bug Channel ID
+    bugChannelId: {
+        type: String,
+        default: null
+    },
+
     // Bot joined at
     joinedAt: {
         type: Date,
@@ -92,6 +98,20 @@ guildSchema.statics.setLogChannel = async function(guildId, channelId) {
     if (!guild) return false;
 
     guild.logChannelId = channelId;
+    await guild.save();
+    return true;
+};
+
+guildSchema.statics.getBugChannel = async function(guildId) {
+    const guild = await this.findByGuildId(guildId);
+    return guild?.bugChannelId || null;
+};
+
+guildSchema.statics.setBugChannel = async function(guildId, channelId) {
+    const guild = await this.findByGuildId(guildId);
+    if (!guild) return false;
+
+    guild.bugChannelId = channelId;
     await guild.save();
     return true;
 };

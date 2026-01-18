@@ -66,6 +66,26 @@ export default {
                     }
                 }
             }
+
+            // Handle bug modal
+            if (interaction.customId === 'bugModal') {
+                const bugCommand = interaction.client.commands.get('bug');
+                if (bugCommand && bugCommand.handleModalSubmit) {
+                    try {
+                        await bugCommand.handleModalSubmit(interaction);
+                    } catch (error) {
+                        logger.error(`Error handling bug modal: ${error.message}`);
+
+                        const errorEmbed = createErrorEmbed('An error occurred while submitting your bug report.');
+
+                        if (interaction.replied || interaction.deferred) {
+                            await interaction.followUp({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+                        } else {
+                            await interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+                        }
+                    }
+                }
+            }
         }
     }
 };

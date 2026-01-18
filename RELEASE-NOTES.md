@@ -2,6 +2,44 @@
 
 ---
 
+## v1.0.2 - Bug Reporting System
+
+**Release Date:** January 18, 2026
+**Status:** ✅ Stable Update
+
+### 🎉 What's New
+
+#### Bug Reporting System
+- ✅ **New `/bug` Command** - MOD/OWNER only command to report bugs via interactive modal
+  - Comprehensive bug report form with 5 fields
+  - Collects: Title, Steps to Reproduce, Expected Behavior, Actual Behavior, Additional Info
+  - Sends formatted bug reports to configured bug channel
+  - Permission-restricted to moderators and server owners
+  - Full error handling and logging
+
+- ✅ **New `/setbugchannel` Command** - Configure where bug reports are sent
+  - MOD/OWNER only command
+  - Validates bot permissions in selected channel
+  - Stores bug channel configuration in database
+  - Sends confirmation message to configured channel
+
+#### Database Updates
+- ✅ **Bug Channel Support** - Added `bugChannelId` field to Guild model
+- ✅ **New Guild Methods** - Added `getBugChannel()` and `setBugChannel()` methods
+
+#### Developer Experience
+- ✅ **Modal Handler Extension** - Extended interactionCreate event to handle bug modal submissions
+- ✅ **Permission Integration** - Bug commands use existing `canExecuteCommand()` utility
+
+### 📋 New Commands
+
+| Command | Description | Permissions |
+|---------|-------------|-------------|
+| `/bug` | Report a bug to moderators | MOD/OWNER |
+| `/setbugchannel` | Set bug report channel | MOD/OWNER |
+
+---
+
 ## v1.0.1 - Feedback & UX Improvements
 
 **Release Date:** January 18, 2026
