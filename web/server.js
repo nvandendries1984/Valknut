@@ -180,6 +180,15 @@ app.get('/terms', (req, res) => {
     });
 });
 
+// Tutorial page
+app.get('/tutorial', (req, res) => {
+    res.render('tutorial', {
+        title: 'Getting Started Tutorial',
+        user: req.user,
+        botName: config.botName
+    });
+});
+
 // 404 handler
 app.use((req, res) => {
     res.status(404).render('404', { title: 'Page Not Found' });
