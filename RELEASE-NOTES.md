@@ -1,11 +1,60 @@
-# Valknut v1.0.0 - Release Notes
+# Valknut Release Notes
+
+---
+
+## v1.0.1 - Feedback & UX Improvements
+
+**Release Date:** January 18, 2026
+**Status:** ✅ Stable Update
+
+### 🎉 What's New
+
+#### Feedback System
+- ✅ **New `/feedback` Command** - Users can now submit feedback directly to the bot owner via Discord
+  - Interactive modal-based interface for better user experience
+  - Collects name, email, subject, and detailed message
+  - Sends formatted feedback to bot owner via DM
+  - Provides confirmation message to the user
+  - Full error handling and logging
+
+#### User Experience Improvements
+- ✅ **Enhanced Error Pages** - Improved error.ejs with better styling and user-friendly messages
+- ✅ **404 Page Updates** - Better 404.ejs layout and navigation
+- ✅ **Navbar Refinements** - Improved navigation bar in web dashboard
+- ✅ **Auth Middleware** - Enhanced authentication error handling and logging
+
+#### Developer Experience
+- ✅ **Better Error Logging** - More comprehensive logging in interactionCreate event handler
+- ✅ **Modal Interaction Support** - Extended interaction handler to support modal submissions
+- ✅ **Improved Error Messages** - More descriptive error messages for troubleshooting
+
+### 📋 Updated Commands List
+
+| Command | Description | Permissions |
+|---------|-------------|-------------|
+| `/feedback` | Submit feedback to bot owner | Everyone |
+
+All commands from v1.0.0 remain available and unchanged.
+
+### 🐛 Bug Fixes
+- Fixed authentication error handling in web dashboard
+- Improved error page rendering
+- Enhanced navbar responsive behavior
+
+### 🔧 Technical Changes
+- Updated `interactionCreate.js` to handle modal submissions
+- Enhanced `auth.js` middleware with better error handling
+- Improved EJS templates for better UI/UX
+- Added comprehensive logging for feedback submissions
+
+---
+
+## v1.0.0 - Initial Release
 
 **Release Date:** January 18, 2026
 **Status:** ✅ MVP (Minimum Viable Product)
 
----
-
-## 🎉 Initial Release
+### 🎉 Initial Release
 
 Valknut v1.0.0 represents the first production-ready release of this modular Discord.js bot template. This MVP delivers a complete foundation for building scalable Discord bots with multi-guild support, web dashboard, and comprehensive management features.
 
