@@ -46,7 +46,7 @@ export default {
         // Handle modal submissions
         if (interaction.isModalSubmit()) {
             logger.debug(`Modal submit interaction: ${interaction.customId} by ${interaction.user.tag}`);
-            
+
             // Handle feedback modal
             if (interaction.customId === 'feedbackModal') {
                 const feedbackCommand = interaction.client.commands.get('feedback');
@@ -55,9 +55,9 @@ export default {
                         await feedbackCommand.handleModalSubmit(interaction);
                     } catch (error) {
                         logger.error(`Error handling feedback modal: ${error.message}`);
-                        
+
                         const errorEmbed = createErrorEmbed('An error occurred while submitting your feedback.');
-                        
+
                         if (interaction.replied || interaction.deferred) {
                             await interaction.followUp({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
                         } else {

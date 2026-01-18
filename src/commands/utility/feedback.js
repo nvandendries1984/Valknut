@@ -8,7 +8,7 @@ export default {
     data: new SlashCommandBuilder()
         .setName('feedback')
         .setDescription('Submit feedback to the bot owner'),
-    
+
     async execute(interaction) {
         // Create modal
         const modal = new ModalBuilder()
@@ -112,7 +112,7 @@ export default {
             try {
                 await owner.send({ embeds: [feedbackEmbed] });
                 logger.info(`Feedback sent to owner from ${interaction.user.tag}: ${subject}`);
-                
+
                 // Confirm to user
                 return interaction.editReply({
                     embeds: [createSuccessEmbed('Your feedback has been sent successfully! Thank you for your input.')]
@@ -125,7 +125,7 @@ export default {
             }
         } catch (error) {
             logger.error(`Error handling feedback modal: ${error.message}`);
-            
+
             const errorResponse = {
                 embeds: [createErrorEmbed('An error occurred while processing your feedback. Please try again later.')]
             };
