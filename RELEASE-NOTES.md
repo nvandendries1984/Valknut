@@ -2,6 +2,129 @@
 
 ---
 
+## v1.0.3 - Advanced User Management & Statistics
+
+**Release Date:** January 18, 2026
+**Status:** ✅ Major Feature Update
+
+### 🎉 What's New
+
+#### User Statistics System
+- ✅ **New `/stats` Command** - View comprehensive user activity statistics (MOD/OWNER only)
+  - Track message counts over 1, 7, and 14 day periods
+  - Track voice channel time across multiple time periods
+  - Beautiful embed with daily breakdown of activity
+  - Real-time voice session tracking
+  - Automatic daily statistics collection
+
+- ✅ **New `/viewuserstats` Command** - Complete user profile viewer (MOD/OWNER only)
+  - View all registered user information in one place
+  - Display onboarding details (name, email, phone, address)
+  - Show saga progression and level information
+  - View points, penalty points (strafpunten), and strikes
+  - Display registration dates (recruit and warrior dates)
+  - Formatted embeds with user avatar and timestamps
+  - Error handling for unregistered users
+
+#### User Management Commands
+- ✅ **New `/setpoints` Command** - Set user points and statistics via interactive modal (MOD/OWNER only)
+  - Update points (punten), penalty points (strafpunten), and strikes
+  - Pre-filled modal with current values
+  - Validates numeric input
+  - Comprehensive error handling and logging
+  - Confirmation embed with updated values
+
+- ✅ **New `/setprogress` Command** - Update user saga progression (MOD/OWNER only)
+  - Set saga type (Beardserker, Sideburn Soldier, Moustache Militia, Goatee Gladiator, Whaler, Shieldmaiden)
+  - Update saga level (numeric)
+  - Set recruit and warrior dates
+  - Add custom notes for moderation tracking
+  - Pre-filled modal with existing user data
+  - Full validation and error handling
+
+- ✅ **New `/backup` Command** - Manual database backup creation (BOT OWNER only)
+  - Create instant compressed database backups
+  - Owner-only command for security
+  - Returns backup file location and name
+  - Shows auto-backup schedule information
+  - Integration with automatic daily backup system
+
+#### Database Enhancements
+- ✅ **UserStats Model** - New collection for tracking daily user activity
+  - Automatic daily stats aggregation
+  - Message count tracking per day
+  - Voice time tracking with session management
+  - Compound indexes for efficient queries
+  - Static helper methods for common operations
+
+- ✅ **User Model Extensions** - Enhanced user schema
+  - Saga progression fields (saga type and level)
+  - Points system (punten, strafpunten, strikes)
+  - Date tracking (recruit date, warrior date)
+  - Notes field for moderation records
+  - Full onboarding information support
+
+#### Event Tracking System
+- ✅ **Message Tracking** - Automatic message count tracking in `messageCreate` event
+  - Increments daily message statistics
+  - Per-guild tracking
+  - Non-blocking background operation
+  - Error resilience
+
+- ✅ **Voice Tracking** - Real-time voice channel activity tracking in `voiceStateUpdate` event
+  - Automatic session start/stop detection
+  - Calculates total voice time per day
+  - Handles disconnects and channel switches
+  - Persistent session tracking
+
+#### Web Dashboard Updates
+- ✅ **Updated Help Page** - Added documentation for new backup command
+- ✅ **Help Command Updates** - Updated `/help` command to include all new features
+
+### 📋 New Commands
+
+| Command | Description | Permissions |
+|---------|-------------|-------------|
+| `/stats` | View user activity statistics (messages/voice) | MOD/OWNER |
+| `/viewuserstats` | View complete user profile and information | MOD/OWNER |
+| `/setpoints` | Set points, penalty points, and strikes | MOD/OWNER |
+| `/setprogress` | Update saga progression and notes | MOD/OWNER |
+| `/backup` | Create manual database backup | BOT OWNER |
+
+### 🔧 Technical Changes
+- Enhanced `messageCreate.js` event handler with stats tracking
+- Enhanced `voiceStateUpdate.js` event handler with voice time calculation
+- Added voice session management logic for accurate tracking
+- Implemented compound indexes on UserStats for performance
+- Extended interaction handlers to support multiple new modals
+- Added comprehensive validation for saga types and numeric fields
+
+### 🎯 Use Cases
+**For Moderators:**
+- Track active community members with `/stats`
+- View complete user profiles with `/viewuserstats`
+- Update member progression with `/setprogress`
+- Manage points and penalties with `/setpoints`
+
+**For Bot Owners:**
+- Create on-demand database backups with `/backup`
+- Monitor bot data integrity
+- Prepare for maintenance windows
+
+**Automatic Features:**
+- Message activity is tracked automatically
+- Voice channel time is recorded in real-time
+- Daily statistics aggregation happens in background
+- No user action required for tracking
+
+### 📊 Statistics Tracked
+- **Messages:** Total message count per day (1/7/14 day views)
+- **Voice Time:** Total seconds in voice channels per day
+- **Daily Breakdown:** Individual daily statistics for last 7 days
+- **Session Management:** Active voice sessions tracked separately
+
+---
+
 ## v1.0.2 - Bug Reporting System
 
 **Release Date:** January 18, 2026
