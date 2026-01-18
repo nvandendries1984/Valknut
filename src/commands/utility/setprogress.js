@@ -13,11 +13,11 @@ export default {
                 .setDescription('The member to set progress for')
                 .setRequired(true))
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
-    
+
     async execute(interaction) {
         try {
             const targetUser = interaction.options.getUser('member');
-            
+
             // Check if user exists in database
             const dbUser = await User.findOne({
                 userId: targetUser.id,
@@ -82,7 +82,7 @@ export default {
 
         } catch (error) {
             logger.error('Error in setprogress command:', error);
-            
+
             if (!interaction.replied && !interaction.deferred) {
                 await interaction.reply({
                     embeds: [createErrorEmbed('An error occurred while creating the progress form.')],
@@ -96,7 +96,7 @@ export default {
     async handleModalSubmit(interaction) {
         try {
             const userId = interaction.customId.split('_')[1];
-            
+
             // Get form values
             const saga = interaction.fields.getTextInputValue('saga').trim() || null;
             const sagaLevelStr = interaction.fields.getTextInputValue('sagaLevel').trim();
@@ -191,7 +191,7 @@ export default {
 
         } catch (error) {
             logger.error('Error handling setprogress modal submission:', error);
-            
+
             if (!interaction.replied && !interaction.deferred) {
                 await interaction.reply({
                     embeds: [createErrorEmbed('An error occurred while saving the progress.')],
