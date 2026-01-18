@@ -18,7 +18,7 @@ const commandDetails = {
     'setpoints': { emoji: '⭐', permissions: 'Moderators + Server Owner', category: 'users', description: 'Set Points & Statistics for a user via interactive modal (Points, Penalty Points, Strikes, Notes)' },
 
     // Moderation Commands
-    'kick': { emoji: '👢', permissions: 'Moderators + Server Owner', category: 'moderation', description: 'Kick a member from the server with optional reason' },
+    'kick': { emoji: '👢', permissions: 'Moderators + Server Owner', category: 'moderation', description: 'Kick a member from the server via interactive modal (message, standing)' },
     'stats': { emoji: '📊', permissions: 'Moderators + Server Owner', category: 'moderation', description: 'View user statistics (messages, voice time) for 1, 7, and 14 days' },
     'userlist': { emoji: '📄', permissions: 'Moderators + Server Owner', category: 'moderation', description: 'Generate Excel file with all registered users and their data' },
 

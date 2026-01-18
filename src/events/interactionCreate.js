@@ -106,6 +106,26 @@ export default {
                     }
                 }
             }
+
+            // Handle kick modal
+            if (interaction.customId.startsWith('kickModal_')) {
+                const kickCommand = interaction.client.commands.get('kick');
+                if (kickCommand && kickCommand.handleModalSubmit) {
+                    try {
+                        await kickCommand.handleModalSubmit(interaction);
+                    } catch (error) {
+                        logger.error(`Error handling kick modal: ${error.message}`);
+
+                        const errorEmbed = createErrorEmbed('An error occurred while processing the kick.');
+
+                        if (interaction.replied || interaction.deferred) {
+                            await interaction.followUp({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+                        } else {
+                            await interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+                        }
+                    }
+                }
+            }
         }
     }
 };
