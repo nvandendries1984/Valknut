@@ -43,9 +43,29 @@ export default {
             logger.debug(`Select menu interaction: ${interaction.customId} by ${interaction.user.tag}`);
         }
 
-        // Handle modal submissions - these are handled by the commands themselves
+        // Handle modal submissions
         if (interaction.isModalSubmit()) {
             logger.debug(`Modal submit interaction: ${interaction.customId} by ${interaction.user.tag}`);
+            
+            // Handle feedback modal
+            if (interaction.customId === 'feedbackModal') {
+                const feedbackCommand = interaction.client.commands.get('feedback');
+                if (feedbackCommand && feedbackCommand.handleModalSubmit) {
+                    try {
+                        await feedbackCommand.handleModalSubmit(interaction);
+                    } catch (error) {
+                        logger.error(`Error handling feedback modal: ${error.message}`);
+                        
+                        const errorEmbed = createErrorEmbed('An error occurred while submitting your feedback.');
+                        
+                        if (interaction.replied || interaction.deferred) {
+                            await interaction.followUp({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+                        } else {
+                            await interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+                        }
+                    }
+                }
+            }
         }
     }
 };
