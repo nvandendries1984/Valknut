@@ -3,29 +3,35 @@ import { createEmbed, createErrorEmbed } from '../../utils/embedBuilder.js';
 import { config } from '../../config/config.js';
 import { canExecuteCommand } from '../../utils/permissions.js';
 
-// Command details with permissions
+// Command details with permissions - organized by category
 const commandDetails = {
-    // Utility Commands
-    'ping': { emoji: '🏓', permissions: 'All registered users', description: 'Check the bot latency and API response time' },
-    'help': { emoji: '📚', permissions: 'All registered users', description: 'Show all available commands with explanations' },
-    'guildinfo': { emoji: 'ℹ️', permissions: 'Moderators + Server Owner', description: 'Display information about this server, such as members, roles, and settings' },
-    'register': { emoji: '📝', permissions: 'Moderators + Server Owner', description: 'Register a user in the database for access to bot functions' },
-    'onboarding': { emoji: '👤', permissions: 'Moderators + Server Owner', description: 'Start onboarding process for a user (Saga, name, date of birth, etc.)' },
-    'setlogchannel': { emoji: '📢', permissions: 'Moderators + Server Owner', description: 'Set the channel where bot logs will be sent' },
-    'setbugchannel': { emoji: '🐛', permissions: 'Moderators + Server Owner', description: 'Set the channel where bug reports will be sent' },
-    'setmod': { emoji: '🛡️', permissions: 'Server Owner only', description: 'Set the moderator role for this server' },
-    'listguilds': { emoji: '🌐', permissions: 'Moderators + Server Owner', description: 'Show list of all servers where the bot is active' },
-    'backup': { emoji: '💾', permissions: 'Moderators + Server Owner', description: 'Create a manual database backup (automatic backup daily at 00:00)' },
-    'feedback': { emoji: '💬', permissions: 'Everyone', description: 'Submit feedback to the bot owner via interactive modal' },
-    'bug': { emoji: '🐞', permissions: 'Moderators + Server Owner', description: 'Report a bug to moderators via interactive modal' },
-    'setprogress': { emoji: '📈', permissions: 'Moderators + Server Owner', description: 'Set Saga & Progress information for a member via interactive modal' },
+    // Basic Commands
+    'ping': { emoji: '🏓', permissions: 'All registered users', category: 'basic', description: 'Check the bot latency and API response time' },
+    'help': { emoji: '❓', permissions: 'All registered users', category: 'basic', description: 'Show all available commands with explanations' },
+    'feedback': { emoji: '💬', permissions: 'All registered users', category: 'basic', description: 'Submit feedback to the bot owner via interactive modal' },
+
+    // User Management
+    'register': { emoji: '📝', permissions: 'Moderators + Server Owner', category: 'users', description: 'Register a user in the database for access to bot functions' },
+    'onboarding': { emoji: '👤', permissions: 'Moderators + Server Owner', category: 'users', description: 'Start onboarding process for a user (Saga, name, date of birth, etc.)' },
+    'viewuserstats': { emoji: '📋', permissions: 'Moderators + Server Owner', category: 'users', description: 'View complete user profile with personal information, saga progress, points, and activity statistics' },
+    'setprogress': { emoji: '📈', permissions: 'Moderators + Server Owner', category: 'users', description: 'Set Saga & Progress information for a member via interactive modal' },
+    'setpoints': { emoji: '⭐', permissions: 'Moderators + Server Owner', category: 'users', description: 'Set Points & Statistics for a user via interactive modal (Points, Penalty Points, Strikes, Notes)' },
 
     // Moderation Commands
-    'kick': { emoji: '👢', permissions: 'Moderators + Server Owner', description: 'Kick a member from the server with optional reason' },
-    'stats': { emoji: '📊', permissions: 'Moderators + Server Owner', description: 'View user statistics (messages, voice time) for 1, 7, and 14 days' },
-    'viewuserstats': { emoji: '👤', permissions: 'Moderators + Server Owner', description: 'View complete user profile with personal information, saga progress, points, and activity statistics' },
-    'userlist': { emoji: '📋', permissions: 'Moderators + Server Owner', description: 'Generate Excel file with all registered users and their data' },
-    'setpoints': { emoji: '⭐', permissions: 'Moderators + Server Owner', description: 'Set Points & Statistics for a user via interactive modal (Points, Penalty Points, Strikes, Notes)' }
+    'kick': { emoji: '👢', permissions: 'Moderators + Server Owner', category: 'moderation', description: 'Kick a member from the server with optional reason' },
+    'stats': { emoji: '📊', permissions: 'Moderators + Server Owner', category: 'moderation', description: 'View user statistics (messages, voice time) for 1, 7, and 14 days' },
+    'userlist': { emoji: '📄', permissions: 'Moderators + Server Owner', category: 'moderation', description: 'Generate Excel file with all registered users and their data' },
+
+    // Server Configuration
+    'guildinfo': { emoji: 'ℹ️', permissions: 'Moderators + Server Owner', category: 'config', description: 'Display information about this server, such as members, roles, and settings' },
+    'setmod': { emoji: '🛡️', permissions: 'Server Owner only', category: 'config', description: 'Set the moderator role for this server' },
+    'setlogchannel': { emoji: '📢', permissions: 'Moderators + Server Owner', category: 'config', description: 'Set the channel where bot logs will be sent' },
+    'setbugchannel': { emoji: '🐛', permissions: 'Moderators + Server Owner', category: 'config', description: 'Set the channel where bug reports will be sent' },
+    'listguilds': { emoji: '🌐', permissions: 'Moderators + Server Owner', category: 'config', description: 'Show list of all servers where the bot is active' },
+    'bug': { emoji: '🐞', permissions: 'Moderators + Server Owner', category: 'config', description: 'Report a bug to moderators via interactive modal' },
+
+    // System & Backup
+    'backup': { emoji: '💾', permissions: 'Bot Owner only', category: 'system', description: 'Create a manual database backup (automatic backup daily at 00:00)' }
 };
 
 export default {
@@ -94,38 +100,76 @@ export default {
         // Group commands by category
         const categories = {};
         commands.forEach(command => {
-            const category = command.category || 'General';
+            const cmdName = command.data.name;
+            const details = commandDetails[cmdName];
+            if (!details) return;
+
+            const category = details.category || 'other';
             if (!categories[category]) {
                 categories[category] = [];
             }
-            categories[category].push(command);
+            categories[category].push({ command, details });
         });
 
         // Create fields for each category with emojis and permissions
         const fields = [];
 
-        // Utility commands
-        if (categories['utility']) {
-            const utilityCommands = categories['utility'].map(cmd => {
-                const details = commandDetails[cmd.data.name] || { emoji: '❔', permissions: 'Onbekend' };
-                return `${details.emoji} \`/${cmd.data.name}\` - ${cmd.data.description}`;
+        // Basic Commands
+        if (categories['basic']) {
+            const basicCommands = categories['basic'].map(({ command, details }) => {
+                return `${details.emoji} \`/${command.data.name}\` - ${command.data.description}`;
             }).join('\n');
             fields.push({
-                name: '🔧 Utility Commands',
-                value: utilityCommands,
+                name: '🚀 Basis Commands',
+                value: basicCommands || 'Geen commands beschikbaar',
+                inline: false
+            });
+        }
+
+        // User Management
+        if (categories['users']) {
+            const userCommands = categories['users'].map(({ command, details }) => {
+                return `${details.emoji} \`/${command.data.name}\` - ${command.data.description}`;
+            }).join('\n');
+            fields.push({
+                name: '👥 User Management',
+                value: userCommands || 'Geen commands beschikbaar',
                 inline: false
             });
         }
 
         // Moderation commands
         if (categories['moderation']) {
-            const moderationCommands = categories['moderation'].map(cmd => {
-                const details = commandDetails[cmd.data.name] || { emoji: '❔', permissions: 'Onbekend' };
-                return `${details.emoji} \`/${cmd.data.name}\` - ${cmd.data.description}`;
+            const moderationCommands = categories['moderation'].map(({ command, details }) => {
+                return `${details.emoji} \`/${command.data.name}\` - ${command.data.description}`;
             }).join('\n');
             fields.push({
-                name: '🛡️ Moderation Commands',
-                value: moderationCommands,
+                name: '⚖️ Moderation Commands',
+                value: moderationCommands || 'Geen commands beschikbaar',
+                inline: false
+            });
+        }
+
+        // Server Configuration
+        if (categories['config']) {
+            const configCommands = categories['config'].map(({ command, details }) => {
+                return `${details.emoji} \`/${command.data.name}\` - ${command.data.description}`;
+            }).join('\n');
+            fields.push({
+                name: '⚙️ Server Configuration',
+                value: configCommands || 'Geen commands beschikbaar',
+                inline: false
+            });
+        }
+
+        // System & Backup
+        if (categories['system']) {
+            const systemCommands = categories['system'].map(({ command, details }) => {
+                return `${details.emoji} \`/${command.data.name}\` - ${command.data.description}`;
+            }).join('\n');
+            fields.push({
+                name: '🗄️ System & Backup',
+                value: systemCommands || 'Geen commands beschikbaar',
                 inline: false
             });
         }

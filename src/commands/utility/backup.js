@@ -2,15 +2,24 @@ import { SlashCommandBuilder } from 'discord.js';
 import { createDatabaseBackup } from '../../utils/backup.js';
 import { createSuccessEmbed, createErrorEmbed } from '../../utils/embedBuilder.js';
 import { canExecuteCommand } from '../../utils/permissions.js';
+import { config } from '../../config/config.js';
 
 export default {
     category: 'utility',
     data: new SlashCommandBuilder()
         .setName('backup')
-        .setDescription('Create a manual database backup')
+        .setDescription('Create a manual database backup (Bot Owner only)')
         .setDMPermission(false),
 
     async execute(interaction) {
+        // Check if user is the bot owner
+        if (interaction.user.id !== config.ownerId) {
+            return interaction.reply({
+                embeds: [createErrorEmbed('❌ This command can only be executed by the bot owner.')],
+                ephemeral: true
+            });
+        }
+
         // Check permissions
         const permissionCheck = await canExecuteCommand(interaction);
         if (!permissionCheck.allowed) {

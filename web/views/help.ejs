@@ -82,11 +82,11 @@
             </div>
         </div>
 
-        <!-- Utility Commands -->
+        <!-- Basic Commands -->
         <div class="mb-5">
             <h2 class="mb-4">
-                <i class="fas fa-tools me-2"></i>Utility Commands
-                <span class="badge bg-primary ms-2">13 Commands</span>
+                <i class="fas fa-rocket me-2"></i>Basis Commands
+                <span class="badge bg-success ms-2">3 Commands</span>
             </h2>
             <div class="row g-4">
                 <!-- Ping -->
@@ -124,23 +124,33 @@
                     </div>
                 </div>
 
-                <!-- GuildInfo -->
+                <!-- Feedback -->
                 <div class="col-md-6 col-lg-4">
                     <div class="card command-card bg-secondary text-white">
                         <div class="card-body">
                             <h5 class="card-title">
-                                <i class="fas fa-info-circle me-2"></i>/guildinfo
-                                <span class="badge permission-mod float-end">Mod</span>
+                                <i class="fas fa-comment-dots me-2"></i>/feedback
+                                <span class="badge permission-all float-end">All</span>
                             </h5>
-                            <p class="card-text">Show detailed information about this server: members, roles, settings and database stats. Moderator-only command.</p>
+                            <p class="card-text">Submit feedback to the bot owner via an interactive modal form with name, email, subject and message.</p>
                             <hr>
                             <small class="text-muted">
-                                <strong>Usage:</strong> <code>/guildinfo</code>
+                                <strong>Usage:</strong> <code>/feedback</code><br>
+                                <strong>Info:</strong> Opens interactive modal
                             </small>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
 
+        <!-- User Management -->
+        <div class="mb-5">
+            <h2 class="mb-4">
+                <i class="fas fa-users me-2"></i>User Management
+                <span class="badge bg-info ms-2">5 Commands</span>
+            </h2>
+            <div class="row g-4">
                 <!-- Register -->
                 <div class="col-md-6 col-lg-4">
                     <div class="card command-card bg-secondary text-white">
@@ -177,127 +187,19 @@
                     </div>
                 </div>
 
-                <!-- SetLogChannel -->
+                <!-- ViewUserStats -->
                 <div class="col-md-6 col-lg-4">
                     <div class="card command-card bg-secondary text-white">
                         <div class="card-body">
                             <h5 class="card-title">
-                                <i class="fas fa-bullhorn me-2"></i>/setlogchannel
+                                <i class="fas fa-id-card me-2"></i>/viewuserstats
                                 <span class="badge permission-mod float-end">Mod</span>
                             </h5>
-                            <p class="card-text">Set the channel where all bot logs and notifications are sent.</p>
+                            <p class="card-text">View complete user profile with personal information, saga progress, points, and activity statistics.</p>
                             <hr>
                             <small class="text-muted">
-                                <strong>Usage:</strong> <code>/setlogchannel #channel</code><br>
-                                <strong>Required:</strong> Discord channel (text)
-                            </small>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SetMod -->
-                <div class="col-md-6 col-lg-4">
-                    <div class="card command-card bg-secondary text-white">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <i class="fas fa-shield-alt me-2"></i>/setmod
-                                <span class="badge permission-owner float-end">Owner</span>
-                            </h5>
-                            <p class="card-text">Set the moderator role that gets access to advanced bot functions.</p>
-                            <hr>
-                            <small class="text-muted">
-                                <strong>Usage:</strong> <code>/setmod @role</code><br>
-                                <strong>Required:</strong> Discord role
-                            </small>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ListGuilds -->
-                <div class="col-md-6 col-lg-4">
-                    <div class="card command-card bg-secondary text-white">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <i class="fas fa-server me-2"></i>/listguilds
-                                <span class="badge permission-mod float-end">Mod</span>
-                            </h5>
-                            <p class="card-text">Show list of all servers where the bot is active with member counts and settings.</p>
-                            <hr>
-                            <small class="text-muted">
-                                <strong>Usage:</strong> <code>/listguilds [active]</code><br>
-                                <strong>Optional:</strong> Active servers only
-                            </small>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Backup -->
-                <div class="col-md-6 col-lg-4">
-                    <div class="card command-card bg-secondary text-white">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <i class="fas fa-database me-2"></i>/backup
-                                <span class="badge permission-mod float-end">Mod</span>
-                            </h5>
-                            <p class="card-text">Create a manual database backup. Automatic backups happen daily at 00:00.</p>
-                            <hr>
-                            <small class="text-muted">
-                                <strong>Usage:</strong> <code>/backup</code><br>
-                                <strong>Info:</strong> Keeps last 7 backups
-                            </small>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Feedback -->
-                <div class="col-md-6 col-lg-4">
-                    <div class="card command-card bg-secondary text-white">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <i class="fas fa-comment-dots me-2"></i>/feedback
-                                <span class="badge permission-all float-end">All</span>
-                            </h5>
-                            <p class="card-text">Submit feedback to the bot owner via an interactive modal form with name, email, subject and message.</p>
-                            <hr>
-                            <small class="text-muted">
-                                <strong>Usage:</strong> <code>/feedback</code><br>
-                                <strong>Info:</strong> Opens interactive modal
-                            </small>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bug -->
-                <div class="col-md-6 col-lg-4">
-                    <div class="card command-card bg-secondary text-white">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <i class="fas fa-bug me-2"></i>/bug
-                                <span class="badge permission-mod float-end">Mod</span>
-                            </h5>
-                            <p class="card-text">Report a bug to moderators via interactive modal. Collects title, steps to reproduce, expected/actual behavior.</p>
-                            <hr>
-                            <small class="text-muted">
-                                <strong>Usage:</strong> <code>/bug</code><br>
-                                <strong>Required:</strong> Bug channel configured
-                            </small>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SetBugChannel -->
-                <div class="col-md-6 col-lg-4">
-                    <div class="card command-card bg-secondary text-white">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <i class="fas fa-bug me-2"></i>/setbugchannel
-                                <span class="badge permission-mod float-end">Mod</span>
-                            </h5>
-                            <p class="card-text">Set the channel where bug reports from the <code>/bug</code> command will be sent.</p>
-                            <hr>
-                            <small class="text-muted">
-                                <strong>Usage:</strong> <code>/setbugchannel #channel</code><br>
-                                <strong>Required:</strong> Discord channel (text)
+                                <strong>Usage:</strong> <code>/viewuserstats @user</code><br>
+                                <strong>Required:</strong> Discord user
                             </small>
                         </div>
                     </div>
@@ -311,12 +213,29 @@
                                 <i class="fas fa-chart-line me-2"></i>/setprogress
                                 <span class="badge permission-mod float-end">Mod</span>
                             </h5>
-                            <p class="card-text">Set Saga & Progress information for a member via an interactive modal: Saga, Saga Level, Recruit Date, and Warrior Date.</p>
+                            <p class="card-text">Set Saga & Progress information for a member: Saga, Saga Level, Recruit Date, and Warrior Date.</p>
                             <hr>
                             <small class="text-muted">
                                 <strong>Usage:</strong> <code>/setprogress @user</code><br>
-                                <strong>Required:</strong> Discord user<br>
-                                <strong>Info:</strong> Opens interactive modal
+                                <strong>Required:</strong> Discord user
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SetPoints -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card command-card bg-secondary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-star me-2"></i>/setpoints
+                                <span class="badge permission-mod float-end">Mod</span>
+                            </h5>
+                            <p class="card-text">Set Points & Statistics for a user: Points, Penalty Points, Strikes, and Notes.</p>
+                            <hr>
+                            <small class="text-muted">
+                                <strong>Usage:</strong> <code>/setpoints @user</code><br>
+                                <strong>Required:</strong> Discord user
                             </small>
                         </div>
                     </div>
@@ -328,7 +247,7 @@
         <div class="mb-5">
             <h2 class="mb-4">
                 <i class="fas fa-gavel me-2"></i>Moderation Commands
-                <span class="badge bg-warning text-dark ms-2">5 Commands</span>
+                <span class="badge bg-warning text-dark ms-2">3 Commands</span>
             </h2>
             <div class="row g-4">
                 <!-- Kick -->
@@ -343,8 +262,7 @@
                             <hr>
                             <small class="text-muted">
                                 <strong>Usage:</strong> <code>/kick @user [reason]</code><br>
-                                <strong>Required:</strong> Discord user<br>
-                                <strong>Optional:</strong> Reason for kick
+                                <strong>Required:</strong> Discord user
                             </small>
                         </div>
                     </div>
@@ -368,25 +286,6 @@
                     </div>
                 </div>
 
-                <!-- ViewUserStats -->
-                <div class="col-md-6 col-lg-4">
-                    <div class="card command-card bg-secondary text-white">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <i class="fas fa-id-card me-2"></i>/viewuserstats
-                                <span class="badge permission-mod float-end">Mod</span>
-                            </h5>
-                            <p class="card-text">View complete user profile with personal information, saga progress, points, and activity statistics in one comprehensive embed.</p>
-                            <hr>
-                            <small class="text-muted">
-                                <strong>Usage:</strong> <code>/viewuserstats @user</code><br>
-                                <strong>Required:</strong> Discord user<br>
-                                <strong>Info:</strong> Shows all user data
-                            </small>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- UserList -->
                 <div class="col-md-6 col-lg-4">
                     <div class="card command-card bg-secondary text-white">
@@ -399,32 +298,158 @@
                             <hr>
                             <small class="text-muted">
                                 <strong>Usage:</strong> <code>/userlist [filter]</code><br>
-                                <strong>Optional:</strong> all/bots/nonbots/onboarded
-                            </small>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SetPoints -->
-                <div class="col-md-6 col-lg-4">
-                    <div class="card command-card bg-secondary text-white">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <i class="fas fa-star me-2"></i>/setpoints
-                                <span class="badge permission-mod float-end">Mod</span>
-                            </h5>
-                            <p class="card-text">Set Points & Statistics for a user via an interactive modal: Points, Penalty Points, Strikes, and Notes.</p>
-                            <hr>
-                            <small class="text-muted">
-                                <strong>Usage:</strong> <code>/setpoints @user</code><br>
-                                <strong>Required:</strong> Discord user<br>
-                                <strong>Info:</strong> Opens interactive modal
+                                <strong>Optional:</strong> Filter criteria
                             </small>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Server Configuration -->
+        <div class="mb-5">
+            <h2 class="mb-4">
+                <i class="fas fa-cog me-2"></i>Server Configuration
+                <span class="badge bg-primary ms-2">6 Commands</span>
+            </h2>
+            <div class="row g-4">
+                <!-- GuildInfo -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card command-card bg-secondary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-info-circle me-2"></i>/guildinfo
+                                <span class="badge permission-mod float-end">Mod</span>
+                            </h5>
+                            <p class="card-text">Show detailed information about this server: members, roles, settings and database stats.</p>
+                            <hr>
+                            <small class="text-muted">
+                                <strong>Usage:</strong> <code>/guildinfo</code>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SetMod -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card command-card bg-secondary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-shield-alt me-2"></i>/setmod
+                                <span class="badge permission-owner float-end">Owner</span>
+                            </h5>
+                            <p class="card-text">Set the moderator role that gets access to advanced bot functions.</p>
+                            <hr>
+                            <small class="text-muted">
+                                <strong>Usage:</strong> <code>/setmod @role</code><br>
+                                <strong>Required:</strong> Discord role
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SetLogChannel -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card command-card bg-secondary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-bullhorn me-2"></i>/setlogchannel
+                                <span class="badge permission-mod float-end">Mod</span>
+                            </h5>
+                            <p class="card-text">Set the channel where all bot logs and notifications are sent.</p>
+                            <hr>
+                            <small class="text-muted">
+                                <strong>Usage:</strong> <code>/setlogchannel #channel</code><br>
+                                <strong>Required:</strong> Text channel
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SetBugChannel -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card command-card bg-secondary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-bug me-2"></i>/setbugchannel
+                                <span class="badge permission-mod float-end">Mod</span>
+                            </h5>
+                            <p class="card-text">Set the channel where bug reports from the <code>/bug</code> command will be sent.</p>
+                            <hr>
+                            <small class="text-muted">
+                                <strong>Usage:</strong> <code>/setbugchannel #channel</code><br>
+                                <strong>Required:</strong> Text channel
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ListGuilds -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card command-card bg-secondary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-server me-2"></i>/listguilds
+                                <span class="badge permission-mod float-end">Mod</span>
+                            </h5>
+                            <p class="card-text">Show list of all servers where the bot is active with member counts and settings.</p>
+                            <hr>
+                            <small class="text-muted">
+                                <strong>Usage:</strong> <code>/listguilds [active]</code><br>
+                                <strong>Optional:</strong> Active only
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bug -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card command-card bg-secondary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-bug me-2"></i>/bug
+                                <span class="badge permission-mod float-end">Mod</span>
+                            </h5>
+                            <p class="card-text">Report a bug to moderators via interactive modal with detailed information.</p>
+                            <hr>
+                            <small class="text-muted">
+                                <strong>Usage:</strong> <code>/bug</code><br>
+                                <strong>Required:</strong> Bug channel configured
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System & Backup -->
+        <div class="mb-5">
+            <h2 class="mb-4">
+                <i class="fas fa-database me-2"></i>System & Backup
+                <span class="badge bg-danger ms-2">1 Command</span>
+            </h2>
+            <div class="row g-4">
+                <!-- Backup -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card command-card bg-secondary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-database me-2"></i>/backup
+                                <span class="badge permission-owner float-end">Owner</span>
+                            </h5>
+                            <p class="card-text">Create a manual database backup. Automatic backups happen daily at 00:00. Only bot owner can execute.</p>
+                            <hr>
+                            <small class="text-muted">
+                                <strong>Usage:</strong> <code>/backup</code><br>
+                                <strong>Info:</strong> Keeps last 7 backups
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 
         <!-- Web Dashboard Info -->
         <div class="card bg-secondary text-white mb-5">
