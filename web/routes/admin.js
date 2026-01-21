@@ -6,6 +6,7 @@ import { exec } from 'child_process';
 import path from 'path';
 import fs from 'fs';
 import { config } from '../../src/config/config.js';
+import { createDatabaseBackup } from '../../src/utils/backup.js';
 
 const router = express.Router();
 const execAsync = promisify(exec);
@@ -139,6 +140,120 @@ router.get('/users/api', isOwner, async (req, res) => {
     } catch (error) {
         console.error('Error fetching allowed users:', error);
         res.status(500).json({ error: 'Error fetching users' });
+    }
+});
+
+// ===== BACKUP MANAGEMENT =====
+
+// Backup management page
+router.get('/backups', isOwner, async (req, res) => {
+    try {
+        const backupDir = config.backupDir;
+
+        // Get list of all backups
+        const { stdout } = await execAsync(`ls -lt ${backupDir}`);
+        const files = stdout.trim().split('\n').slice(1); // Skip first line (total)
+
+        const backups = [];
+        for (const line of files) {
+            const parts = line.split(/\s+/);
+            const filename = parts[parts.length - 1];
+
+            if (filename.startsWith('valknut-backup-') && filename.endsWith('.tar.gz')) {
+                const filePath = path.join(backupDir, filename);
+                const stats = fs.statSync(filePath);
+
+                backups.push({
+                    filename,
+                    size: (stats.size / (1024 * 1024)).toFixed(2), // MB
+                    created: stats.mtime,
+                    path: filePath
+                });
+            }
+        }
+
+        // Sort by creation date (newest first)
+        backups.sort((a, b) => b.created - a.created);
+
+        res.render('admin-backups', {
+            user: req.user,
+            backups,
+            title: 'Backup Management'
+        });
+    } catch (error) {
+        console.error('Error loading backups page:', error);
+        res.status(500).send('Error loading backups page');
+    }
+});
+
+// Create manual backup (API endpoint)
+router.post('/backups/create', isOwner, async (req, res) => {
+    try {
+        const backupPath = await createDatabaseBackup();
+        const filename = path.basename(backupPath);
+
+        res.json({
+            success: true,
+            message: 'Backup created successfully',
+            filename
+        });
+    } catch (error) {
+        console.error('Error creating backup:', error);
+        res.status(500).json({ error: 'Failed to create backup: ' + error.message });
+    }
+});
+
+// Delete backup (API endpoint)
+router.delete('/backups/:filename', isOwner, async (req, res) => {
+    try {
+        const { filename } = req.params;
+
+        // Validate filename to prevent directory traversal
+        if (!filename.startsWith('valknut-backup-') || !filename.endsWith('.tar.gz')) {
+            return res.status(400).json({ error: 'Invalid backup filename' });
+        }
+
+        const backupPath = path.join(config.backupDir, filename);
+
+        // Check if file exists
+        if (!fs.existsSync(backupPath)) {
+            return res.status(404).json({ error: 'Backup file not found' });
+        }
+
+        // Delete the backup file
+        await execAsync(`rm -f ${backupPath}`);
+
+        res.json({
+            success: true,
+            message: 'Backup deleted successfully'
+        });
+    } catch (error) {
+        console.error('Error deleting backup:', error);
+        res.status(500).json({ error: 'Failed to delete backup: ' + error.message });
+    }
+});
+
+// Download backup (API endpoint)
+router.get('/backups/download/:filename', isOwner, (req, res) => {
+    try {
+        const { filename } = req.params;
+
+        // Validate filename to prevent directory traversal
+        if (!filename.startsWith('valknut-backup-') || !filename.endsWith('.tar.gz')) {
+            return res.status(400).send('Invalid backup filename');
+        }
+
+        const backupPath = path.join(config.backupDir, filename);
+
+        // Check if file exists
+        if (!fs.existsSync(backupPath)) {
+            return res.status(404).send('Backup file not found');
+        }
+
+        res.download(backupPath, filename);
+    } catch (error) {
+        console.error('Error downloading backup:', error);
+        res.status(500).send('Failed to download backup');
     }
 });
 
