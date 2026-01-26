@@ -2,6 +2,114 @@
 
 ---
 
+## v1.0.5 - Backup Management System
+
+**Release Date:** January 21, 2026
+**Status:** ✅ Stable Update
+
+### 🎉 What's New
+
+#### Web Dashboard - Backup Management
+- ✅ **New Backup Management Page** - Complete backup management interface for bot owners
+  - View all available database backups with file details (name, size, creation date)
+  - Create manual backups directly from web interface
+  - Delete old or unnecessary backups with confirmation dialog
+  - Download backup files for external storage
+  - Real-time feedback with toast notifications
+  - Automatic page refresh after operations
+
+#### Backend API Endpoints
+- ✅ **GET `/admin/backups`** - Backup management page (Owner only)
+  - Lists all available backups from backup directory
+  - Shows file size in MB and creation timestamps
+  - Sorted by newest first
+  - Integrated with existing owner authentication
+
+- ✅ **POST `/admin/backups/create`** - Create manual backup (Owner only)
+  - Triggers database backup creation
+  - Returns backup filename and success status
+  - Uses existing backup utility for consistency
+  - Non-blocking operation with loading indicators
+
+- ✅ **DELETE `/admin/backups/:filename`** - Delete backup file (Owner only)
+  - Validates filename to prevent directory traversal attacks
+  - Only allows deletion of valid backup files
+  - Returns success/error status
+  - Removes file from filesystem
+
+- ✅ **GET `/admin/backups/download/:filename`** - Download backup (Owner only)
+  - Secure file download endpoint
+  - Filename validation for security
+  - Direct file transfer to browser
+  - Preserves original filename
+
+#### Navigation Updates
+- ✅ **Added "Backup Management" to navbar** - Quick access link in owner dropdown menu
+  - Visible only to bot owner (OWNER_ID check)
+  - Consistent with existing admin menu structure
+  - Easy navigation from any page
+
+### 🔒 Security Features
+- All backup endpoints protected by `isOwner` middleware
+- Filename validation to prevent directory traversal
+- Only files matching `valknut-backup-*.tar.gz` pattern are accessible
+- Secure file path handling with path.join()
+
+### 🎨 User Interface
+- Modern dark theme consistent with existing dashboard
+- Bootstrap 5 components for professional appearance
+- Font Awesome icons for visual clarity
+- Responsive table layout for backup list
+- Confirmation modal for delete operations
+- Toast notifications for user feedback
+- Loading states with spinner animations
+
+### 🔧 Technical Implementation
+- Integrated with existing `backup.js` utility
+- Uses Express.js for API endpoints
+- EJS templating for backup management page
+- Client-side JavaScript for async operations
+- Error handling at all levels
+- Automatic backup count updates
+
+### 📋 Feature Comparison
+
+| Feature | Discord Command | Web Dashboard |
+|---------|----------------|---------------|
+| Create Backup | ✅ `/backup` | ✅ Create button |
+| View Backups | ❌ Not available | ✅ Full list with details |
+| Delete Backups | ❌ Not available | ✅ Delete button |
+| Download Backups | ❌ Not available | ✅ Download button |
+
+### 🎯 Benefits
+**For Bot Owners:**
+- Centralized backup management in one place
+- No need for SSH/terminal access
+- Visual overview of all backups
+- Easy cleanup of old backups
+- Secure backup downloads
+- Manual backup creation without Discord
+
+**For System Maintenance:**
+- Reduces backup storage clutter
+- Allows selective backup retention
+- Provides backup download for off-site storage
+- Complements automatic daily backups
+
+### 📝 Usage
+1. Log in to web dashboard as bot owner
+2. Click your avatar in navbar
+3. Select "Backup Management"
+4. View, create, download, or delete backups
+
+### 🔄 Integration
+- Works alongside automatic daily backups (00:00)
+- Compatible with existing `/backup` Discord command
+- Uses same backup directory and file format
+- Respects backup retention policy (7 backups kept automatically)
+
+---
+
 ## v1.0.4 - Documentation & UX Improvements
 
 **Release Date:** January 18, 2026
