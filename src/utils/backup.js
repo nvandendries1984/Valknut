@@ -1,8 +1,10 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import path from 'path';
+import fs from 'fs';
 import { logger } from './logger.js';
 import { config } from '../config/config.js';
+import { mongoose } from './database.js';
 
 const execAsync = promisify(exec);
 
@@ -14,21 +16,43 @@ export async function createDatabaseBackup() {
         const tempBackupPath = path.join(backupDir, 'temp', backupName);
         const archivePath = path.join(backupDir, `${backupName}.tar.gz`);
 
-        // MongoDB connection details from environment
-        const mongoHost = process.env.MONGODB_HOST || 'mongo';
-        const mongoPort = process.env.MONGODB_PORT || '27017';
-        const mongoUser = process.env.MONGODB_USER || 'admin';
-        const mongoPassword = process.env.MONGODB_PASSWORD || 'Pasja@2025';
-        const mongoDatabase = process.env.MONGODB_DATABASE || 'valknut';
-
         logger.info('Starting database backup...');
 
         // Create temp directory
-        await execAsync(`mkdir -p ${path.join(backupDir, 'temp')}`);
+        await execAsync(`mkdir -p ${tempBackupPath}`);
 
-        // Create backup using mongodump
-        const dumpCommand = `mongodump --host=${mongoHost} --port=${mongoPort} --username=${mongoUser} --password=${mongoPassword} --authenticationDatabase=admin --db=${mongoDatabase} --out=${tempBackupPath}`;
-        await execAsync(dumpCommand);
+        // Get all collections from the database
+        const db = mongoose.connection.db;
+        const collections = await db.listCollections().toArray();
+
+        logger.info(`Found ${collections.length} collections to backup`);
+
+        // Export each collection as JSON
+        for (const collectionInfo of collections) {
+            const collectionName = collectionInfo.name;
+            const collection = db.collection(collectionName);
+
+            // Get all documents from collection
+            const documents = await collection.find({}).toArray();
+
+            // Write to JSON file
+            const outputPath = path.join(tempBackupPath, `${collectionName}.json`);
+            fs.writeFileSync(outputPath, JSON.stringify(documents, null, 2));
+
+            logger.info(`Backed up collection: ${collectionName} (${documents.length} documents)`);
+        }
+
+        // Create metadata file
+        const metadata = {
+            database: db.databaseName,
+            timestamp: new Date().toISOString(),
+            collections: collections.map(c => c.name),
+            mongooseVersion: mongoose.version
+        };
+        fs.writeFileSync(
+            path.join(tempBackupPath, 'metadata.json'),
+            JSON.stringify(metadata, null, 2)
+        );
 
         // Compress backup to tar.gz
         const compressCommand = `cd ${backupDir}/temp && tar -czf ${archivePath} ${backupName}`;
