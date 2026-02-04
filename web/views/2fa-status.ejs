@@ -70,11 +70,17 @@
                         <div class="card mb-3 border-danger">
                             <div class="card-body">
                                 <h6 class="text-danger"><i class="fas fa-times-circle"></i> Disable 2FA</h6>
+                                <% if (isOwner) { %>
+                                    <div class="badge bg-warning text-dark mb-2">
+                                        <i class="fas fa-crown"></i> OWNER - No code required
+                                    </div>
+                                <% } %>
                                 <p class="text-muted">Remove two-factor authentication from your account.</p>
                                 <form id="disableForm">
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="disableToken"
-                                               placeholder="Enter 6-digit code" maxlength="6" required>
+                                               placeholder="<%= isOwner ? 'Code (optional for owner)' : 'Enter 6-digit code' %>" 
+                                               maxlength="6" <%= isOwner ? '' : 'required' %>>
                                         <button class="btn btn-danger" type="submit">
                                             <i class="fas fa-times"></i> Disable 2FA
                                         </button>

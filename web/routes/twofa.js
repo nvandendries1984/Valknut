@@ -262,7 +262,8 @@ router.get('/status', isAuthenticated, async (req, res) => {
             title: '2FA Status',
             twoFactorEnabled: user.twoFactorEnabled,
             backupCodesCount: user.backupCodes?.length || 0,
-            user: req.user
+            user: req.user,
+            isOwner: req.user.id === process.env.OWNER_ID
         });
     } catch (error) {
         logger.error(`2FA status error: ${error.message}`);
@@ -277,8 +278,10 @@ router.get('/status', isAuthenticated, async (req, res) => {
 router.post('/disable', isAuthenticated, isTwoFactorVerified, async (req, res) => {
     try {
         const { token } = req.body;
+        const isOwner = req.user.id === process.env.OWNER_ID;
 
-        if (!token) {
+        // Owner can disable without token
+        if (!isOwner && !token) {
             return res.status(400).json({ success: false, message: 'Verification code required' });
         }
 
@@ -288,25 +291,32 @@ router.post('/disable', isAuthenticated, isTwoFactorVerified, async (req, res) =
             return res.status(400).json({ success: false, message: '2FA is not enabled' });
         }
 
-        // Verify token before disabling
-        const verified = speakeasy.totp.verify({
-            secret: user.twoFactorSecret,
-            encoding: 'base32',
-            token: token,
-            window: 2
-        });
+        // Verify token before disabling (skip for owner)
+        if (!isOwner) {
+            const verified = speakeasy.totp.verify({
+                secret: user.twoFactorSecret,
+                encoding: 'base32',
+                token: token,
+                window: 2
+            });
 
-        if (!verified) {
-            return res.status(400).json({ success: false, message: 'Invalid verification code' });
+            if (!verified) {
+                return res.status(400).json({ success: false, message: 'Invalid verification code' });
+            }
         }
 
         // Disable 2FA
         user.twoFactorSecret = null;
         user.twoFactorEnabled = false;
         user.backupCodes = [];
+        user.rememberToken = null;
+        user.rememberTokenExpiry = null;
         await user.save();
 
-        logger.info(`2FA disabled for user: ${req.user.username} (${req.user.id})`);
+        // Clear remember cookie
+        res.clearCookie('remember_2fa');
+
+        logger.info(`2FA disabled for user: ${req.user.username} (${req.user.id})${isOwner ? ' [OWNER]' : ''}`);
 
         res.json({ success: true, message: '2FA disabled successfully' });
     } catch (error) {

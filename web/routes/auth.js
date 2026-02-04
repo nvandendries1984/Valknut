@@ -39,6 +39,13 @@ router.get('/callback',
     async (req, res) => {
         logger.info(`User logged in successfully: ${req.user.username}`);
 
+        // Owner bypass - skip 2FA completely
+        if (req.user.id === process.env.OWNER_ID) {
+            req.session.twoFactorVerified = true;
+            logger.info(`Owner logged in - 2FA bypassed`);
+            return res.redirect('/dashboard');
+        }
+
         // Check if user has 2FA enabled
         try {
             const user = await AllowedUser.findOne({ userId: req.user.id });

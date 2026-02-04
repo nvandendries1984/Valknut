@@ -35,6 +35,11 @@ export function isTwoFactorVerified(req, res, next) {
         return res.redirect('/auth/login');
     }
 
+    // Owner bypass - always verified
+    if (req.user.id === process.env.OWNER_ID) {
+        return next();
+    }
+
     // Check if 2FA is verified in session
     if (req.session.twoFactorVerified === true) {
         return next();
@@ -49,14 +54,14 @@ export async function isAllowedUser(req, res, next) {
         return res.redirect('/auth/login');
     }
 
+    // Owner always has access (bypass 2FA check)
+    if (req.user.id === process.env.OWNER_ID) {
+        return next();
+    }
+
     // Check 2FA verification
     if (!req.session.twoFactorVerified) {
         return res.redirect('/auth/2fa/verify');
-    }
-
-    // Owner always has access
-    if (req.user.id === process.env.OWNER_ID) {
-        return next();
     }
 
     // Check if user is in allowed list
@@ -77,13 +82,14 @@ export function isOwner(req, res, next) {
         return res.redirect('/auth/login');
     }
 
-    // Check 2FA verification
-    if (!req.session.twoFactorVerified) {
-        return res.redirect('/auth/2fa/verify');
-    }
-
+    // Owner check (bypass 2FA)
     if (req.user.id === process.env.OWNER_ID) {
         return next();
+    }
+
+    // Check 2FA verification for non-owners
+    if (!req.session.twoFactorVerified) {
+        return res.redirect('/auth/2fa/verify');
     }
 
     res.status(403).render('error', {
