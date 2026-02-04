@@ -4,6 +4,7 @@ import { Guild } from '../../src/models/Guild.js';
 import { User } from '../../src/models/User.js';
 import { Role } from '../../src/models/Role.js';
 import { AllowedUser } from '../../src/models/AllowedUser.js';
+import { config } from '../../src/config/config.js';
 
 const router = express.Router();
 
@@ -237,6 +238,23 @@ router.get('/help', isAllowedUser, async (req, res) => {
         res.status(500).render('error', {
             title: 'Error',
             error: { message: 'Failed to load help page' }
+        });
+    }
+});
+
+// Tutorial page - getting started guide (requires login)
+router.get('/tutorial', isAllowedUser, async (req, res) => {
+    try {
+        res.render('tutorial', {
+            title: 'Getting Started Tutorial',
+            user: req.user,
+            botName: config.botName
+        });
+    } catch (error) {
+        console.error('Tutorial page error:', error);
+        res.status(500).render('error', {
+            title: 'Error',
+            error: { message: 'Failed to load tutorial page' }
         });
     }
 });

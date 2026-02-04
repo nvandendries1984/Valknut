@@ -14,13 +14,6 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-center">
-                <!-- Tutorial Link (Always Visible) -->
-                <li class="nav-item">
-                    <a class="nav-link" href="/tutorial">
-                        <i class="fas fa-graduation-cap me-1"></i>
-                        Tutorial
-                    </a>
-                </li>
                 <!-- Status Link (Always Visible) -->
                 <li class="nav-item">
                     <a class="nav-link" href="https://status.nvandendries.nl/status/valknut" target="_blank">
@@ -33,6 +26,12 @@
                         <a class="nav-link" href="/dashboard">
                             <i class="fas fa-tachometer-alt me-1"></i>
                             <%= (typeof __ !== 'undefined' ? __('nav.dashboard') : 'Dashboard') %>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard/tutorial">
+                            <i class="fas fa-graduation-cap me-1"></i>
+                            Tutorial
                         </a>
                     </li>
                     <li class="nav-item">
