@@ -191,15 +191,21 @@ app.get('/tutorial', (req, res) => {
 
 // 404 handler
 app.use((req, res) => {
-    res.status(404).render('404', { title: 'Page Not Found' });
+    res.status(404).render('404', {
+        title: 'Page Not Found',
+        user: req.user || null,
+        botName: config.botName
+    });
 });
 
 // Error handler
 app.use((err, req, res, next) => {
-    logger.error(`Web error: ${err.message}`);
+    logger.error(`Web error: ${err.message || err}`);
     res.status(500).render('error', {
         title: 'Error',
-        error: process.env.NODE_ENV === 'development' ? err : {}
+        error: process.env.NODE_ENV === 'development' ? err : { message: err.message || 'Er is een fout opgetreden' },
+        user: req.user || null,
+        botName: config.botName
     });
 });
 

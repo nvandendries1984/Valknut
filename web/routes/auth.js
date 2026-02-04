@@ -16,12 +16,26 @@ router.get('/login', requireCookieConsent, (req, res, next) => {
 router.get('/callback',
     (req, res, next) => {
         logger.info('Callback received from Discord');
+        logger.info(`Callback query params: ${JSON.stringify(req.query)}`);
         next();
     },
-    passport.authenticate('discord', {
-        failureRedirect: '/',
-        failureMessage: true
-    }),
+    (req, res, next) => {
+        passport.authenticate('discord', {
+            failureRedirect: '/',
+            failureMessage: true
+        })(req, res, (err) => {
+            if (err) {
+                logger.error(`Authentication error: ${err.name} - ${err.message}`);
+                logger.error(`Error details: ${JSON.stringify(err)}`);
+                logger.error(`Error stack: ${err.stack}`);
+                if (err.oauthError) {
+                    logger.error(`OAuth error data: ${err.oauthError.data}`);
+                }
+                return res.redirect('/?error=auth_failed');
+            }
+            next();
+        });
+    },
     async (req, res) => {
         logger.info(`User logged in successfully: ${req.user.username}`);
 
